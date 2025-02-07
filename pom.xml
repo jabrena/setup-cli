@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>info.jab.jbang</groupId>
+    <artifactId>setup</artifactId>
+    <version>0.1.0</version>
+
+    <properties>
+        <java.version>23</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.10.1</junit.version>
+        <picocli.version>4.7.6</picocli.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>${picocli.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence />
+                                <banDuplicatePomDependencyVersions />
+                                <requireMavenVersion>
+                                    <version>3.9.9</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>21</version>
+                                </requireJavaVersion>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>org.projectlombok:lombok</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>        
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>info.jab.jbang.Setup</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.18.0</version>
+                <configuration>
+                    <allowSnapshots>false</allowSnapshots>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project> 
