@@ -6,13 +6,20 @@
 
     <groupId>info.jab.jbang</groupId>
     <artifactId>setup</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 
     <properties>
         <java.version>23</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.1</junit.version>
         <picocli.version>4.7.6</picocli.version>
+        <assertj.version>3.25.0</assertj.version>
+
+        <maven.enforcer.version>3.5.0</maven.enforcer.version>
+        <maven.jar.version>3.4.2</maven.jar.version>
+        <maven.versions.version>2.18.0</maven.versions.version>
+        <maven.shade.version>3.6.0</maven.shade.version>
+        <maven.version>3.9.9</maven.version>
     </properties>
 
     <dependencyManagement>
@@ -33,6 +40,13 @@
             <artifactId>picocli</artifactId>
             <version>${picocli.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -44,7 +58,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>${maven.enforcer.version}</version>
                 <executions>
                     <execution>
                         <id>enforce</id>
@@ -53,10 +67,10 @@
                                 <dependencyConvergence />
                                 <banDuplicatePomDependencyVersions />
                                 <requireMavenVersion>
-                                    <version>3.9.9</version>
+                                    <version>${maven.version}</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>21</version>
+                                    <version>${java.version}</version>
                                 </requireJavaVersion>
                                 <bannedDependencies>
                                     <excludes>
@@ -76,7 +90,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>${maven.jar.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -90,7 +104,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.18.0</version>
+                <version>${maven.versions.version}</version>
                 <configuration>
                     <allowSnapshots>false</allowSnapshots>
                 </configuration>
@@ -98,7 +112,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>${maven.shade.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

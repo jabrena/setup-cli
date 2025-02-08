@@ -7,7 +7,18 @@ A JVM app designed to provided **Cursor rules** to your project.
 ```bash
 ./mvnw clean verify
 ./mvnw clean package
-java -jar ./target/setup-0.1.0.jar init --cursor java
+
+./mvnw versions:display-dependency-updates
+./mvnw versions:display-plugin-updates
+```
+
+## How to use the CLI
+
+```bash
+java -jar ./target/setup-0.2.0.jar
+java -jar ./target/setup-0.2.0.jar --help
+java -jar ./target/setup-0.2.0.jar init --cursor java
+java -jar ./target/setup-0.2.0.jar init --cursor java-spring-boot
 ```
 
 ## References
