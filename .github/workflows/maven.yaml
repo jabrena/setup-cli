@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true  # Fetches all submodules
       - uses: actions/setup-java@v4
         with:
           distribution: 'graalvm' # See 'Supported distributions' for available options
