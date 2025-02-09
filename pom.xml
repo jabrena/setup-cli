@@ -149,7 +149,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/src/main/resources/java</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}/java</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>java-cursor-rules</directory>
