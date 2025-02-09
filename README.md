@@ -17,10 +17,11 @@ A JVM app designed to provided **Cursor rules** to your project.
 ## How to use the CLI
 
 ```bash
-java -jar ./target/setup-0.3.0.jar
-java -jar ./target/setup-0.3.0.jar --help
-java -jar ./target/setup-0.3.0.jar init --cursor java
-java -jar ./target/setup-0.3.0.jar init --cursor java-spring-boot
+java -jar ./target/setup-0.3.1.jar
+java -jar ./target/setup-0.3.1.jar --help
+java -jar ./target/setup-0.3.1.jar init --cursor java
+java -jar ./target/setup-0.3.1.jar init --cursor java-spring-boot
+jar tf ./target/setup-0.3.1.jar
 ```
 
 ## References
