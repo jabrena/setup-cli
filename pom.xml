@@ -139,7 +139,6 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <skip>true</skip>
                             <outputDirectory>./src/main/resources/java</outputDirectory>
                             <resources>
                                 <resource>

@@ -5,6 +5,8 @@ A JVM app designed to provided **Cursor rules** to your project.
 ## How to build in local
 
 ```bash
+./load-remove-git-submodules.sh c
+
 ./mvnw clean verify
 ./mvnw clean package
 
