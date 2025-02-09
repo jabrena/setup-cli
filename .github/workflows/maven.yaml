@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true  # Fetches all submodules
       - uses: actions/setup-java@v4
         with:
           distribution: 'graalvm' # See 'Supported distributions' for available options
@@ -26,4 +28,8 @@ jobs:
         with:
           name: Upload jar
           path: |
-            ./target/setup-0.3.1.jar
+            ./target/setup-0.3.2.jar
+
+      - name: Show Jar content
+        run: |
+          jar tf ./target/setup-0.3.2.jar
