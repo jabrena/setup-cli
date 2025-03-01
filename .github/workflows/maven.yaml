@@ -34,6 +34,11 @@ jobs:
           path: |
             ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar
 
-      - name: Show Jar content
+      - name: Verify .mdc files exist in jar
         run: |
-          jar tf ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar
+          if jar tf ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar | grep -q "\.mdc"; then
+            echo "✅ .mdc files found in the jar"
+          else
+            echo "❌ No .mdc files found in the jar"
+            exit 1
+          fi
