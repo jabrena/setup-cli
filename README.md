@@ -29,6 +29,7 @@ java -jar ./target/setup-0.4.0.jar init --devcontainer
 java -jar ./target/setup-0.4.0.jar init --cursor java
 java -jar ./target/setup-0.4.0.jar init --maven
 java -jar ./target/setup-0.4.0.jar init --spring-cli
+java -jar ./target/setup-0.4.0.jar init --github-action
 jar tf ./target/setup-0.4.0.jar
 ```
 
@@ -52,6 +53,7 @@ jbang setup@jabrena
 - https://picocli.info/
 - https://code.visualstudio.com/docs/devcontainers/containers
 - https://www.jetbrains.com/help/idea/dev-containers-starting-page.html
+- https://github.com/spring-projects/spring-petclinic/tree/main/.devcontainer
 - https://sdkman.io/
 - https://sdkman.io/usage/#env-command
 - https://maven.apache.org/guides/index.html

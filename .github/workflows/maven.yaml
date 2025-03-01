@@ -20,8 +20,7 @@ jobs:
           java-version: '23'
 
       - name: Maven package
-        run: |
-          ./mvnw --batch-mode --no-transfer-progress package
+        run: ./mvnw --batch-mode --no-transfer-progress verify --file pom.xml
 
       - name: Get Maven project version
         id: get_version

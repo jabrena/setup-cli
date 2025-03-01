@@ -49,6 +49,11 @@ public class InitCommand implements Runnable {
     private boolean springCli = false;
 
     @Option(
+        names = {"-ga", "--github-action"}, 
+        description = "Add an initial GitHub Actions workflow for Maven.")
+    private boolean githubAction = false;
+
+    @Option(
         names = {"-d", "--debug"}, 
         description = "Developer feature.")
     private boolean debug = false;
@@ -60,9 +65,10 @@ public class InitCommand implements Runnable {
             System.out.println("maven: " + maven);
             System.out.println("cursor: " + cursor);
             System.out.println("spring-cli: " + springCli);
+            System.out.println("github-action: " + githubAction);
         } else {
 
-            if(cursor.equals("NA") && !maven && !springCli && !devcontainer) {
+            if(cursor.equals("NA") && !maven && !springCli && !devcontainer && !githubAction) {
                 return "type 'init --help' to see available options";
             }
 
@@ -70,7 +76,7 @@ public class InitCommand implements Runnable {
             executeMavenFlag();
             executeCursorFlag();
             executeSpringCliFlag();
-
+            executeGithubActionFlag();
             return "Command executed successfully";
         }
 
@@ -202,6 +208,30 @@ public class InitCommand implements Runnable {
             System.out.println("sdk install springboot");
             System.out.println("spring init -d=web,actuator,devtools --build=maven --force ./");
             System.out.println("");
+        }
+    }
+
+    private void executeGithubActionFlag() {
+        if(githubAction) {
+            try {
+                Path currentPath = Paths.get(System.getProperty("user.dir"));
+                Path workflowsPath = currentPath.resolve(".github").resolve("workflows");
+                
+                // Create .github/workflows directory if it doesn't exist
+                Files.createDirectories(workflowsPath);
+                
+                // Copy maven.yaml from resources to .github/workflows
+                try (InputStream fileIs = getClass().getClassLoader().getResourceAsStream("github-action/maven.yaml")) {
+                    if (fileIs == null) {
+                        throw new IOException("File not found: maven.yaml");
+                    }
+                    Files.copy(fileIs, workflowsPath.resolve("maven.yaml"), StandardCopyOption.REPLACE_EXISTING);
+                }
+                
+                System.out.println("GitHub Actions workflow added successfully");
+            } catch (IOException e) {
+                throw new RuntimeException("Error copying GitHub Actions workflow file", e);
+            }
         }
     }
 } 

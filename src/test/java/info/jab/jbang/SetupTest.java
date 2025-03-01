@@ -64,6 +64,7 @@ class SetupTest {
         maven: false
         cursor: java
         spring-cli: false
+        github-action: false
         Debug mode: Skipping file copy""";
         
         // When
