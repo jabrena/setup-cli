@@ -5,6 +5,7 @@ A JVM app designed to provided **Cursor rules** to your project.
 ## How to build in local
 
 ```bash
+# Update cursor rules in local
 ./load-remove-git-submodules.sh c
 ./load-remove-git-submodules.sh r
 
@@ -24,8 +25,11 @@ java -jar ./target/setup-0.4.0.jar
 java -jar ./target/setup-0.4.0.jar --help
 java -jar ./target/setup-0.4.0.jar init
 java -jar ./target/setup-0.4.0.jar init --help
+java -jar ./target/setup-0.4.0.jar init --devcontainer
 java -jar ./target/setup-0.4.0.jar init --cursor java
-java -jar ./target/setup-0.4.0.jar init --spring-cli true
+java -jar ./target/setup-0.4.0.jar init --maven
+java -jar ./target/setup-0.4.0.jar init --spring-cli
+java -jar ./target/setup-0.4.0.jar init --github-action
 jar tf ./target/setup-0.4.0.jar
 ```
 
@@ -47,8 +51,12 @@ jbang setup@jabrena
 ### Developer links
 
 - https://picocli.info/
+- https://code.visualstudio.com/docs/devcontainers/containers
+- https://www.jetbrains.com/help/idea/dev-containers-starting-page.html
+- https://github.com/spring-projects/spring-petclinic/tree/main/.devcontainer
 - https://sdkman.io/
 - https://sdkman.io/usage/#env-command
 - https://maven.apache.org/guides/index.html
+- https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
 - https://docs.spring.io/spring-boot/cli/index.html
 - https://keepachangelog.com/en/1.1.0/

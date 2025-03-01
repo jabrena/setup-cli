@@ -9,7 +9,7 @@
     <version>0.4.0</version>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>23</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <!-- Dependencies -->
@@ -187,6 +187,38 @@
                             </resources>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-devcontainer</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/devcontainer</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>devcontainer-template</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-github-action</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/github-action</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>github-action-template</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>                    
                 </executions>
             </plugin>
         </plugins>
