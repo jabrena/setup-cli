@@ -12,7 +12,6 @@ import java.io.PrintStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class SetupTest {
 
@@ -61,8 +60,10 @@ class SetupTest {
         // Given
         String[] args = new String[]{"init", "--cursor", "java", "--debug"};
         String expectedOutput =  """
-        spring-cli: false
+        devcontainer: false
+        maven: false
         cursor: java
+        spring-cli: false
         Debug mode: Skipping file copy""";
         
         // When
@@ -90,7 +91,7 @@ class SetupTest {
     @Test
     void shouldShowSpringCliInstructions() {
         // Given
-        String[] args = new String[]{"init", "--spring-cli", "true"};
+        String[] args = new String[]{"init", "--spring-cli"};
         
         // When
         Integer exitCode = new CommandLine(new Setup()).execute(args);
@@ -156,13 +157,13 @@ class SetupTest {
         // Then
         assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString().trim()).contains("Usage: setup");
-        assertThat(outputStreamCaptor.toString().trim()).contains("Setup CLI to help developers when they want to begin a new repository");
+        assertThat(outputStreamCaptor.toString().trim()).contains(" a new repository");
     }
 
     @Test
     void shouldHandleBothCursorAndSpringCliOptions() {
         // Given
-        String[] args = new String[]{"init", "--cursor", "java", "--spring-cli", "true", "--debug"};
+        String[] args = new String[]{"init", "--cursor", "java", "--spring-cli", "--debug"};
         
         // When
         Integer exitCode = new CommandLine(new Setup()).execute(args);

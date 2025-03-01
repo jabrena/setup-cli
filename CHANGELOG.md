@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added Apache Maven support
 - Improving Pipeline to reduce the maintenance
-- Added DevContainer configuration
+- Added DevContainer support
 - Added option to show a hint about Spring CLI usage
 - Cursor rules update. Now all cursor rules has the extension .mdc
 - Added CHANGELOG.md
