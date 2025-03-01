@@ -1,4 +1,4 @@
-package info.jab.jbang;
+package info.jab.jbang.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
