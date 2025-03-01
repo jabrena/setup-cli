@@ -23,13 +23,17 @@ jobs:
         run: |
           ./mvnw --batch-mode --no-transfer-progress package
 
-      - name: Upload Jar
+      - name: Get Maven project version
+        id: get_version
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+      - name: Upload jar
         uses: actions/upload-artifact@v4
         with:
           name: Upload jar
           path: |
-            ./target/setup-0.3.2.jar
+            ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar
 
       - name: Show Jar content
         run: |
-          jar tf ./target/setup-0.3.2.jar
+          jar tf ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar
