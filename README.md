@@ -14,6 +14,7 @@ A JVM app designed to provided **Cursor rules** to your project.
 
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
+./mvnw versions:display-property-updates
 ```
 
 ## How to use the CLI

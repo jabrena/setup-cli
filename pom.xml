@@ -11,15 +11,19 @@
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.10.1</junit.version>
+        
+        <!-- Dependencies -->
         <picocli.version>4.7.6</picocli.version>
-        <assertj.version>3.25.0</assertj.version>
+        <junit.version>5.12.0</junit.version>
+        <assertj.version>3.27.3</assertj.version>
 
+        <!-- Maven Plugins -->
         <maven.enforcer.version>3.5.0</maven.enforcer.version>
         <maven.jar.version>3.4.2</maven.jar.version>
         <maven.versions.version>2.18.0</maven.versions.version>
         <maven.shade.version>3.6.0</maven.shade.version>
         <maven.version>3.9.9</maven.version>
+        <maven.compiler.version>3.14.0</maven.compiler.version>
     </properties>
 
     <dependencyManagement>
@@ -90,7 +94,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>${maven.compiler.version}</version>
                 <configuration>
                 <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
                 <release>${java.version}</release>
@@ -130,8 +134,27 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>.gitignore</exclude>
+                                        <exclude>LICENSE</exclude>
+                                        <exclude>README.md</exclude>
+                                        <exclude>docs/**</exclude>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>info.jab.jbang.Setup</mainClass>
+                                </transformer>
+                            </transformers>
+                            
+                            <minimizeJar>false</minimizeJar>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
                         </configuration>
                     </execution>
                 </executions>

@@ -3,6 +3,7 @@ package info.jab.jbang;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -18,7 +19,7 @@ import picocli.CommandLine.Option;
     description = "Initialize a new repository with some useful features for Developers",
     mixinStandardHelpOptions = true
 )
-class InitCommand implements Runnable {
+public class InitCommand implements Runnable {
     
     @Option(
         names = {"-sc", "--spring-cli"}, 
@@ -40,6 +41,9 @@ class InitCommand implements Runnable {
     
     private static final String RULES_FILE = "rules.properties";
     private static final String RULES_PREFIX = "rules.file.";
+    
+    // Define valid cursor options
+    private static final List<String> VALID_CURSOR_OPTIONS = Arrays.asList("java", "java-spring-boot");
     
     //Load the rules files from the properties file
     private List<String> getProperties() {
@@ -69,7 +73,7 @@ class InitCommand implements Runnable {
         List<String> ruleFiles = getProperties();
         //Alpha support.
         if(cursor.equals("java-spring-boot")) {
-            ruleFiles.add("06-spring-boot.md");
+            ruleFiles.add("301-framework-spring-boot.md");
         }
         //TODO Add quarkus support in the future (Max`s help)
 
@@ -103,6 +107,11 @@ class InitCommand implements Runnable {
 
     @Override
     public void run() {
+        // Validate cursor option if provided
+        if (!"NA".equals(cursor) && !VALID_CURSOR_OPTIONS.contains(cursor)) {
+            throw new IllegalArgumentException("Invalid cursor option: " + cursor);
+        }
+        
         String result = runInitFeature();
         System.out.println(result);
     }

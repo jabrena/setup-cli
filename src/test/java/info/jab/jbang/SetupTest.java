@@ -2,7 +2,6 @@ package info.jab.jbang;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -13,6 +12,7 @@ import java.io.PrintStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SetupTest {
 
@@ -116,15 +116,19 @@ class SetupTest {
         assertThat(outputStreamCaptor.toString().trim()).contains("cursor: " + cursorOption);
     }
 
-    @Disabled
     @Test
     void shouldRejectInvalidCursorOption() {
         // Given
-        String[] args = new String[]{"init", "--cursor", "invalid-option"};
+        InitCommand initCommand = new InitCommand();
+        CommandLine commandLine = new CommandLine(initCommand);
+        String[] args = new String[]{"--cursor", "invalid-option"};
         
         // When & Then
-        assertThatThrownBy(() -> new CommandLine(new Setup()).execute(args))
-            .hasMessageContaining("Invalid cursor option: invalid-option");
+        assertThatThrownBy(() -> {
+            commandLine.parseArgs(args);
+            initCommand.run();
+        }).isInstanceOf(IllegalArgumentException.class)
+          .hasMessageContaining("Invalid cursor option: invalid-option");
     }
 
     @Test
