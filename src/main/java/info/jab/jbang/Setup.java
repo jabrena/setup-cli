@@ -6,9 +6,7 @@ import picocli.CommandLine.Command;
 @Command(
     name = "setup",
     subcommands = {InitCommand.class},
-    description = """
-    Setup is a CLI utility designed to help developers when they start working with a new repository.
-    """,
+    description = "Setup is a CLI utility designed to help developers when they start working with a new repository.",
     mixinStandardHelpOptions = true
 )
 public class Setup implements Runnable {

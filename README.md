@@ -1,6 +1,6 @@
 # Setup
 
-A JVM app designed to provided **Cursor rules** to your project.
+Setup is a Command line utility designed to help developers when they start working with a new repository.
 
 ## How to build in local
 
