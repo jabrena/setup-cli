@@ -14,4 +14,3 @@ jobs:
         with:
           distribution: 'graalvm' # See 'Supported distributions' for available options
           java-version: '23'
-          cache: 'maven'
