@@ -21,16 +21,16 @@ A JVM app designed to provided **Cursor rules** to your project.
 ## How to use the CLI
 
 ```bash
-java -jar ./target/setup-0.4.0.jar
-java -jar ./target/setup-0.4.0.jar --help
-java -jar ./target/setup-0.4.0.jar init
-java -jar ./target/setup-0.4.0.jar init --help
-java -jar ./target/setup-0.4.0.jar init --devcontainer
-java -jar ./target/setup-0.4.0.jar init --cursor java
-java -jar ./target/setup-0.4.0.jar init --maven
-java -jar ./target/setup-0.4.0.jar init --spring-cli
-java -jar ./target/setup-0.4.0.jar init --github-action
-jar tf ./target/setup-0.4.0.jar
+java -jar ./target/setup-0.4.1.jar
+java -jar ./target/setup-0.4.1.jar --help
+java -jar ./target/setup-0.4.1.jar init
+java -jar ./target/setup-0.4.1.jar init --help
+java -jar ./target/setup-0.4.1.jar init --devcontainer
+java -jar ./target/setup-0.4.1.jar init --cursor java
+java -jar ./target/setup-0.4.1.jar init --maven
+java -jar ./target/setup-0.4.1.jar init --spring-cli
+java -jar ./target/setup-0.4.1.jar init --github-action
+jar tf ./target/setup-0.4.1.jar
 ```
 
 ## How to use from Jbang
