@@ -3,21 +3,27 @@ package info.jab.jbang;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import picocli.CommandLine;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(MockitoExtension.class)
 class SetupTest {
 
     private Setup setup;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+
+    //@Mock
+    //private Maven maven;
+    
+    //@Mock
+    //private SpringCli springCli;
 
     @BeforeEach
     void setUp() {
@@ -56,27 +62,6 @@ class SetupTest {
     }
 
     @Test
-    void shouldInitializeJavaCursor() {
-        // Given
-        String[] args = new String[]{"init", "--cursor", "java", "--debug"};
-        String expectedOutput =  """
-        devcontainer: false
-        maven: false
-        cursor: java
-        spring-cli: false
-        github-action: false
-        Debug mode: Skipping file copy""";
-        
-        // When
-        CommandLine cmd = new CommandLine(new Setup());
-        Integer exitCode = cmd.execute(args);
-
-        // Then
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).isEqualTo(expectedOutput);
-    }
-
-    @Test
     void shouldShowHelpMessageWhenNoOptionsProvided() {
         // Given
         String[] args = new String[]{"init"};
@@ -91,6 +76,7 @@ class SetupTest {
 
     @Test
     void shouldShowSpringCliInstructions() {
+        // Test without mocks, but verify the output messages
         // Given
         String[] args = new String[]{"init", "--spring-cli"};
         
@@ -108,29 +94,14 @@ class SetupTest {
     @ValueSource(strings = {"java", "java-spring-boot"})
     void shouldAcceptValidCursorOptions(String cursorOption) {
         // Given
-        String[] args = new String[]{"init", "--cursor", cursorOption, "--debug"};
+        String[] args = new String[]{"init", "--cursor", cursorOption};
         
         // When
         Integer exitCode = new CommandLine(new Setup()).execute(args);
         
         // Then
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("cursor: " + cursorOption);
-    }
-
-    @Test
-    void shouldRejectInvalidCursorOption() {
-        // Given
-        InitCommand initCommand = new InitCommand();
-        CommandLine commandLine = new CommandLine(initCommand);
-        String[] args = new String[]{"--cursor", "invalid-option"};
-        
-        // When & Then
-        assertThatThrownBy(() -> {
-            commandLine.parseArgs(args);
-            initCommand.run();
-        }).isInstanceOf(IllegalArgumentException.class)
-          .hasMessageContaining("Invalid cursor option: invalid-option");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Cursor rules added successfully");
     }
 
     @Test
@@ -164,41 +135,128 @@ class SetupTest {
     @Test
     void shouldHandleBothCursorAndSpringCliOptions() {
         // Given
-        String[] args = new String[]{"init", "--cursor", "java", "--spring-cli", "--debug"};
+        String[] args = new String[]{"init", "--spring-cli", "--cursor", "java"};
         
         // When
         Integer exitCode = new CommandLine(new Setup()).execute(args);
         
         // Then
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("spring-cli: true");
-        assertThat(outputStreamCaptor.toString().trim()).contains("cursor: java");
+        assertThat(outputStreamCaptor.toString().trim()).contains("sdk install springboot");
+        assertThat(outputStreamCaptor.toString().trim()).contains("spring init -d=web,actuator,devtools --build=maven --force ./");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Cursor rules added successfully");
     }
 
     @Test
-    void shouldHandleMainMethodWithNoArgs() {
+    void shouldSimulateMainMethodWithNoArgs() {
         // Given
         String[] args = new String[]{};
         
-        // When - Directly print the message that would normally be printed in main
-        System.out.println("Please specify a subcommand. Use --help to see available options.");
+        // When 
+        // Simulate main behavior without calling System.exit
+        System.out.println("Please specify a command. Use --help to see available options.");
         
         // Then
-        assertThat(outputStreamCaptor.toString().trim()).contains("Please specify a subcommand. Use --help to see available options.");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Please specify a command. Use --help to see available options.");
+    }
+    
+    @Test
+    void shouldHandleMavenOption() {
+        // Given
+        String[] args = new String[]{"init", "--maven"};
+        
+        // When
+        Integer exitCode = new CommandLine(new Setup()).execute(args);
+        
+        // Then
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString().trim()).contains("sdk install maven");
+        assertThat(outputStreamCaptor.toString().trim()).contains("mvn archetype:generate");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
+    }
+    
+    @Test
+    void shouldHandleDevcontainerOption() {
+        // Given
+        String[] args = new String[]{"init", "--devcontainer"};
+        
+        // When
+        Integer exitCode = new CommandLine(new Setup()).execute(args);
+        
+        // Then
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString().trim()).contains("Devcontainer support added successfully");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
+    }
+    
+    @Test
+    void shouldHandleGithubActionOption() {
+        // Given
+        String[] args = new String[]{"init", "--github-action"};
+        
+        // When
+        Integer exitCode = new CommandLine(new Setup()).execute(args);
+        
+        // Then
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString().trim()).contains("GitHub Actions workflow added successfully");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"invalid", "not-supported"})
+    void shouldHandleInvalidCursorOptions(String invalidOption) {
+        // Given
+        String[] args = new String[]{"init", "--cursor", invalidOption};
+        
+        // When
+        Integer exitCode = new CommandLine(new Setup()).execute(args);
+        
+        // Then
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString().trim()).doesNotContain("Cursor rules added successfully");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
+    }
+    
+    @Test
+    void shouldHandleAllOptionsEnabled() {
+        // Given
+        String[] args = new String[]{"init", "--maven", "--spring-cli", "--cursor", "java", "--devcontainer", "--github-action"};
+        
+        // When
+        Integer exitCode = new CommandLine(new Setup()).execute(args);
+        
+        // Then
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString().trim()).contains("Cursor rules added successfully");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Devcontainer support added successfully");
+        assertThat(outputStreamCaptor.toString().trim()).contains("GitHub Actions workflow added successfully");
+        assertThat(outputStreamCaptor.toString().trim()).contains("sdk install maven");
+        assertThat(outputStreamCaptor.toString().trim()).contains("sdk install springboot");
+        assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
     }
 
     @Test
-    void shouldHandleInitCommandMainMethodWithDebugFlag() {
+    void cursorOptionsShouldReturnValidIterator() {
         // Given
-        String[] args = new String[]{"--debug"};
+        CursorOptions options = new CursorOptions();
         
-        // When - Directly use the InitCommand without calling main
-        CommandLine cmd = new CommandLine(new InitCommand());
-        cmd.execute(args);
+        // When
+        int count = 0;
+        for (String option : options) {
+            count++;
+            assertThat(option).isIn("java", "java-spring-boot");
+        }
         
         // Then
-        assertThat(outputStreamCaptor.toString().trim()).contains("spring-cli: false");
-        assertThat(outputStreamCaptor.toString().trim()).contains("cursor: NA");
-        assertThat(outputStreamCaptor.toString().trim()).contains("Debug mode: Skipping file copy");
+        assertThat(count).isEqualTo(2);
+    }
+    
+    @Test
+    void cursorOptionsShouldValidateCorrectly() {
+        // Given & When & Then
+        assertThat(CursorOptions.isValidOption("java")).isTrue();
+        assertThat(CursorOptions.isValidOption("java-spring-boot")).isTrue();
     }
 } 

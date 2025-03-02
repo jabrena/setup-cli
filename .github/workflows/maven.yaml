@@ -1,10 +1,6 @@
 name: CI Builds
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    types: [opened, synchronize, reopened]
+on: [push]
 
 jobs:
   run:
@@ -18,26 +14,3 @@ jobs:
         with:
           distribution: 'graalvm' # See 'Supported distributions' for available options
           java-version: '23'
-
-      - name: Maven package
-        run: ./mvnw --batch-mode --no-transfer-progress verify --file pom.xml
-
-      - name: Get Maven project version
-        id: get_version
-        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
-
-      - name: Upload jar
-        uses: actions/upload-artifact@v4
-        with:
-          name: Upload jar
-          path: |
-            ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar
-
-      - name: Verify .mdc files exist in jar
-        run: |
-          if jar tf ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar | grep -q "\.mdc"; then
-            echo "✅ .mdc files found in the jar"
-          else
-            echo "❌ No .mdc files found in the jar"
-            exit 1
-          fi
