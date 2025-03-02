@@ -25,6 +25,10 @@ public class SpringCli implements Behaviour0 {
     
     @Override
     public void execute() {
+        System.out.println("sdk install springboot");
+        System.out.println("spring init -d=web,actuator,devtools --build=maven --force ./");
+        System.out.println("./mvnw clean verify");
+        /*
         // Check if Spring CLI is installed
         if (commandExecutor.checkCommandInstalled("spring")) {
             System.out.println("Spring CLI is installed. Executing Spring command...");
@@ -42,5 +46,6 @@ public class SpringCli implements Behaviour0 {
             System.out.println("spring init -d=web,actuator,devtools --build=maven --force ./");
             System.out.println("./mvnw clean verify");
         }
+        */
     }
 }

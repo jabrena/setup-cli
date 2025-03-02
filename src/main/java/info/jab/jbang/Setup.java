@@ -11,8 +11,24 @@ import picocli.CommandLine.Command;
 )
 public class Setup implements Runnable {
     
+    // Field for dependency injection in tests
+    private InitCommand initCommand;
+    
+    // Constructor that accepts an InitCommand (for testing)
+    public Setup(InitCommand initCommand) {
+        this.initCommand = initCommand;
+    }
+    
+    // Default constructor (used in production)
+    public Setup() {
+        this.initCommand = new InitCommand();
+    }
+    
     @Override
-    public void run() { }
+    public void run() {
+        System.out.println("Setup is a CLI utility designed to help developers when they start working with a new repository.");
+        initCommand.runInitFeature();
+    }
 
     public static void main(String[] args) {
         if(args.length == 0) {

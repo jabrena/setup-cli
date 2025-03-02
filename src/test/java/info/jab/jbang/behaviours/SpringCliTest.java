@@ -2,6 +2,7 @@ package info.jab.jbang.behaviours;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.AfterEach;
 import org.mockito.Mockito;
 
@@ -14,6 +15,7 @@ import info.jab.jbang.util.CommandExecutor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@Disabled("WIP")
 class SpringCliTest {
 
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();

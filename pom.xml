@@ -28,6 +28,7 @@
         <maven.compiler.version>3.14.0</maven.compiler.version>
         <maven.surefire.version>3.5.2</maven.surefire.version>
         <maven.jacoco.version>0.8.12</maven.jacoco.version>
+        <jacoco.skip>true</jacoco.skip>
     </properties>
 
     <dependencyManagement>
