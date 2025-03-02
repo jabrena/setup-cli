@@ -5,6 +5,8 @@ Setup is a Command line utility designed to help developers when they start work
 ## How to build in local
 
 ```bash
+sdk env install
+
 # Update cursor rules in local
 ./load-remove-git-submodules.sh c
 ./load-remove-git-submodules.sh r
@@ -13,6 +15,7 @@ Setup is a Command line utility designed to help developers when they start work
 ./mvnw clean verify surefire-report:report
 ./mvnw clean package
 ./mvnw clean package -DskipTests
+./mvnw clean javadoc:javadoc -Puml
 
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
