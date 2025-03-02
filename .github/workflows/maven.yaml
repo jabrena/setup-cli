@@ -41,3 +41,10 @@ jobs:
             echo "❌ No .mdc files found in the jar"
             exit 1
           fi
+
+      - name: Upload JaCoCo coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-coverage-report
+          path: ./target/site/jacoco
+          retention-days: 7
