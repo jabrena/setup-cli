@@ -9,7 +9,8 @@ A JVM app designed to provided **Cursor rules** to your project.
 ./load-remove-git-submodules.sh c
 ./load-remove-git-submodules.sh r
 
-./mvnw clean verify
+./mvnw clean verify 
+./mvnw clean verify surefire-report:report
 ./mvnw clean package
 ./mvnw clean package -DskipTests
 

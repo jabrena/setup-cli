@@ -309,4 +309,26 @@
         </plugins>
     </build>
 
+    <reporting>
+        <plugins>
+            <!-- Generates HTML test reports -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <outputName>junit-report</outputName>
+                    <showSuccess>true</showSuccess>
+                </configuration>
+            </plugin>
+            
+            <!-- Adds links to source code in reports -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
 </project> 
