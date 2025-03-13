@@ -6,7 +6,7 @@
 
     <groupId>info.jab.jbang</groupId>
     <artifactId>setup</artifactId>
-    <version>0.4.1</version>
+    <version>0.5.0</version>
 
     <properties>
         <java.version>23</java.version>
@@ -16,6 +16,8 @@
         <picocli.version>4.7.6</picocli.version>
         <junit.version>5.12.0</junit.version>
         <assertj.version>3.27.3</assertj.version>
+        <commons-io.version>2.18.0</commons-io.version>
+        <mockito.version>5.16.0</mockito.version>
 
         <!-- Maven Plugins -->
         <maven.enforcer.version>3.5.0</maven.enforcer.version>
@@ -24,6 +26,8 @@
         <maven.shade.version>3.6.0</maven.shade.version>
         <maven.version>3.9.9</maven.version>
         <maven.compiler.version>3.14.0</maven.compiler.version>
+        <maven.surefire.version>3.5.2</maven.surefire.version>
+        <maven.jacoco.version>0.8.12</maven.jacoco.version>
     </properties>
 
     <dependencyManagement>
@@ -46,6 +50,12 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
@@ -54,6 +64,20 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -103,6 +127,18 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <skipAfterFailureCount>1</skipAfterFailureCount>
+                    <forkCount>1</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <useFile>false</useFile>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven.jar.version}</version>
                 <configuration>
@@ -143,6 +179,7 @@
                                         <exclude>README.md</exclude>
                                         <exclude>docs/**</exclude>
                                         <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/versions/9/module-info.class</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -221,7 +258,81 @@
                     </execution>                    
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven.jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>3.6.0</version>
+            </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <!-- Generates HTML test reports -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <outputName>junit-report</outputName>
+                    <showSuccess>true</showSuccess>
+                </configuration>
+            </plugin>
+            
+            <!-- Adds links to source code in reports -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project> 

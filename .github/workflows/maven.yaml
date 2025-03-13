@@ -19,8 +19,8 @@ jobs:
           distribution: 'graalvm' # See 'Supported distributions' for available options
           java-version: '23'
 
-      - name: Maven package
-        run: ./mvnw --batch-mode --no-transfer-progress verify --file pom.xml
+      - name: Maven build
+        run: ./mvnw --batch-mode --no-transfer-progress verify surefire-report:report --file pom.xml
 
       - name: Get Maven project version
         id: get_version
@@ -29,7 +29,7 @@ jobs:
       - name: Upload jar
         uses: actions/upload-artifact@v4
         with:
-          name: Upload jar
+          name: setup-${{ steps.get_version.outputs.VERSION }}.jar
           path: |
             ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar
 
@@ -41,3 +41,17 @@ jobs:
             echo "❌ No .mdc files found in the jar"
             exit 1
           fi
+
+      - name: Upload JaCoCo coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-coverage-report
+          path: ./target/site/jacoco
+          retention-days: 7
+
+      - name: Upload surefire reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: ./target/reports
+          retention-days: 7

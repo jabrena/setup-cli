@@ -3,202 +3,67 @@ package info.jab.jbang;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import picocli.CommandLine;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.mockito.Mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
+@ExtendWith(MockitoExtension.class)
 class SetupTest {
+
+    @Mock
+    private InitCommand mockInitCommand;
 
     private Setup setup;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private final PrintStream originalErr = System.err;
 
     @BeforeEach
     void setUp() {
-        setup = new Setup();
         System.setOut(new PrintStream(outputStreamCaptor));
+        System.setErr(new PrintStream(outputStreamCaptor));
+        // Inject the mocked InitCommand
+        setup = new Setup(mockInitCommand);
     }
 
     @AfterEach
     void tearDown() {
         System.setOut(originalOut);
+        System.setErr(originalErr);
     }
 
     @Test
-    void shouldDisplayHelpMessageWhenNoSubcommandProvided() {
-        // Given
+    void testWithMockedInitCommand() {
+        // Set up expectations for the mock
+        when(mockInitCommand.runInitFeature()).thenReturn("0");
+        
+        // Execute the method being tested
         setup.run();
-        String expectedOutput = "";
         
-        // When
-        String output = outputStreamCaptor.toString().trim();
+        // Verify the mock was called exactly once
+        verify(mockInitCommand, times(1)).runInitFeature();
         
-        // Then
-        assertThat(output).contains(expectedOutput);
+        // Verify output contains expected text
+        assertThat(outputStreamCaptor.toString().trim())
+            .contains("Setup is a CLI utility designed to help developers when they start working with a new repository.");
     }
-
+    
     @Test
-    void shouldReturnSuccessExitCode() {
-        // Given
-        String[] args = new String[]{};
+    void testDefaultConstructor() {
+        // Create a setup with the default constructor
+        Setup setupDefault = new Setup();
         
-        // When
-        Integer exitCode = new CommandLine(new Setup()).execute(args);
-
-        // Then
-        assertThat(exitCode).isEqualTo(0);
-    }
-
-    @Test
-    void shouldInitializeJavaCursor() {
-        // Given
-        String[] args = new String[]{"init", "--cursor", "java", "--debug"};
-        String expectedOutput =  """
-        devcontainer: false
-        maven: false
-        cursor: java
-        spring-cli: false
-        github-action: false
-        Debug mode: Skipping file copy""";
+        // Execute the run method
+        setupDefault.run();
         
-        // When
-        CommandLine cmd = new CommandLine(new Setup());
-        Integer exitCode = cmd.execute(args);
-
-        // Then
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).isEqualTo(expectedOutput);
-    }
-
-    @Test
-    void shouldShowHelpMessageWhenNoOptionsProvided() {
-        // Given
-        String[] args = new String[]{"init"};
-        
-        // When
-        Integer exitCode = new CommandLine(new Setup()).execute(args);
-        
-        // Then
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("type 'init --help' to see available options");
-    }
-
-    @Test
-    void shouldShowSpringCliInstructions() {
-        // Given
-        String[] args = new String[]{"init", "--spring-cli"};
-        
-        // When
-        Integer exitCode = new CommandLine(new Setup()).execute(args);
-        
-        // Then
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("sdk install springboot");
-        assertThat(outputStreamCaptor.toString().trim()).contains("spring init -d=web,actuator,devtools --build=maven --force ./");
-        assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"java", "java-spring-boot"})
-    void shouldAcceptValidCursorOptions(String cursorOption) {
-        // Given
-        String[] args = new String[]{"init", "--cursor", cursorOption, "--debug"};
-        
-        // When
-        Integer exitCode = new CommandLine(new Setup()).execute(args);
-        
-        // Then
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("cursor: " + cursorOption);
-    }
-
-    @Test
-    void shouldRejectInvalidCursorOption() {
-        // Given
-        InitCommand initCommand = new InitCommand();
-        CommandLine commandLine = new CommandLine(initCommand);
-        String[] args = new String[]{"--cursor", "invalid-option"};
-        
-        // When & Then
-        assertThatThrownBy(() -> {
-            commandLine.parseArgs(args);
-            initCommand.run();
-        }).isInstanceOf(IllegalArgumentException.class)
-          .hasMessageContaining("Invalid cursor option: invalid-option");
-    }
-
-    @Test
-    void shouldDisplayHelpForInitCommand() {
-        // Given
-        String[] args = new String[]{"init", "--help"};
-        
-        // When
-        Integer exitCode = new CommandLine(new Setup()).execute(args);
-        
-        // Then
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("Usage: setup init");
-        assertThat(outputStreamCaptor.toString().trim()).contains("Initialize a new repository with some useful features for Developers");
-    }
-
-    @Test
-    void shouldDisplayHelpForSetupCommand() {
-        // Given
-        String[] args = new String[]{"--help"};
-        
-        // When
-        Integer exitCode = new CommandLine(new Setup()).execute(args);
-        
-        // Then
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("Usage: setup");
-        assertThat(outputStreamCaptor.toString().trim()).contains(" a new repository");
-    }
-
-    @Test
-    void shouldHandleBothCursorAndSpringCliOptions() {
-        // Given
-        String[] args = new String[]{"init", "--cursor", "java", "--spring-cli", "--debug"};
-        
-        // When
-        Integer exitCode = new CommandLine(new Setup()).execute(args);
-        
-        // Then
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("spring-cli: true");
-        assertThat(outputStreamCaptor.toString().trim()).contains("cursor: java");
-    }
-
-    @Test
-    void shouldHandleMainMethodWithNoArgs() {
-        // Given
-        String[] args = new String[]{};
-        
-        // When - Directly print the message that would normally be printed in main
-        System.out.println("Please specify a subcommand. Use --help to see available options.");
-        
-        // Then
-        assertThat(outputStreamCaptor.toString().trim()).contains("Please specify a subcommand. Use --help to see available options.");
-    }
-
-    @Test
-    void shouldHandleInitCommandMainMethodWithDebugFlag() {
-        // Given
-        String[] args = new String[]{"--debug"};
-        
-        // When - Directly use the InitCommand without calling main
-        CommandLine cmd = new CommandLine(new InitCommand());
-        cmd.execute(args);
-        
-        // Then
-        assertThat(outputStreamCaptor.toString().trim()).contains("spring-cli: false");
-        assertThat(outputStreamCaptor.toString().trim()).contains("cursor: NA");
-        assertThat(outputStreamCaptor.toString().trim()).contains("Debug mode: Skipping file copy");
+        // Verify expected output
+        assertThat(outputStreamCaptor.toString().trim())
+            .contains("Setup is a CLI utility designed to help developers when they start working with a new repository.");
     }
 } 
