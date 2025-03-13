@@ -99,6 +99,9 @@ public class InitCommand implements Runnable {
         if(springCliOption) {
             springCli.execute();
         }
+        if(quarkusCliOption) {
+            quarkusCli.execute();
+        }
         if(CursorOptions.isValidOption(cursorOption)) {
             cursor.execute(cursorOption);
         }
