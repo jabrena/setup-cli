@@ -22,10 +22,12 @@ class SetupTest {
     private Setup setup;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private final PrintStream originalErr = System.err;
 
     @BeforeEach
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
+        System.setErr(new PrintStream(outputStreamCaptor));
         // Inject the mocked InitCommand
         setup = new Setup(mockInitCommand);
     }
@@ -33,6 +35,7 @@ class SetupTest {
     @AfterEach
     void tearDown() {
         System.setOut(originalOut);
+        System.setErr(originalErr);
     }
 
     @Test
@@ -47,6 +50,19 @@ class SetupTest {
         verify(mockInitCommand, times(1)).runInitFeature();
         
         // Verify output contains expected text
+        assertThat(outputStreamCaptor.toString().trim())
+            .contains("Setup is a CLI utility designed to help developers when they start working with a new repository.");
+    }
+    
+    @Test
+    void testDefaultConstructor() {
+        // Create a setup with the default constructor
+        Setup setupDefault = new Setup();
+        
+        // Execute the run method
+        setupDefault.run();
+        
+        // Verify expected output
         assertThat(outputStreamCaptor.toString().trim())
             .contains("Setup is a CLI utility designed to help developers when they start working with a new repository.");
     }

@@ -8,8 +8,14 @@ import java.nio.file.Paths;
 import org.apache.commons.io.FileUtils;
 
 public class DevContainer implements Behaviour0 {
+
     @Override
     public void execute() {
+        copyDevContainerFiles();
+        System.out.println("Devcontainer support added successfully");
+    }
+    
+    void copyDevContainerFiles() {
         try {
             Path currentPath = Paths.get(System.getProperty("user.dir"));
             Path devcontainerPath = currentPath.resolve(".devcontainer");
@@ -34,8 +40,6 @@ public class DevContainer implements Behaviour0 {
                     FileUtils.copyInputStreamToFile(resourceStream, devcontainerPath.resolve(fileName).toFile());
                 }
             }
-            
-            System.out.println("Devcontainer support added successfully");
         } catch (IOException e) {
             throw new RuntimeException("Error copying devcontainer files", e);
         }

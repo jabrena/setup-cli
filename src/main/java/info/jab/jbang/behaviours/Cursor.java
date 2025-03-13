@@ -12,6 +12,7 @@ import org.apache.commons.io.FileUtils;
 import info.jab.jbang.CursorOptions;
 
 public class Cursor implements Behaviour1 {
+
     @Override
     public void execute(String parameter) {
         List<String> ruleFiles = getProperties();
@@ -28,7 +29,7 @@ public class Cursor implements Behaviour1 {
     }
 
     //Load the rules files from the properties file
-    private List<String> getProperties() {
+    List<String> getProperties() {
         final String rulesProperties = "rules.properties";
         final String keyPrefix = "rules.file.";
         
@@ -44,7 +45,7 @@ public class Cursor implements Behaviour1 {
         }
     }
 
-    private void copyCursorRulesToDirectory(List<String> ruleFiles) {
+    void copyCursorRulesToDirectory(List<String> ruleFiles) {
         try {
             Path currentPath = Paths.get(System.getProperty("user.dir"));
             Path cursorPath = currentPath.resolve(".cursor");

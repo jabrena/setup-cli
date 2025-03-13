@@ -13,9 +13,10 @@ sdk env install
 
 ./mvnw clean verify 
 ./mvnw clean verify surefire-report:report
+./mvnw clean verify jacoco:report
+jwebserver -p 8000 -d "$(pwd)/target/site/"
 ./mvnw clean package
-./mvnw clean package -DskipTests
-./mvnw clean javadoc:javadoc -Puml
+
 
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates

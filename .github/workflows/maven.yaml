@@ -19,7 +19,7 @@ jobs:
           distribution: 'graalvm' # See 'Supported distributions' for available options
           java-version: '23'
 
-      - name: Maven package
+      - name: Maven build
         run: ./mvnw --batch-mode --no-transfer-progress verify surefire-report:report --file pom.xml
 
       - name: Get Maven project version

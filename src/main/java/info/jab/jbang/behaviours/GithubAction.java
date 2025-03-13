@@ -7,8 +7,14 @@ import java.nio.file.Paths;
 import org.apache.commons.io.FileUtils;
 
 public class GithubAction implements Behaviour0 {
+
     @Override
     public void execute() {
+        copyGithubActionFiles();
+        System.out.println("GitHub Actions workflow added successfully");
+    }
+    
+    void copyGithubActionFiles() {
         try {
             Path currentPath = Paths.get(System.getProperty("user.dir"));
             Path workflowsPath = currentPath.resolve(".github").resolve("workflows");
@@ -23,8 +29,6 @@ public class GithubAction implements Behaviour0 {
                 }
                 FileUtils.copyInputStreamToFile(resourceStream, workflowsPath.resolve("maven.yaml").toFile());
             }
-            
-            System.out.println("GitHub Actions workflow added successfully");
         } catch (IOException e) {
             throw new RuntimeException("Error copying GitHub Actions workflow file", e);
         }

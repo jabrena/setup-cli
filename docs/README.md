@@ -10,7 +10,7 @@ brew install ant
 ## Usage
 
 ```
-sdk install java 11.0.26-tem
+sdk use java 11.0.26-tem
 ant uml
 ```
 
