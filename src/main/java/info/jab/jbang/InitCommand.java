@@ -15,7 +15,8 @@ import picocli.CommandLine.Option;
 @Command(
     name = "init", 
     description = "Initialize a new repository with some useful features for Developers.",
-    mixinStandardHelpOptions = true
+    mixinStandardHelpOptions = true,
+    usageHelpAutoWidth = true
 )
 public class InitCommand implements Runnable {
 
