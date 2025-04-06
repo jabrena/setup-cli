@@ -50,7 +50,7 @@ public class InitCommand implements Runnable {
     private boolean githubActionOption = false;
     
     @Option(
-        names = {"-ec", "--editor-config"}, 
+        names = {"-ec", "--editorconfig"}, 
         description = "Add an initial EditorConfig file.")
     private boolean editorConfigOption = false;
     

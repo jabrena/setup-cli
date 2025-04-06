@@ -37,10 +37,13 @@ java -jar ./target/setup-0.6.0.jar init
 java -jar ./target/setup-0.6.0.jar init --help
 java -jar ./target/setup-0.6.0.jar init --devcontainer
 java -jar ./target/setup-0.6.0.jar init --cursor java
+java -jar ./target/setup-0.6.0.jar init --cursor java-spring-boot
+java -jar ./target/setup-0.6.0.jar init --cursor java-quarkus
 java -jar ./target/setup-0.6.0.jar init --maven
 java -jar ./target/setup-0.6.0.jar init --spring-cli
 java -jar ./target/setup-0.6.0.jar init --quarkus-cli
 java -jar ./target/setup-0.6.0.jar init --github-action
+java -jar ./target/setup-0.6.0.jar init --editorconfig
 jar tf ./target/setup-0.6.0.jar
 ```
 

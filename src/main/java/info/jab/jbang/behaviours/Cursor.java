@@ -10,17 +10,25 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import info.jab.jbang.CursorOptions;
+import java.util.Objects;
 
 public class Cursor implements Behaviour1 {
 
     @Override
     public void execute(String parameter) {
+        if (Objects.isNull(parameter)) {
+            return;
+        }
+        
         List<String> ruleFiles = getProperties();
         //Spring Boot support (Alpha)
         if(parameter.equals("java-spring-boot")) {
-            ruleFiles.add("301-framework-spring-boot.md");
+            ruleFiles.add("301-framework-spring-boot.mdc");
         }
-        //TODO Add Quarkus support in the future (Max`s help)
+        //Quarkus support (Max`s help)
+        if(parameter.equals("java-quarkus")) {
+            ruleFiles.add("401-framework-quarkus.mdc");
+        }
 
         if(CursorOptions.isValidOption(parameter)) {
             copyCursorRulesToDirectory(ruleFiles);

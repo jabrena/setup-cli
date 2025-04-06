@@ -2,7 +2,6 @@ package info.jab.jbang.behaviours;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -16,6 +15,10 @@ import java.io.PrintStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.InputStream;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class EditorConfigTest {
@@ -88,6 +91,44 @@ class EditorConfigTest {
             
         } finally {
             // Restore the original user.dir
+            System.setProperty("user.dir", originalUserDir);
+        }
+    }
+    
+    @Test
+    void testCopyEditorConfigFilesWithMissingResource(@TempDir Path tempDir) {
+        // Save original user.dir
+        String originalUserDir = System.getProperty("user.dir");
+        try {
+            // Set user.dir to temp directory
+            System.setProperty("user.dir", tempDir.toString());
+
+            // Create a mock EditorConfig that simulates missing resource
+            EditorConfig editorConfig = new EditorConfig() {
+                @Override
+                void copyEditorConfigFiles() {
+                    try {
+                        Path currentPath = Paths.get(System.getProperty("user.dir"));
+                        Path editorConfigFile = currentPath.resolve(".editorconfig");
+                        
+                        // Force null resource stream
+                        try (InputStream resourceStream = getClass().getClassLoader().getResourceAsStream("non-existent-file")) {
+                            if (resourceStream == null) {
+                                throw new IOException("Resource not found: non-existent-file");
+                            }
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error copying EditorConfig file", e);
+                    }
+                }
+            };
+
+            // Verify that the expected exception is thrown
+            RuntimeException exception = assertThrows(RuntimeException.class, editorConfig::execute);
+            assertTrue(exception.getCause() instanceof IOException);
+            assertTrue(exception.getCause().getMessage().contains("Resource not found"));
+        } finally {
+            // Restore original user.dir
             System.setProperty("user.dir", originalUserDir);
         }
     }

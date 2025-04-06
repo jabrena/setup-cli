@@ -7,10 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.0]
 
+### Added
+
+- added support for .editorconfig
+- added initial Quarkus support in Cursor rules
+
 ### Changed
 
 - java 24
-- movedd templates to folder templates
+- Moved templates to folder templates
+- Improved Maven behaviour
+- Added Graphviz in Devcontainer support
 
 ## [0.5.0]
 
