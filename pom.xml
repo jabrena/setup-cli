@@ -6,7 +6,7 @@
 
     <groupId>info.jab.jbang</groupId>
     <artifactId>setup</artifactId>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
 
     <properties>
         <java.version>24</java.version>
@@ -14,11 +14,14 @@
         
         <!-- Dependencies -->
         <picocli.version>4.7.6</picocli.version>
+        <commons-io.version>2.18.0</commons-io.version>
+        <commons-exec.version>1.4.0</commons-exec.version>
+        
+        <!-- Test dependencies -->
+        <mockito.version>5.17.0</mockito.version>
         <junit.version>5.12.0</junit.version>
         <assertj.version>3.27.3</assertj.version>
-        <commons-io.version>2.18.0</commons-io.version>
-        <mockito.version>5.17.0</mockito.version>
-
+        
         <!-- Maven Plugins -->
         <maven.enforcer.version>3.5.0</maven.enforcer.version>
         <maven.jar.version>3.4.2</maven.jar.version>
@@ -55,6 +58,13 @@
             <version>${commons-io.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+            <version>${commons-exec.version}</version>
+        </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
