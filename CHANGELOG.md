@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- added support for SDKMAN init file .sdkmanrc
 - added support for .editorconfig
 - added initial Quarkus support in Cursor rules
 

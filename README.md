@@ -44,6 +44,7 @@ java -jar ./target/setup-0.6.0.jar init --spring-cli
 java -jar ./target/setup-0.6.0.jar init --quarkus-cli
 java -jar ./target/setup-0.6.0.jar init --github-action
 java -jar ./target/setup-0.6.0.jar init --editorconfig
+java -jar ./target/setup-0.6.0.jar init --sdkman
 jar tf ./target/setup-0.6.0.jar
 ```
 

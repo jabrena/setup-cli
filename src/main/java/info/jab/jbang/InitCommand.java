@@ -6,6 +6,7 @@ import info.jab.jbang.behaviours.EditorConfig;
 import info.jab.jbang.behaviours.GithubAction;
 import info.jab.jbang.behaviours.Maven;
 import info.jab.jbang.behaviours.QuarkusCli;
+import info.jab.jbang.behaviours.Sdkman;
 import info.jab.jbang.behaviours.SpringCli;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -54,6 +55,11 @@ public class InitCommand implements Runnable {
         description = "Add an initial EditorConfig file.")
     private boolean editorConfigOption = false;
     
+    @Option(
+        names = {"-s", "--sdkman"}, 
+        description = "Add an initial SDKMAN Init file.")
+    private boolean sdkmanOption = false;
+
     private DevContainer devContainer;
     private Maven maven;
     private SpringCli springCli;
@@ -61,6 +67,8 @@ public class InitCommand implements Runnable {
     private Cursor cursor;
     private GithubAction githubAction;
     private EditorConfig editorConfig;
+    private Sdkman sdkman;
+
     public InitCommand() {
         this.devContainer = new DevContainer();
         this.maven = new Maven();
@@ -69,6 +77,7 @@ public class InitCommand implements Runnable {
         this.quarkusCli = new QuarkusCli();
         this.githubAction = new GithubAction();
         this.editorConfig = new EditorConfig();
+        this.sdkman = new Sdkman();
     }
 
     public InitCommand(
@@ -78,7 +87,8 @@ public class InitCommand implements Runnable {
         QuarkusCli quarkusCli,
         Cursor cursor,
         GithubAction githubAction,
-        EditorConfig editorConfig) {
+        EditorConfig editorConfig,
+        Sdkman sdkman) {
         this.devContainer = devContainer;
         this.maven = maven;
         this.cursor = cursor;
@@ -86,6 +96,7 @@ public class InitCommand implements Runnable {
         this.quarkusCli = quarkusCli;
         this.githubAction = githubAction;
         this.editorConfig = editorConfig;
+        this.sdkman = sdkman;
     }
 
     public String runInitFeature() {
@@ -96,7 +107,8 @@ public class InitCommand implements Runnable {
             !quarkusCliOption && 
             !devcontainerOption && 
             !githubActionOption &&
-            !editorConfigOption) {
+            !editorConfigOption &&
+            !sdkmanOption) {
             return "type 'init --help' to see available options";
         }
 
@@ -120,6 +132,9 @@ public class InitCommand implements Runnable {
         }
         if(editorConfigOption) {
             editorConfig.execute();
+        }
+        if(sdkmanOption) {
+            sdkman.execute();
         }
         return "Command executed successfully";
     }
