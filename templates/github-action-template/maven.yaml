@@ -13,6 +13,6 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'graalvm' # See 'Supported distributions' for available options
-          java-version: '23'
+          java-version: '24'
       - name: Maven build
         run: ./mvnw --batch-mode --no-transfer-progress verify --file pom.xml

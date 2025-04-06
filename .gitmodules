@@ -1,3 +1,3 @@
-[submodule "java-cursor-rules"]
-	path = java-cursor-rules
+[submodule "templates/java-cursor-rules"]
+	path = templates/java-cursor-rules
 	url = https://github.com/jabrena/java-cursor-rules

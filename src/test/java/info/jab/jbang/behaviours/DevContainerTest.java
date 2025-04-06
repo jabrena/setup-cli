@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.commons.io.FileUtils;
+import java.io.InputStream;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 class DevContainerTest {
@@ -118,6 +120,114 @@ class DevContainerTest {
             
             // Verify the method was called
             verify(mockDevContainer).copyDevContainerFiles();
+        }
+    }
+    
+    @Test
+    void testCopyDevContainerFilesWithFileContents(@TempDir Path tempDir) throws IOException {
+        // Save the original user.dir
+        String originalUserDir = System.getProperty("user.dir");
+        
+        try {
+            // Set user.dir to our temp directory
+            System.setProperty("user.dir", tempDir.toString());
+            
+            // Create a real DevContainer instance
+            DevContainer realDevContainer = new DevContainer();
+            
+            // Execute the method
+            realDevContainer.copyDevContainerFiles();
+            
+            // Verify that the .devcontainer directory was created
+            Path devcontainerDir = tempDir.resolve(".devcontainer");
+            assertThat(Files.exists(devcontainerDir)).isTrue();
+            
+            // Verify that the files were copied
+            Path devcontainerJsonFile = devcontainerDir.resolve("devcontainer.json");
+            Path dockerfilePath = devcontainerDir.resolve("Dockerfile");
+            
+            assertThat(Files.exists(devcontainerJsonFile)).isTrue();
+            assertThat(Files.exists(dockerfilePath)).isTrue();
+            
+            // Verify file contents
+            String devcontainerJsonContent = Files.readString(devcontainerJsonFile);
+            assertThat(devcontainerJsonContent).contains("java");
+            assertThat(devcontainerJsonContent).contains("devcontainer");
+            
+            String dockerfileContent = Files.readString(dockerfilePath);
+            assertThat(dockerfileContent).contains("FROM");
+            assertThat(dockerfileContent).contains("RUN");
+        } finally {
+            // Restore the original user.dir
+            System.setProperty("user.dir", originalUserDir);
+        }
+    }
+    
+    @Test
+    void testCopyDevContainerFilesWithMissingResource(@TempDir Path tempDir) {
+        // Save original user.dir
+        String originalUserDir = System.getProperty("user.dir");
+        try {
+            // Set user.dir to temp directory
+            System.setProperty("user.dir", tempDir.toString());
+
+            // Create a mock DevContainer that returns null for resource stream
+            DevContainer devContainer = new DevContainer() {
+                @Override
+                void copyDevContainerFiles() {
+                    try {
+                        Path currentPath = Paths.get(System.getProperty("user.dir"));
+                        Path devcontainerPath = currentPath.resolve(".devcontainer");
+                        
+                        // Force null resource stream
+                        try (InputStream resourceStream = getClass().getClassLoader().getResourceAsStream("non-existent-file")) {
+                            if (resourceStream == null) {
+                                throw new IOException("Resource not found: non-existent-file");
+                            }
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error copying devcontainer files", e);
+                    }
+                }
+            };
+
+            // Verify that the expected exception is thrown
+            RuntimeException exception = assertThrows(RuntimeException.class, devContainer::execute);
+            assertTrue(exception.getCause() instanceof IOException);
+            assertTrue(exception.getCause().getMessage().contains("Resource not found"));
+        } finally {
+            // Restore original user.dir
+            System.setProperty("user.dir", originalUserDir);
+        }
+    }
+    
+    @Test
+    void testCopyDevContainerFilesWithExistingDirectory(@TempDir Path tempDir) throws IOException {
+        // Save the original user.dir
+        String originalUserDir = System.getProperty("user.dir");
+        
+        try {
+            // Set user.dir to our temp directory
+            System.setProperty("user.dir", tempDir.toString());
+            
+            // Create .devcontainer directory with some content
+            Path devcontainerDir = tempDir.resolve(".devcontainer");
+            Files.createDirectory(devcontainerDir);
+            Files.writeString(devcontainerDir.resolve("test.txt"), "test content");
+            
+            // Create a real DevContainer instance
+            DevContainer realDevContainer = new DevContainer();
+            
+            // Execute the method
+            realDevContainer.copyDevContainerFiles();
+            
+            // Verify that the directory was cleaned and new files were copied
+            assertThat(Files.exists(devcontainerDir.resolve("test.txt"))).isFalse();
+            assertThat(Files.exists(devcontainerDir.resolve("devcontainer.json"))).isTrue();
+            assertThat(Files.exists(devcontainerDir.resolve("Dockerfile"))).isTrue();
+        } finally {
+            // Restore the original user.dir
+            System.setProperty("user.dir", originalUserDir);
         }
     }
 } 

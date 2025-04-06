@@ -2,9 +2,11 @@ package info.jab.jbang;
 
 import info.jab.jbang.behaviours.Cursor;
 import info.jab.jbang.behaviours.DevContainer;
+import info.jab.jbang.behaviours.EditorConfig;
 import info.jab.jbang.behaviours.GithubAction;
 import info.jab.jbang.behaviours.Maven;
 import info.jab.jbang.behaviours.QuarkusCli;
+import info.jab.jbang.behaviours.Sdkman;
 import info.jab.jbang.behaviours.SpringCli;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +46,12 @@ class InitCommandTest {
     @Mock
     private Cursor mockCursor;
 
+    @Mock
+    private EditorConfig mockEditorConfig;
+
+    @Mock
+    private Sdkman mockSdkman;
+
     private InitCommand initCommand;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -57,7 +65,9 @@ class InitCommandTest {
                 mockSpringCli,
                 mockQuarkusCli,
                 mockCursor,
-                mockGithubAction
+                mockGithubAction,
+                mockEditorConfig,
+                mockSdkman
         );
 
         // Capture console output for assertions
