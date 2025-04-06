@@ -16,7 +16,7 @@ public class Cursor implements Behaviour1 {
     @Override
     public void execute(String parameter) {
         List<String> ruleFiles = getProperties();
-        //Alpha support.
+        //Spring Boot support (Alpha)
         if(parameter.equals("java-spring-boot")) {
             ruleFiles.add("301-framework-spring-boot.md");
         }
