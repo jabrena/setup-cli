@@ -6,7 +6,7 @@
 
     <groupId>info.jab.jbang</groupId>
     <artifactId>setup</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
 
     <properties>
         <java.version>24</java.version>

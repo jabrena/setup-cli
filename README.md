@@ -24,28 +24,28 @@ jwebserver -p 8000 -d "$(pwd)/target/site/"
 ./mvnw versions:display-plugin-updates
 ./mvnw versions:display-property-updates
 
-./mvnw versions:set -DnewVersion=0.6.0
+./mvnw versions:set -DnewVersion=0.6.1
 ./mvnw versions:commit
 ```
 
 ## How to use the CLI
 
 ```bash
-java -jar ./target/setup-0.6.0.jar
-java -jar ./target/setup-0.6.0.jar --help
-java -jar ./target/setup-0.6.0.jar init
-java -jar ./target/setup-0.6.0.jar init --help
-java -jar ./target/setup-0.6.0.jar init --devcontainer
-java -jar ./target/setup-0.6.0.jar init --cursor java
-java -jar ./target/setup-0.6.0.jar init --cursor java-spring-boot
-java -jar ./target/setup-0.6.0.jar init --cursor java-quarkus
-java -jar ./target/setup-0.6.0.jar init --maven
-java -jar ./target/setup-0.6.0.jar init --spring-cli
-java -jar ./target/setup-0.6.0.jar init --quarkus-cli
-java -jar ./target/setup-0.6.0.jar init --github-action
-java -jar ./target/setup-0.6.0.jar init --editorconfig
-java -jar ./target/setup-0.6.0.jar init --sdkman
-jar tf ./target/setup-0.6.0.jar
+java -jar ./target/setup-0.6.1.jar
+java -jar ./target/setup-0.6.1.jar --help
+java -jar ./target/setup-0.6.1.jar init
+java -jar ./target/setup-0.6.1.jar init --help
+java -jar ./target/setup-0.6.1.jar init --devcontainer
+java -jar ./target/setup-0.6.1.jar init --cursor java
+java -jar ./target/setup-0.6.1.jar init --cursor java-spring-boot
+java -jar ./target/setup-0.6.1.jar init --cursor java-quarkus
+java -jar ./target/setup-0.6.1.jar init --maven
+java -jar ./target/setup-0.6.1.jar init --spring-cli
+java -jar ./target/setup-0.6.1.jar init --quarkus-cli
+java -jar ./target/setup-0.6.1.jar init --github-action
+java -jar ./target/setup-0.6.1.jar init --editorconfig
+java -jar ./target/setup-0.6.1.jar init --sdkman
+jar tf ./target/setup-0.6.1.jar
 ```
 
 ## How to use from Jbang
