@@ -2,6 +2,7 @@ package info.jab.jbang;
 
 import info.jab.jbang.behaviours.Cursor;
 import info.jab.jbang.behaviours.DevContainer;
+import info.jab.jbang.behaviours.EditorConfig;
 import info.jab.jbang.behaviours.GithubAction;
 import info.jab.jbang.behaviours.Maven;
 import info.jab.jbang.behaviours.QuarkusCli;
@@ -44,6 +45,9 @@ class InitCommandTest {
     @Mock
     private Cursor mockCursor;
 
+    @Mock
+    private EditorConfig mockEditorConfig;
+
     private InitCommand initCommand;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -57,7 +61,8 @@ class InitCommandTest {
                 mockSpringCli,
                 mockQuarkusCli,
                 mockCursor,
-                mockGithubAction
+                mockGithubAction,
+                mockEditorConfig
         );
 
         // Capture console output for assertions

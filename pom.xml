@@ -255,7 +255,23 @@
                                 </resource>
                             </resources>
                         </configuration>
-                    </execution>                    
+                    </execution>
+                    <execution>
+                        <id>copy-editorconfig</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/editorconfig</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>templates/editorconfig-template</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>                                    
                 </executions>
             </plugin>
             
