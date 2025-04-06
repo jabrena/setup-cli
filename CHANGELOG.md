@@ -9,19 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- improved terminal width visualization
+- Improved terminal width visualization
 
 ## [0.6.0]
 
 ### Added
 
-- added support for SDKMAN init file .sdkmanrc
-- added support for .editorconfig
-- added initial Quarkus support in Cursor rules
+- Added support for SDKMAN init file .sdkmanrc
+- Added support for .editorconfig
+- Added initial Quarkus support in Cursor rules
 
 ### Changed
 
-- java 24
+- Java 24
 - Moved templates to folder templates
 - Improved Maven behaviour
 - Added Graphviz in Devcontainer support
