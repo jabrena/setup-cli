@@ -38,7 +38,8 @@ class CursorTest {
         
         // Use lenient() to avoid UnnecessaryStubbingException
         lenient().doReturn(new ArrayList<>(List.of("test-rule.md"))).when(cursor).getProperties();
-        lenient().doNothing().when(cursor).copyCursorRulesToDirectory(any());
+        lenient().doNothing().when(cursor).copyJavaCursorRulesToDirectory(any());
+        lenient().doNothing().when(cursor).copyProcessesCursorRulesToDirectory(any());
     }
     
     @AfterEach
@@ -56,7 +57,7 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         
         // Verify the copyCursorRulesToDirectory method was called
-        verify(cursor).copyCursorRulesToDirectory(any());
+        verify(cursor).copyJavaCursorRulesToDirectory(any());
     }
     
     @Test
@@ -68,7 +69,7 @@ class CursorTest {
         assertThat(outputStreamCaptor.toString().trim()).isEmpty();
         
         // Verify the copyCursorRulesToDirectory method was not called
-        verify(cursor, never()).copyCursorRulesToDirectory(any());
+        verify(cursor, never()).copyJavaCursorRulesToDirectory(any());
     }
     
     @Test
@@ -81,7 +82,7 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         
         // Verify the copyCursorRulesToDirectory method was called
-        verify(cursor).copyCursorRulesToDirectory(any());
+        verify(cursor).copyJavaCursorRulesToDirectory(any());
     }
     
     @Test
@@ -94,7 +95,7 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         
         // Verify the copyCursorRulesToDirectory method was called
-        verify(cursor).copyCursorRulesToDirectory(any());
+        verify(cursor).copyJavaCursorRulesToDirectory(any());
     }
 
     @Test
@@ -115,10 +116,10 @@ class CursorTest {
         // Given
         List<String> invalidRuleFiles = List.of("non-existent-file.mdc");
         doThrow(new RuntimeException("Error copying rules files"))
-            .when(cursor).copyCursorRulesToDirectory(invalidRuleFiles);
+            .when(cursor).copyJavaCursorRulesToDirectory(invalidRuleFiles);
         
         // When/Then
-        assertThatThrownBy(() -> cursor.copyCursorRulesToDirectory(invalidRuleFiles))
+        assertThatThrownBy(() -> cursor.copyJavaCursorRulesToDirectory(invalidRuleFiles))
             .isInstanceOf(RuntimeException.class)
             .hasMessageContaining("Error copying rules files");
     }
@@ -130,7 +131,7 @@ class CursorTest {
         
         // Then
         assertThat(outputStreamCaptor.toString().trim()).isEmpty();
-        verify(cursor, never()).copyCursorRulesToDirectory(any());
+        verify(cursor, never()).copyJavaCursorRulesToDirectory(any());
     }
     
     @Test
@@ -139,10 +140,10 @@ class CursorTest {
         List<String> emptyRuleFiles = List.of();
         
         // When
-        cursor.copyCursorRulesToDirectory(emptyRuleFiles);
+        cursor.copyJavaCursorRulesToDirectory(emptyRuleFiles);
         
         // Then
-        verify(cursor).copyCursorRulesToDirectory(emptyRuleFiles);
+        verify(cursor).copyJavaCursorRulesToDirectory(emptyRuleFiles);
     }
     
     @Test
@@ -156,7 +157,7 @@ class CursorTest {
             // Create a mock Cursor that simulates missing resource
             Cursor cursor = new Cursor() {
                 @Override
-                void copyCursorRulesToDirectory(List<String> ruleFiles) {
+                void copyJavaCursorRulesToDirectory(List<String> ruleFiles) {
                     try {
                         Path currentPath = Paths.get(System.getProperty("user.dir"));
                         Path cursorPath = currentPath.resolve(".cursor");

@@ -20,18 +20,26 @@ public class Cursor implements Behaviour1 {
             return;
         }
         
-        List<String> ruleFiles = getProperties();
+        List<String> ruleJavaFiles = getProperties();
         //Spring Boot support (Alpha)
         if(parameter.equals("java-spring-boot")) {
-            ruleFiles.add("301-framework-spring-boot.mdc");
+            ruleJavaFiles.add("301-framework-spring-boot.mdc");
         }
         //Quarkus support (Max`s help)
         if(parameter.equals("java-quarkus")) {
-            ruleFiles.add("401-framework-quarkus.mdc");
+            ruleJavaFiles.add("401-framework-quarkus.mdc");
         }
 
         if(CursorOptions.isValidOption(parameter)) {
-            copyCursorRulesToDirectory(ruleFiles);
+            if(parameter.equals("processes")) {
+                List<String> ruleProcessesFiles = List.of(
+                    "1000-create-prd.mdc",
+                    "1001-generate-tasks-from-prd.mdc",
+                    "1002-task-list.mdc");
+                copyProcessesCursorRulesToDirectory(ruleProcessesFiles);
+            } else {
+                copyJavaCursorRulesToDirectory(ruleJavaFiles);
+            }
             System.out.println("Cursor rules added successfully");
         }
     }
@@ -53,25 +61,43 @@ public class Cursor implements Behaviour1 {
         }
     }
 
-    void copyCursorRulesToDirectory(List<String> ruleFiles) {
+    void copyJavaCursorRulesToDirectory(List<String> ruleFiles) {
         try {
             Path currentPath = Paths.get(System.getProperty("user.dir"));
             Path cursorPath = currentPath.resolve(".cursor");
             Path rulesPath = cursorPath.resolve("rules");
-            
-            // Delete existing rules directory contents if it exists
-            if (Files.exists(rulesPath)) {
-                FileUtils.cleanDirectory(rulesPath.toFile());
-            }
-            
-            // Create rules directory
+
+            // Create rules directory if it doesn't exist
             FileUtils.forceMkdir(rulesPath.toFile());
-                        
+
             // Copy rule files to the rules directory
             for (String fileName : ruleFiles) {
-                try (InputStream resourceStream = getClass().getResourceAsStream("/java/.cursor/rules/" + fileName)) {
+                try (InputStream resourceStream = getClass().getResourceAsStream("cursor-rules-java/" + fileName)) {
                     if (resourceStream == null) {
-                        throw new IOException("Resource not found: /java/.cursor/rules/" + fileName);
+                        throw new IOException("Resource not found: cursor-rules-java/" + fileName);
+                    }
+                    FileUtils.copyInputStreamToFile(resourceStream, rulesPath.resolve(fileName).toFile());
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error copying rules files", e);
+        }
+    }
+
+    void copyProcessesCursorRulesToDirectory(List<String> ruleFiles) {
+        try {
+            Path currentPath = Paths.get(System.getProperty("user.dir"));
+            Path cursorPath = currentPath.resolve(".cursor");
+            Path rulesPath = cursorPath.resolve("rules");
+
+            // Create rules directory if it doesn't exist
+            FileUtils.forceMkdir(rulesPath.toFile());
+
+            // Copy rule files to the rules directory
+            for (String fileName : ruleFiles) {
+                try (InputStream resourceStream = getClass().getResourceAsStream("cursor-rules-processes/" + fileName)) {
+                    if (resourceStream == null) {
+                        throw new IOException("Resource not found: cursor-rules-processes/" + fileName);
                     }
                     FileUtils.copyInputStreamToFile(resourceStream, rulesPath.resolve(fileName).toFile());
                 }

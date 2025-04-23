@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class CursorOptions implements Iterable<String> {
-    private static final List<String> OPTIONS = List.of("java", "java-spring-boot", "java-quarkus");
+    private static final List<String> OPTIONS = List.of("java", "java-spring-boot", "java-quarkus", "processes");
     
     @Override
     public Iterator<String> iterator() {

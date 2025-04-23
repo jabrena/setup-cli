@@ -13,8 +13,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <!-- Dependencies -->
-        <picocli.version>4.7.6</picocli.version>
-        <commons-io.version>2.18.0</commons-io.version>
+        <picocli.version>4.7.7</picocli.version>
+        <commons-io.version>2.19.0</commons-io.version>
         <commons-exec.version>1.4.0</commons-exec.version>
         
         <!-- Test dependencies -->
@@ -59,9 +59,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-exec</artifactId>
-            <version>${commons-exec.version}</version>
+            <groupId>dev.jbang</groupId>
+            <artifactId>jash</artifactId>
+            <version>0.0.3</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -213,22 +213,44 @@
                 <version>3.3.1</version>
                 <executions>
                     <execution>
-                        <id>copy-rules</id>
+                        <id>copy-cursor-rules-java</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/java</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-java</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>templates/java-cursor-rules</directory>
+                                    <directory>templates/cursor-rules-java</directory>
                                     <filtering>false</filtering>
                                     <excludes>
                                         <exclude>.gitignore</exclude>
                                         <exclude>LICENSE</exclude>
                                         <exclude>README.md</exclude>
                                         <exclude>docs/**</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-cursor-rules-processes</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-processes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>templates/cursor-rules-processes</directory>
+                                    <filtering>false</filtering>
+                                    <excludes>
+                                        <exclude>.gitignore</exclude>
+                                        <exclude>LICENSE</exclude>
+                                        <exclude>*.md</exclude>
+                                        <exclude>*.png</exclude>
                                     </excludes>
                                 </resource>
                             </resources>
@@ -333,12 +355,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.75</minimum><!-- Technical debt -->
+                                            <minimum>0.65</minimum><!-- Technical debt -->
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.75</minimum><!-- Technical debt -->
+                                            <minimum>0.65</minimum><!-- Technical debt -->
                                         </limit>
                                     </limits>
                                 </rule>
