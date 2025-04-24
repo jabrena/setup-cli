@@ -72,9 +72,10 @@ public class Cursor implements Behaviour1 {
 
             // Copy rule files to the rules directory
             for (String fileName : ruleFiles) {
-                try (InputStream resourceStream = getClass().getResourceAsStream("cursor-rules-java/" + fileName)) {
+                // Use the correct path found in the JAR, starting from root
+                try (InputStream resourceStream = getClass().getResourceAsStream("/cursor-rules-java/.cursor/rules/" + fileName)) {
                     if (resourceStream == null) {
-                        throw new IOException("Resource not found: cursor-rules-java/" + fileName);
+                        throw new IOException("Resource not found at /cursor-rules-java/.cursor/rules/: " + fileName);
                     }
                     FileUtils.copyInputStreamToFile(resourceStream, rulesPath.resolve(fileName).toFile());
                 }
@@ -95,9 +96,9 @@ public class Cursor implements Behaviour1 {
 
             // Copy rule files to the rules directory
             for (String fileName : ruleFiles) {
-                try (InputStream resourceStream = getClass().getResourceAsStream("cursor-rules-processes/" + fileName)) {
+                try (InputStream resourceStream = getClass().getResourceAsStream("/cursor-rules-processes/.cursor/rules/" + fileName)) {
                     if (resourceStream == null) {
-                        throw new IOException("Resource not found: cursor-rules-processes/" + fileName);
+                        throw new IOException("Resource not found: cursor-rules-processes/.cursor/rules/" + fileName);
                     }
                     FileUtils.copyInputStreamToFile(resourceStream, rulesPath.resolve(fileName).toFile());
                 }
