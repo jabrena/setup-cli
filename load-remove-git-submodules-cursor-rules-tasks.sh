@@ -10,8 +10,8 @@ fi
 ACTION=$1
 
 # Define the submodule URL
-SUBMODULE_URL="https://github.com/jabrena/cursor-rules-processes"
-SUBMODULE_PATH="templates/cursor-rules-processes"
+SUBMODULE_URL="https://github.com/jabrena/cursor-rules-tasks"
+SUBMODULE_PATH="templates/cursor-rules-tasks"
 
 # Perform the action based on the first argument
 case $ACTION in

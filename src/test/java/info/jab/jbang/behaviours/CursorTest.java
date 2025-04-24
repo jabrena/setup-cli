@@ -39,7 +39,7 @@ class CursorTest {
         // Use lenient() to avoid UnnecessaryStubbingException
         lenient().doReturn(new ArrayList<>(List.of("test-rule.md"))).when(cursor).getProperties();
         lenient().doNothing().when(cursor).copyJavaCursorRulesToDirectory(any());
-        lenient().doNothing().when(cursor).copyProcessesCursorRulesToDirectory(any());
+        lenient().doNothing().when(cursor).copyTasksCursorRulesToDirectory(any());
     }
     
     @AfterEach

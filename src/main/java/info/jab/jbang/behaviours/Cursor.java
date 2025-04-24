@@ -31,12 +31,12 @@ public class Cursor implements Behaviour1 {
         }
 
         if(CursorOptions.isValidOption(parameter)) {
-            if(parameter.equals("processes")) {
+            if(parameter.equals("tasks")) {
                 List<String> ruleProcessesFiles = List.of(
                     "1000-create-prd.mdc",
                     "1001-generate-tasks-from-prd.mdc",
                     "1002-task-list.mdc");
-                copyProcessesCursorRulesToDirectory(ruleProcessesFiles);
+                    copyTasksCursorRulesToDirectory(ruleProcessesFiles);
             } else {
                 copyJavaCursorRulesToDirectory(ruleJavaFiles);
             }
@@ -73,9 +73,9 @@ public class Cursor implements Behaviour1 {
             // Copy rule files to the rules directory
             for (String fileName : ruleFiles) {
                 // Use the correct path found in the JAR, starting from root
-                try (InputStream resourceStream = getClass().getResourceAsStream("/cursor-rules-java/.cursor/rules/" + fileName)) {
+                try (InputStream resourceStream = getClass().getResourceAsStream("/cursor-rules-java/" + fileName)) {
                     if (resourceStream == null) {
-                        throw new IOException("Resource not found at /cursor-rules-java/.cursor/rules/: " + fileName);
+                        throw new IOException("Resource not found at /cursor-rules-java/: " + fileName);
                     }
                     FileUtils.copyInputStreamToFile(resourceStream, rulesPath.resolve(fileName).toFile());
                 }
@@ -85,7 +85,7 @@ public class Cursor implements Behaviour1 {
         }
     }
 
-    void copyProcessesCursorRulesToDirectory(List<String> ruleFiles) {
+    void copyTasksCursorRulesToDirectory(List<String> ruleFiles) {
         try {
             Path currentPath = Paths.get(System.getProperty("user.dir"));
             Path cursorPath = currentPath.resolve(".cursor");
@@ -96,9 +96,9 @@ public class Cursor implements Behaviour1 {
 
             // Copy rule files to the rules directory
             for (String fileName : ruleFiles) {
-                try (InputStream resourceStream = getClass().getResourceAsStream("/cursor-rules-processes/.cursor/rules/" + fileName)) {
+                try (InputStream resourceStream = getClass().getResourceAsStream("/cursor-rules-tasks/" + fileName)) {
                     if (resourceStream == null) {
-                        throw new IOException("Resource not found: cursor-rules-processes/.cursor/rules/" + fileName);
+                        throw new IOException("Resource not found: cursor-rules-tasks/" + fileName);
                     }
                     FileUtils.copyInputStreamToFile(resourceStream, rulesPath.resolve(fileName).toFile());
                 }

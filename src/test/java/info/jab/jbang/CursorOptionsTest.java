@@ -24,7 +24,7 @@ class CursorOptionsTest {
         }
         
         // Verify all expected values are present
-        assertThat(values).contains("java", "java-spring-boot", "java-quarkus", "processes");
+        assertThat(values).contains("java", "java-spring-boot", "java-quarkus", "tasks");
         assertThat(values).hasSize(4);
     }
     
@@ -34,7 +34,7 @@ class CursorOptionsTest {
         assertThat(CursorOptions.isValidOption("java")).isTrue();
         assertThat(CursorOptions.isValidOption("java-spring-boot")).isTrue();
         assertThat(CursorOptions.isValidOption("java-quarkus")).isTrue();
-        assertThat(CursorOptions.isValidOption("processes")).isTrue();
+        assertThat(CursorOptions.isValidOption("tasks")).isTrue();
         // Test with invalid options
         assertThat(CursorOptions.isValidOption("invalid-option")).isFalse();
         assertThat(CursorOptions.isValidOption("")).isFalse();

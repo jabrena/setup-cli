@@ -9,9 +9,10 @@ sdk env install
 
 # Update cursor rules in local
 ./load-remove-git-submodules-cursor-rules-java.sh r 
+./load-remove-git-submodules-cursor-rules-tasks.sh r 
 touch .gitmodules
 ./load-remove-git-submodules-cursor-rules-java.sh c
-./load-remove-git-submodules-cursor-rules-processes.sh c
+./load-remove-git-submodules-cursor-rules-tasks.sh c
 
 # Setup cli
 ./mvnw clean verify 
@@ -38,7 +39,7 @@ java -jar ./target/setup-0.7.0.jar init
 java -jar ./target/setup-0.7.0.jar init --help
 java -jar ./target/setup-0.7.0.jar init --devcontainer
 java -jar ./target/setup-0.7.0.jar init --cursor java
-java -jar ./target/setup-0.7.0.jar init --cursor processes
+java -jar ./target/setup-0.7.0.jar init --cursor tasks
 java -jar ./target/setup-0.7.0.jar init --cursor java-spring-boot
 java -jar ./target/setup-0.7.0.jar init --cursor java-quarkus
 java -jar ./target/setup-0.7.0.jar init --maven
