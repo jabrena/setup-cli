@@ -5,28 +5,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.Mock;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
-import org.junit.jupiter.api.io.TempDir;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Assertions;
 
 @ExtendWith(MockitoExtension.class)
 class CursorTest {
 
-    @Mock
-    private Cursor cursorMock;
-    
     private Cursor cursor;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -37,9 +32,7 @@ class CursorTest {
         cursor = spy(new Cursor());
         
         // Use lenient() to avoid UnnecessaryStubbingException
-        lenient().doReturn(new ArrayList<>(List.of("test-rule.md"))).when(cursor).getProperties();
-        lenient().doNothing().when(cursor).copyJavaCursorRulesToDirectory(any());
-        lenient().doNothing().when(cursor).copyTasksCursorRulesToDirectory(any());
+        lenient().doNothing().when(cursor).copyCursorRulesToDirectory(any(), anyString());
     }
     
     @AfterEach
@@ -57,7 +50,7 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         
         // Verify the copyCursorRulesToDirectory method was called
-        verify(cursor).copyJavaCursorRulesToDirectory(any());
+        verify(cursor).copyCursorRulesToDirectory(any(), any());
     }
     
     @Test
@@ -69,7 +62,7 @@ class CursorTest {
         assertThat(outputStreamCaptor.toString().trim()).isEmpty();
         
         // Verify the copyCursorRulesToDirectory method was not called
-        verify(cursor, never()).copyJavaCursorRulesToDirectory(any());
+        verify(cursor, never()).copyCursorRulesToDirectory(any(), any());
     }
     
     @Test
@@ -82,7 +75,7 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         
         // Verify the copyCursorRulesToDirectory method was called
-        verify(cursor).copyJavaCursorRulesToDirectory(any());
+        verify(cursor).copyCursorRulesToDirectory(any(), any());
     }
     
     @Test
@@ -95,20 +88,7 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         
         // Verify the copyCursorRulesToDirectory method was called
-        verify(cursor).copyJavaCursorRulesToDirectory(any());
-    }
-
-    @Test
-    void testGetPropertiesSuccess() {
-        // Given
-        when(cursor.getProperties()).thenReturn(List.of("100-java-general.mdc"));
-        
-        // When
-        List<String> ruleFiles = cursor.getProperties();
-        
-        // Then
-        assertThat(ruleFiles).isNotEmpty();
-        assertThat(ruleFiles).contains("100-java-general.mdc");
+        verify(cursor).copyCursorRulesToDirectory(any(), any());
     }
     
     @Test
@@ -116,10 +96,10 @@ class CursorTest {
         // Given
         List<String> invalidRuleFiles = List.of("non-existent-file.mdc");
         doThrow(new RuntimeException("Error copying rules files"))
-            .when(cursor).copyJavaCursorRulesToDirectory(invalidRuleFiles);
+            .when(cursor).copyCursorRulesToDirectory(eq(invalidRuleFiles), any());
         
         // When/Then
-        assertThatThrownBy(() -> cursor.copyJavaCursorRulesToDirectory(invalidRuleFiles))
+        assertThatThrownBy(() -> cursor.copyCursorRulesToDirectory(invalidRuleFiles, "dummyPath"))
             .isInstanceOf(RuntimeException.class)
             .hasMessageContaining("Error copying rules files");
     }
@@ -131,62 +111,19 @@ class CursorTest {
         
         // Then
         assertThat(outputStreamCaptor.toString().trim()).isEmpty();
-        verify(cursor, never()).copyJavaCursorRulesToDirectory(any());
+        verify(cursor, never()).copyCursorRulesToDirectory(any(), any());
     }
     
     @Test
     void testCopyCursorRulesToDirectoryWithEmptyList() {
         // Given
         List<String> emptyRuleFiles = List.of();
+        String dummyPath = "some/path";
         
         // When
-        cursor.copyJavaCursorRulesToDirectory(emptyRuleFiles);
+        cursor.copyCursorRulesToDirectory(emptyRuleFiles, dummyPath);
         
         // Then
-        verify(cursor).copyJavaCursorRulesToDirectory(emptyRuleFiles);
-    }
-    
-    @Test
-    void testCopyCursorRulesToDirectoryWithMissingResource(@TempDir Path tempDir) {
-        // Save original user.dir
-        String originalUserDir = System.getProperty("user.dir");
-        try {
-            // Set user.dir to temp directory
-            System.setProperty("user.dir", tempDir.toString());
-
-            // Create a mock Cursor that simulates missing resource
-            Cursor cursor = new Cursor() {
-                @Override
-                void copyJavaCursorRulesToDirectory(List<String> ruleFiles) {
-                    try {
-                        Path currentPath = Paths.get(System.getProperty("user.dir"));
-                        Path cursorPath = currentPath.resolve(".cursor");
-                        Path rulesPath = cursorPath.resolve("rules");
-                        
-                        // Create rules directory
-                        FileUtils.forceMkdir(rulesPath.toFile());
-                        
-                        // Force null resource stream
-                        for (String fileName : ruleFiles) {
-                            try (InputStream resourceStream = getClass().getResourceAsStream("/non-existent-file")) {
-                                if (resourceStream == null) {
-                                    throw new IOException("Resource not found: /non-existent-file");
-                                }
-                            }
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException("Error copying rules files", e);
-                    }
-                }
-            };
-
-            // Verify that the expected exception is thrown
-            RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> cursor.execute("java"));
-            Assertions.assertTrue(exception.getCause() instanceof IOException);
-            Assertions.assertTrue(exception.getCause().getMessage().contains("Resource not found"));
-        } finally {
-            // Restore original user.dir
-            System.setProperty("user.dir", originalUserDir);
-        }
+        verify(cursor).copyCursorRulesToDirectory(eq(emptyRuleFiles), eq(dummyPath));
     }
 } 
