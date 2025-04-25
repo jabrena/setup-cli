@@ -70,7 +70,7 @@ public class Cursor implements Behaviour1 {
             for (String fileName : ruleFiles) {
                 String resourcePath = resourceBasePath + fileName;
                 try (InputStream resourceStream = getClass().getResourceAsStream(resourcePath)) {
-                    if (resourceStream == null) {
+                    if (Objects.isNull(resourceStream)) {
                         throw new IOException("Resource not found at " + resourcePath);
                     }
                     FileUtils.copyInputStreamToFile(resourceStream, rulesPath.resolve(fileName).toFile());
