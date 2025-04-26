@@ -26,35 +26,35 @@ class DevContainerTest {
 
     @InjectMocks
     private DevContainer devContainer;
-    
+
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
-    
+
     @BeforeEach
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
     }
-    
+
     @AfterEach
     void tearDown() {
         System.setOut(originalOut);
     }
-    
+
     @Test
     void testExecute() {
         // Setup expected paths and files
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path expectedDevcontainerPath = currentPath.resolve(".devcontainer");
-        List<String> expectedFiles = List.of("Dockerfile", "devcontainer.json");
+        List<String> expectedFiles = List.of( "devcontainer.json");
         String expectedSourceDir = "devcontainer/";
 
         // Execute
         devContainer.execute();
-        
+
         // Verify the success message was printed
         assertThat(outputStreamCaptor.toString().trim())
             .contains("Devcontainer support added successfully");
-        
+
         // Verify the copyFilesToDirectory method was called with correct arguments
         verify(copyFiles).copyFilesToDirectory(expectedFiles, expectedSourceDir, expectedDevcontainerPath);
     }

@@ -28,32 +28,32 @@ public class DevContainer implements Behaviour0 {
     public void execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path devcontainerPath = currentPath.resolve(".devcontainer");
-        
-        List<String> files = List.of("Dockerfile", "devcontainer.json");
+
+        List<String> files = List.of("devcontainer.json");
 
         copyFiles.copyFilesToDirectory(files, "devcontainer/", devcontainerPath);
 
         System.out.println("Devcontainer support added successfully");
     }
-    
+
     /*
     void copyDevContainerFiles() {
         try {
             Path currentPath = Paths.get(System.getProperty("user.dir"));
             Path devcontainerPath = currentPath.resolve(".devcontainer");
-            
+
             // Clean existing .devcontainer directory if it exists
             if (Files.exists(devcontainerPath)) {
                 FileUtils.cleanDirectory(devcontainerPath.toFile());
             }
-            
+
             // Create .devcontainer directory if it doesn't exist
             FileUtils.forceMkdir(devcontainerPath.toFile());
-            
+
             // Copy files from resources/devcontainer to .devcontainer
             String resourcePath = "devcontainer/";
             String[] files = {"Dockerfile", "devcontainer.json"};
-            
+
             for (String fileName : files) {
                 try (InputStream resourceStream = getClass().getClassLoader().getResourceAsStream(resourcePath + fileName)) {
                     if (resourceStream == null) {
