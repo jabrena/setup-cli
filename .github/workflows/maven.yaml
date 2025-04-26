@@ -26,22 +26,6 @@ jobs:
         id: get_version
         run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
 
-      - name: Upload jar
-        uses: actions/upload-artifact@v4
-        with:
-          name: setup-${{ steps.get_version.outputs.VERSION }}.jar
-          path: |
-            ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar
-
-      - name: Verify .mdc files exist in jar
-        run: |
-          if jar tf ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar | grep -q "\.mdc"; then
-            echo "✅ .mdc files found in the jar"
-          else
-            echo "❌ No .mdc files found in the jar"
-            exit 1
-          fi
-
       - name: Test CLI commands
         run: |
           JAR_FILE="./target/setup-${{ steps.get_version.outputs.VERSION }}.jar"
@@ -62,6 +46,22 @@ jobs:
           java -jar $JAR_FILE init --editorconfig || exit 1
           java -jar $JAR_FILE init --sdkman || exit 1
           echo "✅ CLI commands executed successfully"
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: setup-${{ steps.get_version.outputs.VERSION }}.jar
+          path: |
+            ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar
+
+      - name: Verify .mdc files exist in jar
+        run: |
+          if jar tf ./target/setup-${{ steps.get_version.outputs.VERSION }}.jar | grep -q "\.mdc"; then
+            echo "✅ .mdc files found in the jar"
+          else
+            echo "❌ No .mdc files found in the jar"
+            exit 1
+          fi
 
       - name: Upload JaCoCo coverage reports
         uses: actions/upload-artifact@v4
