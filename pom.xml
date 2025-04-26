@@ -31,6 +31,10 @@
         <maven.compiler.version>3.14.0</maven.compiler.version>
         <maven.surefire.version>3.5.3</maven.surefire.version>
         <maven.jacoco.version>0.8.13</maven.jacoco.version>
+
+        <!-- Coverage -->
+        <coverage.lines>80</coverage.lines>
+        <coverage.branches>80</coverage.branches>
     </properties>
 
     <dependencyManagement>
@@ -355,12 +359,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.8</minimum><!-- Technical debt -->
+                                            <minimum>${coverage.lines}%</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.8</minimum><!-- Technical debt -->
+                                            <minimum>${coverage.branches}%</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

@@ -64,7 +64,7 @@ jbang setup@jabrena
 - https://www.cursor.com/
 - https://docs.cursor.com/context/rules-for-ai
 - https://github.com/jabrena/cursor-rules-java
-- https://github.com/jabrena/cursor-rules-processes
+- https://github.com/jabrena/cursor-rules-tasks
 - https://github.com/jabrena/jbang-catalog
 
 ### Developer links
@@ -80,3 +80,4 @@ jbang setup@jabrena
 - https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
 - https://docs.spring.io/spring-boot/cli/index.html
 - https://keepachangelog.com/en/1.1.0/
+- https://www.eclemma.org/jacoco/trunk/doc/maven.html
