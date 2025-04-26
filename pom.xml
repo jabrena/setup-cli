@@ -355,12 +355,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.65</minimum><!-- Technical debt -->
+                                            <minimum>0.8</minimum><!-- Technical debt -->
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.65</minimum><!-- Technical debt -->
+                                            <minimum>0.8</minimum><!-- Technical debt -->
                                         </limit>
                                     </limits>
                                 </rule>
