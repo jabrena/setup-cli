@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 public class Cursor implements Behaviour1 {
 
-    private static final String CURSOR_RULES_JAVA_PATH = "/cursor-rules-java/";
-    private static final String CURSOR_RULES_TASKS_PATH = "/cursor-rules-tasks/";
+    private static final String CURSOR_RULES_JAVA_PATH = "cursor-rules-java/";
+    private static final String CURSOR_RULES_TASKS_PATH = "cursor-rules-tasks/";
 
     // Instantiate CopyFiles
     private final CopyFiles copyFiles;

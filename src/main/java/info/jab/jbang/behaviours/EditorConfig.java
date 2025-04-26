@@ -1,33 +1,30 @@
 package info.jab.jbang.behaviours;
 
-import java.io.IOException;
-import java.io.InputStream;
+import info.jab.jbang.io.CopyFiles;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.commons.io.FileUtils;
+import java.util.List;
 
 public class EditorConfig implements Behaviour0 {
 
+    private final CopyFiles copyFiles;
+
+    public EditorConfig() {
+        this.copyFiles = new CopyFiles();
+    }
+
+    // Constructor for testing with a mock
+    EditorConfig(CopyFiles copyFiles) {
+        this.copyFiles = copyFiles;
+    }
+
     @Override
     public void execute() {
-        copyEditorConfigFiles();
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        List<String> files = List.of(".editorconfig");
+        // Use "." as the target path since .editorconfig should be at the root
+        copyFiles.copyFilesToDirectory(files, "editorconfig/", currentPath); 
         System.out.println("EditorConfig support added successfully");
-    }
-    
-    void copyEditorConfigFiles() {
-        try {
-            Path currentPath = Paths.get(System.getProperty("user.dir"));
-            Path editorConfigFile = currentPath.resolve(".editorconfig");
-            
-            // Copy .editorconfig from resources
-            try (InputStream resourceStream = getClass().getClassLoader().getResourceAsStream("editorconfig/.editorconfig")) {
-                if (resourceStream == null) {
-                    throw new IOException("Resource not found: editorconfig/.editorconfig");
-                }
-                FileUtils.copyInputStreamToFile(resourceStream, editorConfigFile.toFile());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Error copying EditorConfig file", e);
-        }
     }
 }

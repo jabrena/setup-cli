@@ -49,7 +49,7 @@ class CursorTest {
         assertThat(outputStreamCaptor.toString().trim())
             .contains("Cursor rules added successfully");
 
-        Mockito.verify(mockCopyFiles).copyFilesToDirectory(any(), eq("/cursor-rules-java/"), any(Path.class));
+        Mockito.verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
     }
     
     @Test
@@ -70,7 +70,7 @@ class CursorTest {
         assertThat(outputStreamCaptor.toString().trim())
             .contains("Cursor rules added successfully");
 
-        Mockito.verify(mockCopyFiles).copyFilesToDirectory(any(), eq("/cursor-rules-java/"), any(Path.class));
+        Mockito.verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
     }
     
     @Test
@@ -82,7 +82,7 @@ class CursorTest {
         assertThat(outputStreamCaptor.toString().trim())
             .contains("Cursor rules added successfully");
 
-        Mockito.verify(mockCopyFiles).copyFilesToDirectory(any(), eq("/cursor-rules-java/"), any(Path.class));
+        Mockito.verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
     }
     
     @Test
