@@ -23,7 +23,7 @@ public class EditorConfig implements Behaviour0 {
     public void execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         List<String> files = List.of(".editorconfig");
-        // Use "." as the target path since .editorconfig should be at the root
+        
         copyFiles.copyFilesToDirectory(files, "editorconfig/", currentPath); 
         System.out.println("EditorConfig support added successfully");
     }
