@@ -5,16 +5,38 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+
 import org.apache.commons.io.FileUtils;
+
+import info.jab.jbang.io.CopyFiles;
 
 public class DevContainer implements Behaviour0 {
 
+    private final CopyFiles copyFiles;
+
+    public DevContainer() {
+        this.copyFiles = new CopyFiles();
+    }
+
+    // Constructor for testing with a mock
+    DevContainer(CopyFiles copyFiles) {
+        this.copyFiles = copyFiles;
+    }
+
     @Override
     public void execute() {
-        copyDevContainerFiles();
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        Path devcontainerPath = currentPath.resolve(".devcontainer");
+        
+        List<String> files = List.of("Dockerfile", "devcontainer.json");
+
+        copyFiles.copyFilesToDirectory(files, "devcontainer/", devcontainerPath);
+
         System.out.println("Devcontainer support added successfully");
     }
     
+    /*
     void copyDevContainerFiles() {
         try {
             Path currentPath = Paths.get(System.getProperty("user.dir"));
@@ -44,4 +66,5 @@ public class DevContainer implements Behaviour0 {
             throw new RuntimeException("Error copying devcontainer files", e);
         }
     }
+    */
 }

@@ -1,12 +1,11 @@
 package info.jab.jbang.behaviours;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 import info.jab.jbang.CursorOptions;
+import info.jab.jbang.io.CopyFiles;
+
 import java.util.Objects;
 import java.util.ArrayList;
 
@@ -14,6 +13,18 @@ public class Cursor implements Behaviour1 {
 
     private static final String CURSOR_RULES_JAVA_PATH = "/cursor-rules-java/";
     private static final String CURSOR_RULES_TASKS_PATH = "/cursor-rules-tasks/";
+
+    // Instantiate CopyFiles
+    private final CopyFiles copyFiles;
+
+    public Cursor() {
+        this.copyFiles = new CopyFiles();
+    }
+
+    // Constructor for testing with a mock
+    Cursor(CopyFiles copyFiles) {
+        this.copyFiles = copyFiles;
+    }
 
     @Override
     public void execute(String parameter) {
@@ -53,31 +64,11 @@ public class Cursor implements Behaviour1 {
             Path rulesPath = cursorPath.resolve("rules");
 
             if(parameter.equals("tasks")) {
-                copyCursorRulesToDirectory(ruleProcessesFiles, CURSOR_RULES_TASKS_PATH, rulesPath);
+                copyFiles.copyFilesToDirectory(ruleProcessesFiles, CURSOR_RULES_TASKS_PATH, rulesPath);
             } else {
-                copyCursorRulesToDirectory(ruleJavaFiles, CURSOR_RULES_JAVA_PATH, rulesPath);
+                copyFiles.copyFilesToDirectory(ruleJavaFiles, CURSOR_RULES_JAVA_PATH, rulesPath);
             }
             System.out.println("Cursor rules added successfully");
-        }
-    }
-
-    protected void copyCursorRulesToDirectory(List<String> ruleFiles, String resourceBasePath, Path path) {
-        try {
-            // Create directory if it doesn't exist
-            FileUtils.forceMkdir(path.toFile());
-
-            // Copy rule files to the rules directory
-            for (String fileName : ruleFiles) {
-                String resourcePath = resourceBasePath + fileName;
-                try (InputStream resourceStream = getClass().getResourceAsStream(resourcePath)) {
-                    if (Objects.isNull(resourceStream)) {
-                        throw new IOException("Resource not found at " + resourcePath);
-                    }
-                    FileUtils.copyInputStreamToFile(resourceStream, path.resolve(fileName).toFile());
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Error copying rules files", e);
         }
     }
 }
