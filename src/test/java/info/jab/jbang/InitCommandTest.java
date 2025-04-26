@@ -207,12 +207,14 @@ class InitCommandTest {
     @Test
     void shouldExecuteCommandThroughMainMethod() throws Exception {
         // Given
+        setPrivateField(initCommand, "cursorOption", "java");
         String[] args = new String[]{"--cursor", "java"};
-        
+
         // When
-        int exitCode = new CommandLine(new InitCommand()).execute(args);
-        
+        int exitCode = new CommandLine(initCommand).execute(args);
+
         // Then
+        verify(mockCursor, times(1)).execute("java");
         assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
     }

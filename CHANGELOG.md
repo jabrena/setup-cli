@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0]
+
+### Added
+
+- Added initial cursor rules for Processes. Many thanks for the ideas from (https://x.com/ryancarson, https://x.com/elie2222 & https://x.com/EyalToledano)
+
 ## [0.6.1]
 
 ### Changed
@@ -42,5 +48,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improving Pipeline to reduce the maintenance
 - Added DevContainer support
 - Added Spring CLI support
-- Cursor rules update. Now all cursor rules has the extension .mdc
+- Cursor rules for Java update. Now all cursor rules has the extension .mdc
 - Added CHANGELOG.md

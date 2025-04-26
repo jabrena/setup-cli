@@ -26,6 +26,27 @@ jobs:
         id: get_version
         run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
 
+      - name: Test CLI commands
+        run: |
+          JAR_FILE="./target/setup-${{ steps.get_version.outputs.VERSION }}.jar"
+          echo "Testing CLI with $JAR_FILE"
+          java -jar $JAR_FILE --help
+          java -jar $JAR_FILE init --help
+          # Run basic init commands and check exit code
+          java -jar $JAR_FILE init || exit 1
+          java -jar $JAR_FILE init --devcontainer || exit 1
+          java -jar $JAR_FILE init --cursor java || exit 1
+          java -jar $JAR_FILE init --cursor tasks || exit 1
+          # java -jar $JAR_FILE init --cursor java-spring-boot || exit 1 # Potentially interactive/complex
+          # java -jar $JAR_FILE init --cursor java-quarkus || exit 1 # Potentially interactive/complex
+          java -jar $JAR_FILE init --maven || exit 1
+          java -jar $JAR_FILE init --spring-cli || exit 1
+          java -jar $JAR_FILE init --quarkus-cli || exit 1
+          java -jar $JAR_FILE init --github-action || exit 1
+          java -jar $JAR_FILE init --editorconfig || exit 1
+          java -jar $JAR_FILE init --sdkman || exit 1
+          echo "✅ CLI commands executed successfully"
+
       - name: Upload jar
         uses: actions/upload-artifact@v4
         with:

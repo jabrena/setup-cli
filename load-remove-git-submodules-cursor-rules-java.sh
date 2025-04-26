@@ -10,8 +10,8 @@ fi
 ACTION=$1
 
 # Define the submodule URL
-SUBMODULE_URL="https://github.com/jabrena/java-cursor-rules"
-SUBMODULE_PATH="templates/java-cursor-rules"
+SUBMODULE_URL="https://github.com/jabrena/cursor-rules-java"
+SUBMODULE_PATH="templates/cursor-rules-java"
 
 # Perform the action based on the first argument
 case $ACTION in

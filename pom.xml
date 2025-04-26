@@ -6,19 +6,22 @@
 
     <groupId>info.jab.jbang</groupId>
     <artifactId>setup</artifactId>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
 
     <properties>
         <java.version>24</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <!-- Dependencies -->
-        <picocli.version>4.7.6</picocli.version>
+        <picocli.version>4.7.7</picocli.version>
+        <commons-io.version>2.19.0</commons-io.version>
+        <commons-exec.version>1.4.0</commons-exec.version>
+        
+        <!-- Test dependencies -->
+        <mockito.version>5.17.0</mockito.version>
         <junit.version>5.12.0</junit.version>
         <assertj.version>3.27.3</assertj.version>
-        <commons-io.version>2.18.0</commons-io.version>
-        <mockito.version>5.17.0</mockito.version>
-
+        
         <!-- Maven Plugins -->
         <maven.enforcer.version>3.5.0</maven.enforcer.version>
         <maven.jar.version>3.4.2</maven.jar.version>
@@ -28,6 +31,10 @@
         <maven.compiler.version>3.14.0</maven.compiler.version>
         <maven.surefire.version>3.5.3</maven.surefire.version>
         <maven.jacoco.version>0.8.13</maven.jacoco.version>
+
+        <!-- Coverage -->
+        <coverage.lines>80</coverage.lines>
+        <coverage.branches>80</coverage.branches>
     </properties>
 
     <dependencyManagement>
@@ -55,6 +62,13 @@
             <version>${commons-io.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>dev.jbang</groupId>
+            <artifactId>jash</artifactId>
+            <version>0.0.3</version>
+        </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -203,22 +217,44 @@
                 <version>3.3.1</version>
                 <executions>
                     <execution>
-                        <id>copy-rules</id>
+                        <id>copy-cursor-rules-java</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/java</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-java</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>templates/java-cursor-rules</directory>
+                                    <directory>templates/cursor-rules-java</directory>
                                     <filtering>false</filtering>
                                     <excludes>
                                         <exclude>.gitignore</exclude>
                                         <exclude>LICENSE</exclude>
                                         <exclude>README.md</exclude>
                                         <exclude>docs/**</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-cursor-rules-processes</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-tasks</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>templates/cursor-rules-tasks</directory>
+                                    <filtering>false</filtering>
+                                    <excludes>
+                                        <exclude>.gitignore</exclude>
+                                        <exclude>LICENSE</exclude>
+                                        <exclude>*.md</exclude>
+                                        <exclude>*.png</exclude>
                                     </excludes>
                                 </resource>
                             </resources>
@@ -323,12 +359,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.75</minimum><!-- Technical debt -->
+                                            <minimum>${coverage.lines}%</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.75</minimum><!-- Technical debt -->
+                                            <minimum>${coverage.branches}%</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

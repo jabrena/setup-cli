@@ -1,12 +1,22 @@
 package info.jab.jbang.behaviours;
 
-import java.io.IOException;
-import java.io.InputStream;
+import info.jab.jbang.io.CopyFiles;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.commons.io.FileUtils;
+import java.util.List;
 
 public class Sdkman implements Behaviour0 {
+
+    private final CopyFiles copyFiles;
+
+    public Sdkman() {
+        this.copyFiles = new CopyFiles();
+    }
+
+    // Constructor for testing with a mock
+    Sdkman(CopyFiles copyFiles) {
+        this.copyFiles = copyFiles;
+    }
 
     @Override
     public void execute() {
@@ -15,19 +25,10 @@ public class Sdkman implements Behaviour0 {
     }
     
     void copySdkmanFiles() {
-        try {
-            Path currentPath = Paths.get(System.getProperty("user.dir"));
-            Path sdkmanFile = currentPath.resolve(".sdkmanrc");
-            
-            // Copy .sdkmanrc from resources
-            try (InputStream resourceStream = getClass().getClassLoader().getResourceAsStream("sdkman/.sdkmanrc")) {
-                if (resourceStream == null) {
-                    throw new IOException("Resource not found: sdkman/.sdkmanrc");
-                }
-                FileUtils.copyInputStreamToFile(resourceStream, sdkmanFile.toFile());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Error copying SDKMAN file", e);
-        }
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        List<String> files = List.of(".sdkmanrc");
+        String resourcePath = "sdkman/";
+
+        copyFiles.copyFilesToDirectory(files, resourcePath, currentPath);
     }
 }
