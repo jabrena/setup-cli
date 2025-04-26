@@ -48,23 +48,23 @@ public class Cursor implements Behaviour1 {
         }
 
         if(CursorOptions.isValidOption(parameter)) {
+            Path currentPath = Paths.get(System.getProperty("user.dir"));
+            Path cursorPath = currentPath.resolve(".cursor");
+            Path rulesPath = cursorPath.resolve("rules");
+
             if(parameter.equals("tasks")) {
-                copyCursorRulesToDirectory(ruleProcessesFiles, CURSOR_RULES_TASKS_PATH);
+                copyCursorRulesToDirectory(ruleProcessesFiles, CURSOR_RULES_TASKS_PATH, rulesPath);
             } else {
-                copyCursorRulesToDirectory(ruleJavaFiles, CURSOR_RULES_JAVA_PATH);
+                copyCursorRulesToDirectory(ruleJavaFiles, CURSOR_RULES_JAVA_PATH, rulesPath);
             }
             System.out.println("Cursor rules added successfully");
         }
     }
 
-    protected void copyCursorRulesToDirectory(List<String> ruleFiles, String resourceBasePath) {
+    protected void copyCursorRulesToDirectory(List<String> ruleFiles, String resourceBasePath, Path path) {
         try {
-            Path currentPath = Paths.get(System.getProperty("user.dir"));
-            Path cursorPath = currentPath.resolve(".cursor");
-            Path rulesPath = cursorPath.resolve("rules");
-
-            // Create rules directory if it doesn't exist
-            FileUtils.forceMkdir(rulesPath.toFile());
+            // Create directory if it doesn't exist
+            FileUtils.forceMkdir(path.toFile());
 
             // Copy rule files to the rules directory
             for (String fileName : ruleFiles) {
@@ -73,7 +73,7 @@ public class Cursor implements Behaviour1 {
                     if (Objects.isNull(resourceStream)) {
                         throw new IOException("Resource not found at " + resourcePath);
                     }
-                    FileUtils.copyInputStreamToFile(resourceStream, rulesPath.resolve(fileName).toFile());
+                    FileUtils.copyInputStreamToFile(resourceStream, path.resolve(fileName).toFile());
                 }
             }
         } catch (IOException e) {
