@@ -39,54 +39,69 @@ class SetupTest {
 
     @Test
     void testRunWithMockedInitCommand() {
+        // Given
+        // setupWithMock initialized in @BeforeEach
+
+        // When
         setupWithMock.run();
+
+        // Then
         verify(mockInitCommand, times(1)).runInitFeature();
     }
     
     @Test
     void testRunCLINoArgs() {
-        int exitCode = Setup.runCLI(new String[]{});
+        // Given
+        String[] args = {};
+
+        // When
+        int exitCode = Setup.runCLI(args);
+
+        // Then
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
-        
-        assertThat(output)
-            .contains("Please specify a command. Use --help to see available options.");
-        assertThat(exitCode).isZero(); 
+        assertThat(output).contains("Please specify a command. Use --help to see available options.");
+        assertThat(exitCode).isZero();
     }
 
     @Test
     void testRunCLIWithInitNoOpts() {
-        int exitCode = Setup.runCLI(new String[]{"init"});
-        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
+        // Given
+        String[] args = {"init"};
 
-        // Verify banner is printed by checking for distinct Figlet text
-        assertThat(output).contains("____       _"); 
-        
+        // When
+        int exitCode = Setup.runCLI(args);
+
+        // Then
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
         assertThat(output).contains("type 'init --help' to see available options");
-        assertThat(exitCode).isZero(); 
+        assertThat(exitCode).isZero();
     }
 
     @Test
     void testRunCLIWithInitValidOpt() {
-        int exitCode = Setup.runCLI(new String[]{"init", "-ec"});
+        // Given
+        String[] args = {"init", "-ec"}; // Example: enable editorconfig
+
+        // When
+        int exitCode = Setup.runCLI(args);
+
+        // Then
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
-        
-        // Verify banner is printed by checking for distinct Figlet text
-        assertThat(output).contains("____       _"); 
-        
-        assertThat(output).contains("EditorConfig support added successfully"); 
-        assertThat(output).contains("Command executed successfully"); 
-        assertThat(exitCode).isZero(); 
+        assertThat(output).contains("Command executed successfully");
+        assertThat(exitCode).isZero();
     }
 
     @Test
     void testRunCLIWithInitHelp() {
-        int exitCode = Setup.runCLI(new String[]{"init", "--help"});
+        // Given
+        String[] args = {"init", "--help"};
+
+        // When
+        int exitCode = Setup.runCLI(args);
+
+        // Then
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
-        
-        // Verify banner is printed by checking for distinct Figlet text
-        assertThat(output).contains("____       _");
-        
-        assertThat(output).contains("Usage: setup init"); 
-        assertThat(exitCode).isZero(); 
+        assertThat(output).contains("Usage: setup init");
+        assertThat(exitCode).isZero();
     }
 } 

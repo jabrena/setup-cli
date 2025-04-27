@@ -82,9 +82,13 @@ class SpringCliTest {
 
     @Test
     void testExecute() {
-        // Execute
+        // Given
+        // No specific setup needed
+
+        // When
         springCli.execute();
-        
+
+        // Then
         // Verify the output contains the required information
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
         assertThat(output).contains("spring init");

@@ -69,7 +69,7 @@ class GithubActionTest {
         doThrow(new RuntimeException("Simulated copy error"))
                 .when(copyFilesMock).copyFilesToDirectory(eq(expectedFiles), eq(expectedResourcePath), eq(expectedPath));
 
-        // When & Then
+        // When / Then
         assertThatThrownBy(() -> githubAction.execute())
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Simulated copy error");

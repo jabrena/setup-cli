@@ -46,15 +46,16 @@ class EditorConfigTest {
 
     @Test
     void testExecute() {
-        // Arrange
+        // Given
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         List<String> expectedFiles = List.of(".editorconfig");
         String expectedResourcePath = "editorconfig/";
         doNothing().when(copyFilesMock).copyFilesToDirectory(expectedFiles, expectedResourcePath, currentPath);
 
-        // Execute
+        // When
         editorConfig.execute();
 
+        // Then
         // Verify the success message was printed
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("EditorConfig support added successfully");
@@ -65,12 +66,13 @@ class EditorConfigTest {
 
     @Test
     void testExecuteWithCopyException() {
-        // Arrange
+        // Given
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         List<String> expectedFiles = List.of(".editorconfig");
         String expectedResourcePath = "editorconfig/";
         doThrow(new RuntimeException("Error copying files")).when(copyFilesMock).copyFilesToDirectory(expectedFiles, expectedResourcePath, currentPath);
 
+        // When / Then
         // Verify that the exception is properly handled
         assertThatThrownBy(() -> editorConfig.execute())
             .isInstanceOf(RuntimeException.class)
@@ -79,6 +81,7 @@ class EditorConfigTest {
 
     @Test
     void testCopyEditorConfigFiles(@TempDir Path tempDir) throws IOException {
+        // Given
         // Save the original user.dir
         String originalUserDir = System.getProperty("user.dir");
 
@@ -89,9 +92,10 @@ class EditorConfigTest {
             // Create an EditorConfig instance with a real CopyFiles
             EditorConfig realEditorConfig = new EditorConfig();
 
-            // Execute the method
+            // When
             realEditorConfig.execute();
 
+            // Then
             // Verify that the .editorconfig file was created
             Path editorconfigFile = tempDir.resolve(".editorconfig");
             assertThat(Files.exists(editorconfigFile)).isTrue();

@@ -43,15 +43,17 @@ class DevContainerTest {
 
     @Test
     void testExecute() {
+        // Given
         // Setup expected paths and files
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path expectedDevcontainerPath = currentPath.resolve(".devcontainer");
         List<String> expectedFiles = List.of( "devcontainer.json");
         String expectedSourceDir = "devcontainer/";
 
-        // Execute
+        // When
         devContainer.execute();
 
+        // Then
         // Verify the success message was printed
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Devcontainer support added successfully");

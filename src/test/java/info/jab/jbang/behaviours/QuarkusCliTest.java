@@ -28,9 +28,13 @@ class QuarkusCliTest {
     
     @Test
     void testExecute() {
-        // Execute
+        // Given
+        // No specific setup needed
+
+        // When
         quarkusCli.execute();
-        
+
+        // Then
         // Verify the output contains the required information
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
         assertThat(output).contains("quarkus create app");

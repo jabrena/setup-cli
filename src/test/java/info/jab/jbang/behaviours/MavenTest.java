@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
@@ -34,9 +33,13 @@ class MavenTest {
     
     @Test
     void testExecute() {
-        // Execute
+        // Given
+        // No specific setup needed for this simple print test
+
+        // When
         maven.execute();
-        
+
+        // Then
         // Verify the output contains the required information
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
         assertThat(output).contains("mvn archetype:generate");

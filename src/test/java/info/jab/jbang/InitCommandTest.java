@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -83,6 +84,9 @@ class InitCommandTest {
 
     @Test
     void shouldShowHelpMessageWhenNoOptionsProvided() {
+        // Given
+        // No specific setup, command initialized in @BeforeEach
+
         // When
         String result = initCommand.runInitFeature();
 
@@ -94,10 +98,10 @@ class InitCommandTest {
     @Test
     void shouldExecuteDevContainerFeature() throws Exception {
         // Given
-        //setPrivateField(initCommand, "devcontainerOption", true);
+        String[] args = {"--devcontainer"};
 
         // When
-        int exitCode = cmd.execute("--devcontainer");
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockDevContainer, times(1)).execute();
@@ -108,10 +112,10 @@ class InitCommandTest {
     @Test
     void shouldExecuteMavenFeature() throws Exception {
         // Given
-        //setPrivateField(initCommand, "mavenOption", true);
+        String[] args = {"--maven"};
 
         // When
-        int exitCode = cmd.execute("--maven");
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockMaven, times(1)).execute();
@@ -122,10 +126,10 @@ class InitCommandTest {
     @Test
     void shouldExecuteSpringCliFeature() throws Exception {
         // Given
-        //setPrivateField(initCommand, "springCliOption", true);
+        String[] args = {"--spring-cli"};
 
         // When
-        int exitCode = cmd.execute("--spring-cli");
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockSpringCli, times(1)).execute();
@@ -136,10 +140,10 @@ class InitCommandTest {
     @Test
     void shouldExecuteGithubActionFeature() throws Exception {
         // Given
-        //setPrivateField(initCommand, "githubActionOption", true);
+        String[] args = {"--github-action"};
 
         // When
-        int exitCode = cmd.execute("--github-action");
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockGithubAction, times(1)).execute();
@@ -148,13 +152,13 @@ class InitCommandTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"java", "java-spring-boot"})
+    @MethodSource("info.jab.jbang.CursorOptions#getOptions")
     void shouldExecuteCursorFeatureWithValidOptions(String validOption) throws Exception {
         // Given
-        //setPrivateField(initCommand, "cursorOption", validOption);
+        String[] args = {"--cursor", validOption};
 
         // When
-        int exitCode = cmd.execute("--cursor", validOption);
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockCursor, times(1)).execute(validOption);
@@ -166,31 +170,28 @@ class InitCommandTest {
     @ValueSource(strings = {"invalid", "not-supported"})
     void shouldNotExecuteCursorFeatureWithInvalidOptions(String invalidOption) throws Exception {
         // Given
-        //setPrivateField(initCommand, "cursorOption", invalidOption);
+        String[] args = {"--cursor", invalidOption};
 
         // When
-        int exitCode = cmd.execute("--cursor", invalidOption);
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockCursor, never()).execute(any());
-        assertThat(exitCode).isEqualTo(0);
+        assertThat(exitCode).isEqualTo(0); // Picocli handles invalid param gracefully? Check behaviour.
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
     @Test
     void shouldExecuteAllFeaturesWhenAllOptionsEnabled() throws Exception {
         // Given
-        //setPrivateField(initCommand, "devcontainerOption", true);
-        //setPrivateField(initCommand, "mavenOption", true);
-        //setPrivateField(initCommand, "springCliOption", true);
-        //setPrivateField(initCommand, "githubActionOption", true);
-        //setPrivateField(initCommand, "cursorOption", "java");
         String[] args = {
-            "--devcontainer", 
-            "--maven", 
-            "--spring-cli", 
-            "--github-action", 
-            "--cursor", "java"
+            "--devcontainer",
+            "--maven",
+            "--spring-cli",
+            "--github-action",
+            "--cursor", "java",
+            "--editorconfig",
+            "--sdkman"
         };
 
         // When
@@ -202,6 +203,8 @@ class InitCommandTest {
         verify(mockSpringCli, times(1)).execute();
         verify(mockGithubAction, times(1)).execute();
         verify(mockCursor, times(1)).execute("java");
+        verify(mockEditorConfig, times(1)).execute();
+        verify(mockSdkman, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
@@ -213,17 +216,17 @@ class InitCommandTest {
         CommandLine spyCmd = new CommandLine(spyCommand);
 
         // When
-        spyCmd.execute();
+        spyCmd.execute(); // No args, should trigger runInitFeature
 
         // Then
         verify(spyCommand, times(1)).run();
+        verify(spyCommand, times(1)).runInitFeature();
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("type 'init --help' to see available options");
     }
 
     @Test
     void shouldExecuteCommandThroughMainMethod() throws Exception {
         // Given
-        //setPrivateField(initCommand, "cursorOption", "java");
         String[] args = new String[]{"--cursor", "java"};
 
         // When
