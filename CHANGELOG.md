@@ -9,7 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Centralized implementation for IO operations
+- Added initial cursor rules for Unit Testing & Integration Test for Java
 - Added initial cursor rules for Processes. Many thanks for the ideas from (https://x.com/ryancarson, https://x.com/elie2222 & https://x.com/EyalToledano)
+
+### Changed
+
+- Simplified support for Devcontainers
+- Improved Tests
+- Improved compilation with Error-prone support
 
 ## [0.6.1]
 
