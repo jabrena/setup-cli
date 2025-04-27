@@ -71,11 +71,6 @@
             <artifactId>JColor</artifactId>
             <version>${jcolor.version}</version>
         </dependency>
-        <dependency>
-            <groupId>dev.jbang</groupId>
-            <artifactId>jash</artifactId>
-            <version>${jash.version}</version>
-        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
