@@ -142,7 +142,7 @@
                     <release>${java.version}</release>
                     <showWarnings>true</showWarnings>
                     <fork>true</fork> <!-- Required for JDK16+ -->
-                    <compilerArgs combine.children="append">
+                    <compilerArgs>
                         <arg>-Werror</arg>
                         <arg>-Xlint:all</arg>
                         
