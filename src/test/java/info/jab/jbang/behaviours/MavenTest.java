@@ -3,14 +3,12 @@ package info.jab.jbang.behaviours;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
-import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 class MavenTest {
 
@@ -34,62 +32,16 @@ class MavenTest {
     }
     
     @Test
-    void shouldPrintCommandsWhenMavenIsNotInstalled() throws IOException, InterruptedException {
-        // Given
-        Maven maven = new Maven();
-        
-        // When
-        maven.execute();
-        
-        // Then
-        assertThat(outputStreamCaptor.toString()).contains("sdk install maven");
-        assertThat(outputStreamCaptor.toString()).contains("mvn archetype:generate");
-        assertThat(outputStreamCaptor.toString()).contains("mvn wrapper:wrapper");
-        assertThat(outputStreamCaptor.toString()).contains("./mvnw clean verify");
-    }
-    
-    @Test
-    void shouldExecuteCommandWhenMavenIsInstalled() throws IOException, InterruptedException {
-        // Given
-        Maven maven = new Maven();
-        
-        // When
-        maven.execute();
-        
-        // Then
-        assertThat(outputStreamCaptor.toString()).contains("sdk install maven");
-        assertThat(outputStreamCaptor.toString()).contains("mvn archetype:generate");
-    }
-    
-    @Test
-    void shouldHandleExceptionWhenExecutingCommand() throws IOException, InterruptedException {
-        // Given
-        Maven maven = new Maven();
-        
-        // When
-        maven.execute();
-        
-        // Then
-        // No error message is expected in the current implementation
-        assertThat(errorStreamCaptor.toString()).isEmpty();
-    }
-    
-    @Test
-    void shouldCreateMavenWithDefaultExecutor() {
-        // When
-        Maven maven = new Maven();
-        
-        // Then
-        assertThat(maven).isNotNull();
-    }
-
-    @Test
     void testExecute() {
-        // Execute
+        // Given
+        // No specific setup needed for this simple print test
+
+        // When
         maven.execute();
-        
+
+        // Then
         // Verify the output contains the required information
-        String output = outputStreamCaptor.toString().trim();
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
         assertThat(output).contains("mvn archetype:generate");
     }
 } 

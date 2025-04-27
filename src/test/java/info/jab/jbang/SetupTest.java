@@ -9,9 +9,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
+import java.nio.charset.StandardCharsets;
 
 @ExtendWith(MockitoExtension.class)
 class SetupTest {
@@ -19,7 +19,7 @@ class SetupTest {
     @Mock
     private InitCommand mockInitCommand;
 
-    private Setup setup;
+    private Setup setupWithMock;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
@@ -28,8 +28,7 @@ class SetupTest {
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         System.setErr(new PrintStream(outputStreamCaptor));
-        // Inject the mocked InitCommand
-        setup = new Setup(mockInitCommand);
+        setupWithMock = new Setup(mockInitCommand);
     }
 
     @AfterEach
@@ -39,31 +38,70 @@ class SetupTest {
     }
 
     @Test
-    void testWithMockedInitCommand() {
-        // Set up expectations for the mock
-        when(mockInitCommand.runInitFeature()).thenReturn("0");
-        
-        // Execute the method being tested
-        setup.run();
-        
-        // Verify the mock was called exactly once
+    void testRunWithMockedInitCommand() {
+        // Given
+        // setupWithMock initialized in @BeforeEach
+
+        // When
+        setupWithMock.run();
+
+        // Then
         verify(mockInitCommand, times(1)).runInitFeature();
-        
-        // Verify output contains expected text
-        assertThat(outputStreamCaptor.toString().trim())
-            .contains("Setup is a CLI utility designed to help developers when they start working with a new repository.");
     }
     
     @Test
-    void testDefaultConstructor() {
-        // Create a setup with the default constructor
-        Setup setupDefault = new Setup();
-        
-        // Execute the run method
-        setupDefault.run();
-        
-        // Verify expected output
-        assertThat(outputStreamCaptor.toString().trim())
-            .contains("Setup is a CLI utility designed to help developers when they start working with a new repository.");
+    void testRunCLINoArgs() {
+        // Given
+        String[] args = {};
+
+        // When
+        int exitCode = Setup.runCLI(args);
+
+        // Then
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
+        assertThat(output).contains("Please specify a command. Use --help to see available options.");
+        assertThat(exitCode).isZero();
+    }
+
+    @Test
+    void testRunCLIWithInitNoOpts() {
+        // Given
+        String[] args = {"init"};
+
+        // When
+        int exitCode = Setup.runCLI(args);
+
+        // Then
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
+        assertThat(output).contains("type 'init --help' to see available options");
+        assertThat(exitCode).isZero();
+    }
+
+    @Test
+    void testRunCLIWithInitValidOpt() {
+        // Given
+        String[] args = {"init", "-ec"}; // Example: enable editorconfig
+
+        // When
+        int exitCode = Setup.runCLI(args);
+
+        // Then
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
+        assertThat(output).contains("Command executed successfully");
+        assertThat(exitCode).isZero();
+    }
+
+    @Test
+    void testRunCLIWithInitHelp() {
+        // Given
+        String[] args = {"init", "--help"};
+
+        // When
+        int exitCode = Setup.runCLI(args);
+
+        // Then
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
+        assertThat(output).contains("Usage: setup init");
+        assertThat(exitCode).isZero();
     }
 } 

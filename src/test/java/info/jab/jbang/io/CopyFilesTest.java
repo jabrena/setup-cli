@@ -97,7 +97,7 @@ class CopyFilesTest {
     @Test
     void shouldThrowRuntimeExceptionWhenDirectoryCreationFails() throws IOException {
         // Given
-        Files.createFile(rulesDir);
+        Files.createFile(rulesDir); // Target path is a file, not a directory
         List<String> ruleFiles = List.of("rule1.mdc");
         String resourceBasePath = "any/copyfiles/path/";
 

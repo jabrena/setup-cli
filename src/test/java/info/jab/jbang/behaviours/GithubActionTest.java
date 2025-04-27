@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -55,7 +56,7 @@ class GithubActionTest {
 
         // Then
         verify(copyFilesMock).copyFilesToDirectory(eq(expectedFiles), eq(expectedResourcePath), eq(expectedPath));
-        assertThat(outputStreamCaptor.toString().trim())
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .isEqualTo("GitHub Actions workflow added successfully");
     }
 
@@ -68,13 +69,13 @@ class GithubActionTest {
         doThrow(new RuntimeException("Simulated copy error"))
                 .when(copyFilesMock).copyFilesToDirectory(eq(expectedFiles), eq(expectedResourcePath), eq(expectedPath));
 
-        // When & Then
+        // When / Then
         assertThatThrownBy(() -> githubAction.execute())
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Simulated copy error");
 
         // Verify no success message was printed
-        assertThat(outputStreamCaptor.toString().trim()).isEmpty();
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEmpty();
     }
 
     // Test the real file copy logic (integration-like test)
@@ -112,7 +113,7 @@ class GithubActionTest {
             assertThat(mavenYamlContent).contains("Maven");
 
             // Verify console output
-            assertThat(outputStreamCaptor.toString().trim())
+            assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
                 .isEqualTo("GitHub Actions workflow added successfully");
 
         } finally {

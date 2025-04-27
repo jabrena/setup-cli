@@ -40,6 +40,8 @@ public class Cursor implements Behaviour1 {
             "103-java-data-oriented-programming.mdc",
             "104-java-logging.mdc",
             "105-java-modern-features.mdc",
+            "106-java-unit-testing.mdc",
+            "107-java-integration-testing.mdc",
             "201-book-effective-java.mdc",
             "202-book-pragmatic-unit-testing.mdc",
             "203-book-refactoring.mdc"

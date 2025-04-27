@@ -3,14 +3,12 @@ package info.jab.jbang.behaviours;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
-import org.mockito.Mockito;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 class SpringCliTest {
 
@@ -42,9 +40,9 @@ class SpringCliTest {
         springCli.execute();
         
         // Then
-        assertThat(outputStreamCaptor.toString()).contains("sdk install springboot");
-        assertThat(outputStreamCaptor.toString()).contains("spring init -d=web,actuator,devtools");
-        assertThat(outputStreamCaptor.toString()).contains("./mvnw clean verify");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("sdk install springboot");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("spring init -d=web,actuator,devtools");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("./mvnw clean verify");
     }
     
     @Test
@@ -56,8 +54,8 @@ class SpringCliTest {
         springCli.execute();
         
         // Then
-        assertThat(outputStreamCaptor.toString()).contains("sdk install springboot");
-        assertThat(outputStreamCaptor.toString()).contains("spring init");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("sdk install springboot");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("spring init");
     }
     
     @Test
@@ -70,7 +68,7 @@ class SpringCliTest {
         
         // Then
         // No error message is expected in the current implementation
-        assertThat(errorStreamCaptor.toString()).isEmpty();
+        assertThat(errorStreamCaptor.toString(StandardCharsets.UTF_8)).isEmpty();
     }
     
     @Test
@@ -84,11 +82,15 @@ class SpringCliTest {
 
     @Test
     void testExecute() {
-        // Execute
+        // Given
+        // No specific setup needed
+
+        // When
         springCli.execute();
-        
+
+        // Then
         // Verify the output contains the required information
-        String output = outputStreamCaptor.toString().trim();
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
         assertThat(output).contains("spring init");
     }
 } 

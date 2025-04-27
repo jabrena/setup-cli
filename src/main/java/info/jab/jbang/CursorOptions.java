@@ -28,4 +28,8 @@ public class CursorOptions implements Iterable<String> {
         }
         return OPTIONS.contains(parameter);
     }
+
+    public static List<String> getOptions() {
+        return OPTIONS;
+    }
 }

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,7 +21,7 @@ import picocli.CommandLine;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -55,6 +56,7 @@ class InitCommandTest {
     private InitCommand initCommand;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private CommandLine cmd;
 
     @BeforeEach
     void setUp() {
@@ -72,6 +74,7 @@ class InitCommandTest {
 
         // Capture console output for assertions
         System.setOut(new PrintStream(outputStreamCaptor));
+        cmd = new CommandLine(initCommand);
     }
 
     @AfterEach
@@ -81,6 +84,9 @@ class InitCommandTest {
 
     @Test
     void shouldShowHelpMessageWhenNoOptionsProvided() {
+        // Given
+        // No specific setup, command initialized in @BeforeEach
+
         // When
         String result = initCommand.runInitFeature();
 
@@ -92,94 +98,104 @@ class InitCommandTest {
     @Test
     void shouldExecuteDevContainerFeature() throws Exception {
         // Given
-        setPrivateField(initCommand, "devcontainerOption", true);
+        String[] args = {"--devcontainer"};
 
         // When
-        String result = initCommand.runInitFeature();
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockDevContainer, times(1)).execute();
-        assertThat(result).isEqualTo("Command executed successfully");
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
     @Test
     void shouldExecuteMavenFeature() throws Exception {
         // Given
-        setPrivateField(initCommand, "mavenOption", true);
+        String[] args = {"--maven"};
 
         // When
-        String result = initCommand.runInitFeature();
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockMaven, times(1)).execute();
-        assertThat(result).isEqualTo("Command executed successfully");
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
     @Test
     void shouldExecuteSpringCliFeature() throws Exception {
         // Given
-        setPrivateField(initCommand, "springCliOption", true);
+        String[] args = {"--spring-cli"};
 
         // When
-        String result = initCommand.runInitFeature();
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockSpringCli, times(1)).execute();
-        assertThat(result).isEqualTo("Command executed successfully");
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
     @Test
     void shouldExecuteGithubActionFeature() throws Exception {
         // Given
-        setPrivateField(initCommand, "githubActionOption", true);
+        String[] args = {"--github-action"};
 
         // When
-        String result = initCommand.runInitFeature();
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockGithubAction, times(1)).execute();
-        assertThat(result).isEqualTo("Command executed successfully");
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"java", "java-spring-boot"})
+    @MethodSource("info.jab.jbang.CursorOptions#getOptions")
     void shouldExecuteCursorFeatureWithValidOptions(String validOption) throws Exception {
         // Given
-        setPrivateField(initCommand, "cursorOption", validOption);
+        String[] args = {"--cursor", validOption};
 
         // When
-        String result = initCommand.runInitFeature();
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockCursor, times(1)).execute(validOption);
-        assertThat(result).isEqualTo("Command executed successfully");
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"invalid", "not-supported"})
     void shouldNotExecuteCursorFeatureWithInvalidOptions(String invalidOption) throws Exception {
         // Given
-        setPrivateField(initCommand, "cursorOption", invalidOption);
+        String[] args = {"--cursor", invalidOption};
 
         // When
-        String result = initCommand.runInitFeature();
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockCursor, never()).execute(any());
-        assertThat(result).isEqualTo("Command executed successfully");
+        assertThat(exitCode).isEqualTo(0); // Picocli handles invalid param gracefully? Check behaviour.
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
     @Test
     void shouldExecuteAllFeaturesWhenAllOptionsEnabled() throws Exception {
         // Given
-        setPrivateField(initCommand, "devcontainerOption", true);
-        setPrivateField(initCommand, "mavenOption", true);
-        setPrivateField(initCommand, "springCliOption", true);
-        setPrivateField(initCommand, "githubActionOption", true);
-        setPrivateField(initCommand, "cursorOption", "java");
+        String[] args = {
+            "--devcontainer",
+            "--maven",
+            "--spring-cli",
+            "--github-action",
+            "--cursor", "java",
+            "--editorconfig",
+            "--sdkman"
+        };
 
         // When
-        String result = initCommand.runInitFeature();
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockDevContainer, times(1)).execute();
@@ -187,49 +203,38 @@ class InitCommandTest {
         verify(mockSpringCli, times(1)).execute();
         verify(mockGithubAction, times(1)).execute();
         verify(mockCursor, times(1)).execute("java");
-        assertThat(result).isEqualTo("Command executed successfully");
+        verify(mockEditorConfig, times(1)).execute();
+        verify(mockSdkman, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
     @Test
     void shouldRunCommandAndPrintResult() {
         // Given
         InitCommand spyCommand = spy(initCommand);
-        doReturn("Command executed successfully").when(spyCommand).runInitFeature();
+        CommandLine spyCmd = new CommandLine(spyCommand);
 
         // When
-        spyCommand.run();
+        spyCmd.execute(); // No args, should trigger runInitFeature
 
         // Then
+        verify(spyCommand, times(1)).run();
         verify(spyCommand, times(1)).runInitFeature();
-        assertThat(outputStreamCaptor.toString().trim()).isEqualTo("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("type 'init --help' to see available options");
     }
 
     @Test
     void shouldExecuteCommandThroughMainMethod() throws Exception {
         // Given
-        setPrivateField(initCommand, "cursorOption", "java");
         String[] args = new String[]{"--cursor", "java"};
 
         // When
-        int exitCode = new CommandLine(initCommand).execute(args);
+        int exitCode = cmd.execute(args);
 
         // Then
         verify(mockCursor, times(1)).execute("java");
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
-    }
-
-    /**
-     * Helper method to set private fields using reflection.
-     * 
-     * @param object The object instance to modify
-     * @param fieldName The name of the private field
-     * @param value The value to set
-     * @throws Exception If reflection fails
-     */
-    private void setPrivateField(Object object, String fieldName, Object value) throws Exception {
-        Field field = object.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(object, value);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).contains("Command executed successfully");
     }
 } 

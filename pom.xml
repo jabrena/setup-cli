@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>info.jab.jbang</groupId>
@@ -11,17 +11,18 @@
     <properties>
         <java.version>24</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
+
         <!-- Dependencies -->
         <picocli.version>4.7.7</picocli.version>
         <commons-io.version>2.19.0</commons-io.version>
-        <commons-exec.version>1.4.0</commons-exec.version>
-        
+        <jcolor.version>5.5.1</jcolor.version>
+        <jfiglet.version>0.0.9</jfiglet.version>
+
         <!-- Test dependencies -->
         <mockito.version>5.17.0</mockito.version>
         <junit.version>5.12.0</junit.version>
         <assertj.version>3.27.3</assertj.version>
-        
+
         <!-- Maven Plugins -->
         <maven.enforcer.version>3.5.0</maven.enforcer.version>
         <maven.jar.version>3.4.2</maven.jar.version>
@@ -31,10 +32,10 @@
         <maven.compiler.version>3.14.0</maven.compiler.version>
         <maven.surefire.version>3.5.3</maven.surefire.version>
         <maven.jacoco.version>0.8.13</maven.jacoco.version>
+        <error-prone.version>2.38.0</error-prone.version>
 
         <!-- Coverage -->
-        <coverage.lines>80</coverage.lines>
-        <coverage.branches>80</coverage.branches>
+        <coverage.level>80</coverage.level>
     </properties>
 
     <dependencyManagement>
@@ -55,17 +56,20 @@
             <artifactId>picocli</artifactId>
             <version>${picocli.version}</version>
         </dependency>
-
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>dev.jbang</groupId>
-            <artifactId>jash</artifactId>
-            <version>0.0.3</version>
+            <groupId>com.github.lalyos</groupId>
+            <artifactId>jfiglet</artifactId>
+            <version>${jfiglet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.diogonunes</groupId>
+            <artifactId>JColor</artifactId>
+            <version>${jcolor.version}</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -80,14 +84,14 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
@@ -127,15 +131,44 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>        
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.version}</version>
                 <configuration>
-                <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
-                <release>${java.version}</release>
+
+                    <release>${java.version}</release>
+                    <showWarnings>true</showWarnings>
+                    <fork>true</fork> <!-- Required for JDK16+ -->
+                    <compilerArgs>
+                        <arg>-Werror</arg>
+                        <arg>-Xlint:all</arg>
+                        
+                        <!-- Error prone settings-->
+                        <arg>-XDcompilePolicy=simple</arg>
+                        <arg>-Xplugin:ErrorProne</arg>
+                        <arg>--should-stop=ifError=FLOW</arg>
+                        <!-- Following are required on JDK16+ -->
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.errorprone</groupId>
+                            <artifactId>error_prone_core</artifactId>
+                            <version>${error-prone.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
 
@@ -193,24 +226,26 @@
                                         <exclude>README.md</exclude>
                                         <exclude>docs/**</exclude>
                                         <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/LICENSE.txt</exclude>
                                         <exclude>META-INF/versions/9/module-info.class</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
-                            
+
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>info.jab.jbang.Setup</mainClass>
                                 </transformer>
                             </transformers>
-                            
+
                             <minimizeJar>false</minimizeJar>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -323,10 +358,10 @@
                                 </resource>
                             </resources>
                         </configuration>
-                    </execution>                                                       
+                    </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -359,12 +394,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>${coverage.lines}%</minimum>
+                                            <minimum>${coverage.level}%</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>${coverage.branches}%</minimum>
+                                            <minimum>${coverage.level}%</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -393,7 +428,7 @@
                     <showSuccess>true</showSuccess>
                 </configuration>
             </plugin>
-            
+
             <!-- Adds links to source code in reports -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
