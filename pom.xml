@@ -35,7 +35,7 @@
         <error-prone.version>2.38.0</error-prone.version>
 
         <!-- Coverage -->
-        <coverage.level>70</coverage.level>
+        <coverage.level>80</coverage.level>
     </properties>
 
     <dependencyManagement>
