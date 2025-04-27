@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 class QuarkusCliTest {
 
@@ -31,7 +32,7 @@ class QuarkusCliTest {
         quarkusCli.execute();
         
         // Verify the output contains the required information
-        String output = outputStreamCaptor.toString().trim();
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
         assertThat(output).contains("quarkus create app");
     }
 } 

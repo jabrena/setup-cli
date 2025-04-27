@@ -21,6 +21,7 @@ import picocli.CommandLine;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -201,7 +202,7 @@ class InitCommandTest {
 
         // Then
         verify(spyCommand, times(1)).runInitFeature();
-        assertThat(outputStreamCaptor.toString().trim()).isEqualTo("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
     @Test
@@ -216,7 +217,7 @@ class InitCommandTest {
         // Then
         verify(mockCursor, times(1)).execute("java");
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString().trim()).contains("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).contains("Command executed successfully");
     }
 
     /**

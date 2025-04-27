@@ -13,6 +13,7 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 import info.jab.jbang.io.CopyFiles;
 import org.mockito.Mock;
@@ -52,7 +53,7 @@ class DevContainerTest {
         devContainer.execute();
 
         // Verify the success message was printed
-        assertThat(outputStreamCaptor.toString().trim())
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Devcontainer support added successfully");
 
         // Verify the copyFilesToDirectory method was called with correct arguments

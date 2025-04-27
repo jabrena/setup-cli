@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 
 @ExtendWith(MockitoExtension.class)
 class CursorTest {
@@ -46,7 +47,7 @@ class CursorTest {
 
         cursor.execute("java");
 
-        assertThat(outputStreamCaptor.toString().trim())
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
 
         Mockito.verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
@@ -56,7 +57,7 @@ class CursorTest {
     void testExecuteWithInvalidParam() {
         cursor.execute("invalid-option");
 
-        assertThat(outputStreamCaptor.toString().trim()).isEmpty();
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEmpty();
 
         Mockito.verify(mockCopyFiles, never()).copyFilesToDirectory(any(), anyString(), any(Path.class));
     }
@@ -67,7 +68,7 @@ class CursorTest {
 
         cursor.execute("java-spring-boot");
 
-        assertThat(outputStreamCaptor.toString().trim())
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
 
         Mockito.verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
@@ -79,7 +80,7 @@ class CursorTest {
 
         cursor.execute("java-quarkus");
 
-        assertThat(outputStreamCaptor.toString().trim())
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
 
         Mockito.verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
@@ -89,7 +90,7 @@ class CursorTest {
     void testExecuteWithNullParameter() {
         cursor.execute(null);
 
-        assertThat(outputStreamCaptor.toString().trim()).isEmpty();
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEmpty();
         Mockito.verify(mockCopyFiles, never()).copyFilesToDirectory(any(), anyString(), any(Path.class));
     }
 } 

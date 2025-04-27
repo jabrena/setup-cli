@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
+import java.nio.charset.StandardCharsets;
 
 @ExtendWith(MockitoExtension.class)
 class SetupTest {
@@ -52,7 +53,7 @@ class SetupTest {
         verify(mockInitCommand, times(1)).runInitFeature();
         
         // Verify output contains expected text
-        assertThat(outputStreamCaptor.toString().trim())
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Setup is a CLI utility designed to help developers when they start working with a new repository.");
     }
     
@@ -66,7 +67,7 @@ class SetupTest {
         setupDefault.run();
         
         // Verify expected output
-        assertThat(outputStreamCaptor.toString().trim())
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Setup is a CLI utility designed to help developers when they start working with a new repository.");
     }
 } 

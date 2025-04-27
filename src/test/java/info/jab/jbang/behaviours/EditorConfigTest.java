@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 @ExtendWith(MockitoExtension.class)
 class EditorConfigTest {
@@ -55,7 +56,7 @@ class EditorConfigTest {
         editorConfig.execute();
 
         // Verify the success message was printed
-        assertThat(outputStreamCaptor.toString().trim())
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("EditorConfig support added successfully");
 
         // Verify the copyFilesToDirectory method was called with correct arguments
