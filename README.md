@@ -83,3 +83,5 @@ jbang setup@jabrena
 - https://docs.spring.io/spring-boot/cli/index.html
 - https://keepachangelog.com/en/1.1.0/
 - https://www.eclemma.org/jacoco/trunk/doc/maven.html
+
+Powered by [Cursor](https://www.cursor.com/)
