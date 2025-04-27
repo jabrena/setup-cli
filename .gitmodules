@@ -1,6 +1,6 @@
-[submodule "templates/cursor-rules-java"]
-	path = templates/cursor-rules-java
-	url = https://github.com/jabrena/cursor-rules-java
 [submodule "templates/cursor-rules-tasks"]
 	path = templates/cursor-rules-tasks
 	url = https://github.com/jabrena/cursor-rules-tasks
+[submodule "templates/cursor-rules-java"]
+	path = templates/cursor-rules-java
+	url = https://github.com/jabrena/cursor-rules-java
