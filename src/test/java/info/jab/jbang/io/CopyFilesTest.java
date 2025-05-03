@@ -26,6 +26,7 @@ class CopyFilesTest {
     private CopyFiles copyFiles;
 
     @BeforeEach
+    @SuppressWarnings("NullAway.Init")
     void setUp() {
         // Define a subdirectory within the temporary directory for rules
         rulesDir = tempDir.resolve("rules");
@@ -109,4 +110,4 @@ class CopyFilesTest {
                 .isInstanceOf(IOException.class) // Cause should be IOException from forceMkdir
                 .hasMessageContaining("Cannot create directory"); // Adjusted assertion to be less specific
     }
-} 
+}

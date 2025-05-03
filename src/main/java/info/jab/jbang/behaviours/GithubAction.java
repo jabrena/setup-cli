@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.jspecify.annotations.NonNull;
+
 public class GithubAction implements Behaviour0 {
 
     private final CopyFiles copyFiles;
@@ -15,7 +17,7 @@ public class GithubAction implements Behaviour0 {
     }
 
     // Constructor for testing with a mock
-    GithubAction(CopyFiles copyFiles) {
+    GithubAction(@NonNull CopyFiles copyFiles) {
         this.copyFiles = copyFiles;
     }
 

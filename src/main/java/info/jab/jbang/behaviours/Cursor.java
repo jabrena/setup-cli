@@ -7,6 +7,9 @@ import info.jab.jbang.CursorOptions;
 import info.jab.jbang.io.CopyFiles;
 
 import java.util.Objects;
+
+import org.jspecify.annotations.NonNull;
+
 import java.util.ArrayList;
 
 public class Cursor implements Behaviour1 {
@@ -22,16 +25,16 @@ public class Cursor implements Behaviour1 {
     }
 
     // Constructor for testing with a mock
-    Cursor(CopyFiles copyFiles) {
+    Cursor(@NonNull CopyFiles copyFiles) {
         this.copyFiles = copyFiles;
     }
 
     @Override
-    public void execute(String parameter) {
+    public void execute(@NonNull String parameter) {
         if (Objects.isNull(parameter)) {
             return;
         }
-        
+
         //TODO: not maintain the list of files.
         List<String> ruleJavaFiles = new ArrayList<>(List.of(
             "100-java-general.mdc",

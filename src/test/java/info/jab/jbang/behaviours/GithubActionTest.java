@@ -34,6 +34,7 @@ class GithubActionTest {
     private final PrintStream originalOut = System.out;
 
     @BeforeEach
+    @SuppressWarnings("NullAway.Init")
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         githubAction = new GithubAction(copyFilesMock);
@@ -121,4 +122,4 @@ class GithubActionTest {
             System.setProperty("user.dir", originalUserDir);
         }
     }
-} 
+}

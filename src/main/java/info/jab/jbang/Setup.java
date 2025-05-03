@@ -2,6 +2,9 @@ package info.jab.jbang;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -18,24 +21,24 @@ import com.github.lalyos.jfiglet.FigletFont;
     usageHelpAutoWidth = true
 )
 public class Setup implements Runnable {
-    
+
     // Field for dependency injection in tests
     private InitCommand initCommand;
-    
+
     // Constructor that accepts an InitCommand (for testing)
-    public Setup(InitCommand initCommand) {
+    public Setup(@NonNull InitCommand initCommand) {
         this.initCommand = initCommand;
     }
-    
+
     // Default constructor (used in production)
     public Setup() {
         this.initCommand = new InitCommand();
     }
-    
+
     @Override
     public void run() {
         // Execute the feature, ignore return value as Runnable.run is void
-        initCommand.runInitFeature(); 
+        initCommand.runInitFeature();
     }
 
     private static void printBanner() {

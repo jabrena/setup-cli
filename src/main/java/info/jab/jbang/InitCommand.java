@@ -1,5 +1,7 @@
 package info.jab.jbang;
 
+import org.jspecify.annotations.NonNull;
+
 import info.jab.jbang.behaviours.Cursor;
 import info.jab.jbang.behaviours.DevContainer;
 import info.jab.jbang.behaviours.EditorConfig;
@@ -13,7 +15,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Command(
-    name = "init", 
+    name = "init",
     description = "Initialize a new repository with some useful features for Developers.",
     mixinStandardHelpOptions = true,
     usageHelpAutoWidth = true
@@ -21,43 +23,43 @@ import picocli.CommandLine.Option;
 public class InitCommand implements Runnable {
 
     @Option(
-        names = {"-dc", "--devcontainer"}, 
+        names = {"-dc", "--devcontainer"},
         description = "Add Devcontainer support for Java.")
     private boolean devcontainerOption = false;
 
     @Option(
-        names = {"-c", "--cursor"}, 
-        description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.", 
+        names = {"-c", "--cursor"},
+        description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.",
         completionCandidates = CursorOptions.class)
     private String cursorOption = "NA";
 
     @Option(
-        names = {"-m", "--maven"}, 
+        names = {"-m", "--maven"},
         description = "Show how to use Maven to create a new project.")
     private boolean mavenOption = false;
 
     @Option(
-        names = {"-sc", "--spring-cli"}, 
+        names = {"-sc", "--spring-cli"},
         description = "Show how to use Spring CLI to create a new project.")
     private boolean springCliOption = false;
 
     @Option(
-        names = {"-qc", "--quarkus-cli"}, 
+        names = {"-qc", "--quarkus-cli"},
         description = "Show how to use Quarkus CLI to create a new project.")
     private boolean quarkusCliOption = false;
 
     @Option(
-        names = {"-ga", "--github-action"}, 
+        names = {"-ga", "--github-action"},
         description = "Add an initial GitHub Actions workflow for Maven.")
     private boolean githubActionOption = false;
-    
+
     @Option(
-        names = {"-ec", "--editorconfig"}, 
+        names = {"-ec", "--editorconfig"},
         description = "Add an initial EditorConfig file.")
     private boolean editorConfigOption = false;
-    
+
     @Option(
-        names = {"-s", "--sdkman"}, 
+        names = {"-s", "--sdkman"},
         description = "Add an initial SDKMAN Init file.")
     private boolean sdkmanOption = false;
 
@@ -82,12 +84,12 @@ public class InitCommand implements Runnable {
     }
 
     public InitCommand(
-        DevContainer devContainer, 
-        Maven maven, 
-        SpringCli springCli, 
-        QuarkusCli quarkusCli,
-        Cursor cursor,
-        GithubAction githubAction,
+        @NonNull DevContainer devContainer,
+        @NonNull Maven maven,
+        @NonNull SpringCli springCli,
+        @NonNull QuarkusCli quarkusCli,
+        @NonNull Cursor cursor,
+        @NonNull GithubAction githubAction,
         EditorConfig editorConfig,
         Sdkman sdkman) {
         this.devContainer = devContainer;
@@ -102,11 +104,11 @@ public class InitCommand implements Runnable {
 
     public String runInitFeature() {
 
-        if(cursorOption.equals("NA") && 
-            !mavenOption && 
-            !springCliOption && 
-            !quarkusCliOption && 
-            !devcontainerOption && 
+        if(cursorOption.equals("NA") &&
+            !mavenOption &&
+            !springCliOption &&
+            !quarkusCliOption &&
+            !devcontainerOption &&
             !githubActionOption &&
             !editorConfigOption &&
             !sdkmanOption) {
@@ -150,4 +152,4 @@ public class InitCommand implements Runnable {
         int exitCode = new CommandLine(new InitCommand()).execute(args);
         System.exit(exitCode);
     }
-} 
+}

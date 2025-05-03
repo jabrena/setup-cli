@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import info.jab.jbang.io.CopyFiles;
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 
 @ExtendWith(MockitoExtension.class)
 class DevContainerTest {
@@ -31,14 +32,15 @@ class DevContainerTest {
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
 
-    @BeforeEach
-    void setUp() {
-        System.setOut(new PrintStream(outputStreamCaptor));
-    }
-
     @AfterEach
     void tearDown() {
         System.setOut(originalOut);
+    }
+
+    @BeforeEach
+    @SuppressWarnings("NullAway.Init")
+    void setUp() {
+        System.setOut(new PrintStream(outputStreamCaptor));
     }
 
     @Test

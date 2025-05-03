@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.jspecify.annotations.NonNull;
+
 import info.jab.jbang.io.CopyFiles;
 
 public class DevContainer implements Behaviour0 {
@@ -15,7 +17,7 @@ public class DevContainer implements Behaviour0 {
     }
 
     // Constructor for testing with a mock
-    DevContainer(CopyFiles copyFiles) {
+    DevContainer(@NonNull CopyFiles copyFiles) {
         this.copyFiles = copyFiles;
     }
 

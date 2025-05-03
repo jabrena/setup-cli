@@ -25,7 +25,7 @@ class CursorOptionsTest {
         }
         assertThat(values).containsExactlyInAnyOrderElementsOf(expectedValues);
     }
-    
+
     @Test
     void testIsValidOption() {
         // Given
@@ -35,7 +35,6 @@ class CursorOptionsTest {
         String validTasks = "tasks";
         String invalidOption = "invalid-option";
         String emptyOption = "";
-        String nullOption = null;
 
         // When
         //  Then
@@ -45,6 +44,5 @@ class CursorOptionsTest {
         assertThat(CursorOptions.isValidOption(validTasks)).isTrue();
         assertThat(CursorOptions.isValidOption(invalidOption)).isFalse();
         assertThat(CursorOptions.isValidOption(emptyOption)).isFalse();
-        assertThat(CursorOptions.isValidOption(nullOption)).isFalse();
     }
-} 
+}

@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.DisplayName;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 class SetupTest {
@@ -25,6 +27,7 @@ class SetupTest {
     private final PrintStream originalErr = System.err;
 
     @BeforeEach
+    @SuppressWarnings("NullAway.Init")
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         System.setErr(new PrintStream(outputStreamCaptor));
@@ -48,7 +51,7 @@ class SetupTest {
         // Then
         verify(mockInitCommand, times(1)).runInitFeature();
     }
-    
+
     @Test
     void testRunCLINoArgs() {
         // Given
@@ -104,4 +107,4 @@ class SetupTest {
         assertThat(output).contains("Usage: setup init");
         assertThat(exitCode).isZero();
     }
-} 
+}

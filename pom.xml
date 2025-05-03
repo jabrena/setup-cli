@@ -17,7 +17,7 @@
         <commons-io.version>2.19.0</commons-io.version>
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
-
+        <jspecify.version>1.0.0</jspecify.version>
         <!-- Test dependencies -->
         <mockito.version>5.17.0</mockito.version>
         <junit.version>5.12.0</junit.version>
@@ -33,6 +33,7 @@
         <maven.surefire.version>3.5.3</maven.surefire.version>
         <maven.jacoco.version>0.8.13</maven.jacoco.version>
         <error-prone.version>2.38.0</error-prone.version>
+        <nullaway.version>0.11.0</nullaway.version>
 
         <!-- Coverage -->
         <coverage.level>80</coverage.level>
@@ -71,7 +72,11 @@
             <artifactId>JColor</artifactId>
             <version>${jcolor.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <version>${jspecify.version}</version>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.assertj</groupId>
@@ -138,18 +143,17 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.version}</version>
                 <configuration>
-
                     <release>${java.version}</release>
                     <showWarnings>true</showWarnings>
-                    <fork>true</fork> <!-- Required for JDK16+ -->
+                    <fork>true</fork>
                     <compilerArgs>
                         <arg>-Werror</arg>
                         <arg>-Xlint:all</arg>
-                        
+
                         <!-- Error prone settings-->
                         <arg>-XDcompilePolicy=simple</arg>
-                        <arg>-Xplugin:ErrorProne</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
+                        <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=info.jab.jbang</arg>
                         <!-- Following are required on JDK16+ -->
                         <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
                         <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
@@ -167,6 +171,11 @@
                             <groupId>com.google.errorprone</groupId>
                             <artifactId>error_prone_core</artifactId>
                             <version>${error-prone.version}</version>
+                        </path>
+                        <path>
+                            <groupId>com.uber.nullaway</groupId>
+                            <artifactId>nullaway</artifactId>
+                            <version>${nullaway.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -438,4 +447,4 @@
         </plugins>
     </reporting>
 
-</project> 
+</project>

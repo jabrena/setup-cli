@@ -59,6 +59,7 @@ class InitCommandTest {
     private CommandLine cmd;
 
     @BeforeEach
+    @SuppressWarnings("NullAway.Init")
     void setUp() {
         // Set up the command with mocked dependencies
         initCommand = new InitCommand(
@@ -237,4 +238,4 @@ class InitCommandTest {
         assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).contains("Command executed successfully");
     }
-} 
+}

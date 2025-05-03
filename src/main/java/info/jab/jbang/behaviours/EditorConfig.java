@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.jspecify.annotations.NonNull;
+
 public class EditorConfig implements Behaviour0 {
 
     private final CopyFiles copyFiles;
@@ -15,7 +17,7 @@ public class EditorConfig implements Behaviour0 {
     }
 
     // Constructor for testing with a mock
-    EditorConfig(CopyFiles copyFiles) {
+    EditorConfig(@NonNull CopyFiles copyFiles) {
         this.copyFiles = copyFiles;
     }
 
@@ -23,8 +25,8 @@ public class EditorConfig implements Behaviour0 {
     public void execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         List<String> files = List.of(".editorconfig");
-        
-        copyFiles.copyFilesToDirectory(files, "editorconfig/", currentPath); 
+
+        copyFiles.copyFilesToDirectory(files, "editorconfig/", currentPath);
         System.out.println("EditorConfig support added successfully");
     }
 }

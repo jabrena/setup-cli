@@ -33,6 +33,7 @@ class EditorConfigTest {
     private final PrintStream originalOut = System.out;
 
     @BeforeEach
+    @SuppressWarnings("NullAway.Init")
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         // Use the constructor that accepts the mock
@@ -105,4 +106,4 @@ class EditorConfigTest {
             System.setProperty("user.dir", originalUserDir);
         }
     }
-} 
+}

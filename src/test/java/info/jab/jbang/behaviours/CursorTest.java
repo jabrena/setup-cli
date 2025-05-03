@@ -30,18 +30,19 @@ class CursorTest {
 
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
-    
+
     @BeforeEach
+    @SuppressWarnings("NullAway.Init")
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         cursor = new Cursor(mockCopyFiles);
     }
-    
+
     @AfterEach
     void tearDown() {
         System.setOut(originalOut);
     }
-    
+
     @Test
     void testExecuteWithInvalidParam() {
         // Given
@@ -68,7 +69,7 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
     }
-    
+
     @Test
     void testExecuteWithJavaSpringBootParam() {
         // Given
@@ -82,7 +83,7 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
     }
-    
+
     @Test
     void testExecuteWithJavaQuarkusParam() {
         // Given
@@ -96,17 +97,4 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
     }
-    
-    @Test
-    void testExecuteWithNullParameter() {
-        // Given
-        String nullOption = null;
-
-        // When
-        cursor.execute(nullOption);
-
-        // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEmpty();
-        verify(mockCopyFiles, never()).copyFilesToDirectory(any(), anyString(), any(Path.class));
-    }
-} 
+}
