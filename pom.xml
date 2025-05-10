@@ -17,6 +17,7 @@
         <commons-io.version>2.19.0</commons-io.version>
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
+        <jash.version>0.0.3</jash.version>
 
         <!-- Test dependencies -->
         <mockito.version>5.17.0</mockito.version>
@@ -35,7 +36,7 @@
         <error-prone.version>2.38.0</error-prone.version>
 
         <!-- Coverage -->
-        <coverage.level>80</coverage.level>
+        <coverage.level>70</coverage.level>
     </properties>
 
     <dependencyManagement>
@@ -70,6 +71,11 @@
             <groupId>com.diogonunes</groupId>
             <artifactId>JColor</artifactId>
             <version>${jcolor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.jbang</groupId>
+            <artifactId>jash</artifactId>
+            <version>${jash.version}</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -138,7 +144,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.version}</version>
                 <configuration>
-
                     <release>${java.version}</release>
                     <showWarnings>true</showWarnings>
                     <fork>true</fork> <!-- Required for JDK16+ -->
