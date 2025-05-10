@@ -25,6 +25,7 @@
         <assertj.version>3.27.3</assertj.version>
 
         <!-- Maven Plugins -->
+        <maven-plugins.flatten.version>1.7.0</maven-plugins.flatten.version>
         <maven-plugins.enforcer.version>3.5.0</maven-plugins.enforcer.version>
         <maven-plugins.compiler.version>3.14.0</maven-plugins.compiler.version>
         <error-prone.version>2.38.0</error-prone.version>
@@ -109,6 +110,29 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${maven-plugins.flatten.version}</version>
+                <configuration>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>${maven-plugins.enforcer.version}</version>
@@ -192,6 +216,9 @@
                     <forkCount>1</forkCount>
                     <reuseForks>true</reuseForks>
                     <useFile>false</useFile>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar"
+                    </argLine>
                 </configuration>
             </plugin>
 

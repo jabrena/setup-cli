@@ -17,6 +17,7 @@ touch .gitmodules
 ./load-remove-git-submodules-cursor-rules-tasks.sh c
 
 # Setup cli
+./mvnw clean validate -U
 ./mvnw clean verify
 ./mvnw clean verify surefire-report:report
 ./mvnw clean verify jacoco:report -Pjacoco
