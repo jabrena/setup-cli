@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -42,14 +43,18 @@ class SdkmanTest {
 
         // Then
         verify(mockCopyFiles).copyFilesToDirectory(expectedFiles, expectedResourcePath, expectedPath);
-        assertThat(outputStreamCaptor.toString().trim()).isEqualTo("SDKMAN support added successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("SDKMAN support added successfully");
 
         // Reset System.out to its original stream
+        //TODO: Check if this line is needed. It should be handled in tearDown.
         System.setOut(System.out);
     }
 
     @Test
     void constructor_should_initialize_copyFiles() {
+        // Given
+        // No specific setup needed
+
         //When
         Sdkman sdkmanDefault = new Sdkman();
 

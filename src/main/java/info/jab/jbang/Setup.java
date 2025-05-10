@@ -34,7 +34,8 @@ public class Setup implements Runnable {
     
     @Override
     public void run() {
-        initCommand.runInitFeature();
+        // Execute the feature, ignore return value as Runnable.run is void
+        initCommand.runInitFeature(); 
     }
 
     private static void printBanner() {
@@ -47,13 +48,18 @@ public class Setup implements Runnable {
         }
     }
 
-    public static void main(String[] args) {
+    // Refactored method to contain the core CLI logic for easier testing
+    public static int runCLI(String[] args) {
         if(args.length == 0) {
             System.out.println("Please specify a command. Use --help to see available options.");
-            System.exit(0);
+            return 0; // Return 0 as per original logic
         }
         printBanner();
-        int exitCode = new CommandLine(new Setup()).execute(args);
+        return new CommandLine(new Setup()).execute(args);
+    }
+
+    public static void main(String[] args) {
+        int exitCode = runCLI(args);
         System.exit(exitCode);
     }
 }

@@ -11,33 +11,40 @@ class CursorOptionsTest {
 
     @Test
     void testIterator() {
-        // Create an instance of CursorOptions
+        // Given
         CursorOptions cursorOptions = new CursorOptions();
-        
-        // Get the iterator
+        List<String> expectedValues = List.of("java", "java-spring-boot", "java-quarkus", "tasks");
+
+        // When
         Iterator<String> iterator = cursorOptions.iterator();
-        
-        // Collect all the values
+
+        // Then
         List<String> values = new ArrayList<>();
         while (iterator.hasNext()) {
             values.add(iterator.next());
         }
-        
-        // Verify all expected values are present
-        assertThat(values).contains("java", "java-spring-boot", "java-quarkus", "tasks");
-        assertThat(values).hasSize(4);
+        assertThat(values).containsExactlyInAnyOrderElementsOf(expectedValues);
     }
     
     @Test
     void testIsValidOption() {
-        // Test with valid options
-        assertThat(CursorOptions.isValidOption("java")).isTrue();
-        assertThat(CursorOptions.isValidOption("java-spring-boot")).isTrue();
-        assertThat(CursorOptions.isValidOption("java-quarkus")).isTrue();
-        assertThat(CursorOptions.isValidOption("tasks")).isTrue();
-        // Test with invalid options
-        assertThat(CursorOptions.isValidOption("invalid-option")).isFalse();
-        assertThat(CursorOptions.isValidOption("")).isFalse();
-        assertThat(CursorOptions.isValidOption(null)).isFalse();
+        // Given
+        String validJava = "java";
+        String validSpringBoot = "java-spring-boot";
+        String validQuarkus = "java-quarkus";
+        String validTasks = "tasks";
+        String invalidOption = "invalid-option";
+        String emptyOption = "";
+        String nullOption = null;
+
+        // When
+        //  Then
+        assertThat(CursorOptions.isValidOption(validJava)).isTrue();
+        assertThat(CursorOptions.isValidOption(validSpringBoot)).isTrue();
+        assertThat(CursorOptions.isValidOption(validQuarkus)).isTrue();
+        assertThat(CursorOptions.isValidOption(validTasks)).isTrue();
+        assertThat(CursorOptions.isValidOption(invalidOption)).isFalse();
+        assertThat(CursorOptions.isValidOption(emptyOption)).isFalse();
+        assertThat(CursorOptions.isValidOption(nullOption)).isFalse();
     }
 } 
