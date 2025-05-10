@@ -19,8 +19,8 @@ touch .gitmodules
 # Setup cli
 ./mvnw clean verify
 ./mvnw clean verify surefire-report:report
-./mvnw clean verify jacoco:report
-jwebserver -p 8000 -d "$(pwd)/target/site/"
+./mvnw clean verify jacoco:report -Pjacoco
+jwebserver -p 8000 -d "$(pwd)/target/site/jacoco"
 
 
 ./mvnw versions:display-dependency-updates
