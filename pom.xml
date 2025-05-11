@@ -19,24 +19,25 @@
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
         <jspecify.version>1.0.0</jspecify.version>
+
         <!-- Test dependencies -->
-        <mockito.version>5.17.0</mockito.version>
         <junit.version>5.12.0</junit.version>
+        <mockito.version>5.17.0</mockito.version>
         <assertj.version>3.27.3</assertj.version>
 
         <!-- Maven Plugins -->
-        <maven-plugins.flatten.version>1.7.0</maven-plugins.flatten.version>
-        <maven-plugins.enforcer.version>3.5.0</maven-plugins.enforcer.version>
-        <maven-plugins.compiler.version>3.14.0</maven-plugins.compiler.version>
+        <maven-plugins-flatten.version>1.7.0</maven-plugins-flatten.version>
+        <maven-plugins-enforcer.version>3.5.0</maven-plugins-enforcer.version>
+        <maven-plugins-compiler.version>3.14.0</maven-plugins-compiler.version>
         <error-prone.version>2.38.0</error-prone.version>
         <nullaway.version>0.11.0</nullaway.version>
-        <maven-plugins.surefire.version>3.5.3</maven-plugins.surefire.version>
-        <maven-plugins.jacoco.version>0.8.13</maven-plugins.jacoco.version>
-        <maven-plugins.jar.version>3.4.2</maven-plugins.jar.version>
-        <maven-plugins.shade.version>3.6.0</maven-plugins.shade.version>
-        <maven-plugins.versions.version>2.18.0</maven-plugins.versions.version>
-        <maven-plugins.resources.version>3.3.1</maven-plugins.resources.version>
-        <maven-plugins.jxr.version>3.6.0</maven-plugins.jxr.version>
+        <maven-plugins-surefire.version>3.5.3</maven-plugins-surefire.version>
+        <maven-plugins-jacoco.version>0.8.13</maven-plugins-jacoco.version>
+        <maven-plugins-jar.version>3.4.2</maven-plugins-jar.version>
+        <maven-plugins-shade.version>3.6.0</maven-plugins-shade.version>
+        <maven-plugins-versions.version>2.18.0</maven-plugins-versions.version>
+        <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
+        <maven-plugins-jxr.version>3.6.0</maven-plugins-jxr.version>
 
         <!-- Coverage -->
         <coverage.level>80</coverage.level>
@@ -112,7 +113,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>${maven-plugins.flatten.version}</version>
+                <version>${maven-plugins-flatten.version}</version>
                 <configuration>
                 </configuration>
                 <executions>
@@ -135,7 +136,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven-plugins.enforcer.version}</version>
+                <version>${maven-plugins-enforcer.version}</version>
                 <executions>
                     <execution>
                         <id>enforce</id>
@@ -167,30 +168,24 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-plugins.compiler.version}</version>
+                <version>${maven-plugins-compiler.version}</version>
                 <configuration>
                     <release>${java.version}</release>
-                    <showWarnings>true</showWarnings>
-                    <fork>true</fork>
                     <compilerArgs>
-                        <arg>-Werror</arg>
                         <arg>-Xlint:all</arg>
-
+                        <arg>-Werror</arg>
                         <!-- Error prone settings-->
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
-                        <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=info.jab.cli</arg>
-                        <!-- Following are required on JDK16+ -->
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                        <arg>-Xplugin:ErrorProne \
+                             -Xep:NullAway:ERROR \
+                             -XepOpt:NullAway:JSpecifyMode=true \
+                             -XepOpt:NullAway:TreatGeneratedAsUnannotated=true \
+                             -XepOpt:NullAway:CheckOptionalEmptiness=true \
+                             -XepOpt:NullAway:HandleTestAssertionLibraries=true \
+                             -XepOpt:NullAway:AssertsEnabled=true \
+                             -XepOpt:NullAway:AnnotatedPackages=info.jab.cli
+                        </arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>
@@ -210,7 +205,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-plugins.surefire.version}</version>
+                <version>${maven-plugins-surefire.version}</version>
                 <configuration>
                     <skipAfterFailureCount>1</skipAfterFailureCount>
                     <forkCount>1</forkCount>
@@ -225,7 +220,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>${maven-plugins.versions.version}</version>
+                <version>${maven-plugins-versions.version}</version>
                 <configuration>
                     <allowSnapshots>false</allowSnapshots>
                 </configuration>
@@ -234,7 +229,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-plugins.jar.version}</version>
+                <version>${maven-plugins-jar.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -248,7 +243,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven-plugins.shade.version}</version>
+                <version>${maven-plugins-shade.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -288,7 +283,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-plugins.resources.version}</version>
+                <version>${maven-plugins-resources.version}</version>
                 <executions>
                     <execution>
                         <id>copy-cursor-rules-java</id>
@@ -404,7 +399,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>${maven-plugins.jxr.version}</version>
+                <version>${maven-plugins-jxr.version}</version>
             </plugin>
         </plugins>
     </build>
@@ -417,7 +412,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${maven-plugins.jacoco.version}</version>
+                        <version>${maven-plugins-jacoco.version}</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
@@ -471,7 +466,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
+                <version>${maven-plugins-surefire.version}</version>
                 <configuration>
                     <outputName>junit-report</outputName>
                     <showSuccess>true</showSuccess>
@@ -482,7 +477,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>${maven-plugins-jxr.version}</version>
             </plugin>
         </plugins>
     </reporting>
