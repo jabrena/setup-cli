@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for JSpecify
 - Added flatten-maven-plugin in the build
 - Added git-commit-id-plugin in the build
+- Added Version & Commit in Banner
 
 ### Changed
 
