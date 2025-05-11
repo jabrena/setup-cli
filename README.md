@@ -10,17 +10,18 @@ Setup is a Command line utility designed to help developers when they start work
 sdk env install
 
 # Update cursor rules in local
-./load-remove-git-submodules-cursor-rules-java.sh r 
-./load-remove-git-submodules-cursor-rules-tasks.sh r 
+./load-remove-git-submodules-cursor-rules-java.sh r
+./load-remove-git-submodules-cursor-rules-tasks.sh r
 touch .gitmodules
 ./load-remove-git-submodules-cursor-rules-java.sh c
 ./load-remove-git-submodules-cursor-rules-tasks.sh c
 
 # Setup cli
-./mvnw clean verify 
+./mvnw clean validate -U
+./mvnw clean verify
 ./mvnw clean verify surefire-report:report
-./mvnw clean verify jacoco:report
-jwebserver -p 8000 -d "$(pwd)/target/site/"
+./mvnw clean verify jacoco:report -Pjacoco
+jwebserver -p 8000 -d "$(pwd)/target/site/jacoco"
 
 
 ./mvnw versions:display-dependency-updates

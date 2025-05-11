@@ -4,11 +4,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>info.jab.jbang</groupId>
+    <groupId>info.jab.cli</groupId>
     <artifactId>setup</artifactId>
     <version>0.8.0</version>
 
     <properties>
+        <maven.version>3.9.9</maven.version>
         <java.version>24</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -17,22 +18,27 @@
         <commons-io.version>2.19.0</commons-io.version>
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
+        <jspecify.version>1.0.0</jspecify.version>
 
         <!-- Test dependencies -->
-        <mockito.version>5.17.0</mockito.version>
         <junit.version>5.12.0</junit.version>
+        <mockito.version>5.17.0</mockito.version>
         <assertj.version>3.27.3</assertj.version>
 
         <!-- Maven Plugins -->
-        <maven.enforcer.version>3.5.0</maven.enforcer.version>
-        <maven.jar.version>3.4.2</maven.jar.version>
-        <maven.versions.version>2.18.0</maven.versions.version>
-        <maven.shade.version>3.6.0</maven.shade.version>
-        <maven.version>3.9.9</maven.version>
-        <maven.compiler.version>3.14.0</maven.compiler.version>
-        <maven.surefire.version>3.5.3</maven.surefire.version>
-        <maven.jacoco.version>0.8.13</maven.jacoco.version>
+        <maven-plugins-flatten.version>1.7.0</maven-plugins-flatten.version>
+        <maven-plugins-enforcer.version>3.5.0</maven-plugins-enforcer.version>
+        <maven-plugins-compiler.version>3.14.0</maven-plugins-compiler.version>
         <error-prone.version>2.38.0</error-prone.version>
+        <nullaway.version>0.11.0</nullaway.version>
+        <maven-plugins-surefire.version>3.5.3</maven-plugins-surefire.version>
+        <maven-plugins-jacoco.version>0.8.13</maven-plugins-jacoco.version>
+        <maven-plugins-jar.version>3.4.2</maven-plugins-jar.version>
+        <maven-plugins-shade.version>3.6.0</maven-plugins-shade.version>
+        <maven-plugins-versions.version>2.18.0</maven-plugins-versions.version>
+        <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
+        <maven-plugins-jxr.version>3.6.0</maven-plugins-jxr.version>
+        <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
 
         <!-- Coverage -->
         <coverage.level>80</coverage.level>
@@ -71,7 +77,12 @@
             <artifactId>JColor</artifactId>
             <version>${jcolor.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <version>${jspecify.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.assertj</groupId>
@@ -102,9 +113,32 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${maven-plugins-flatten.version}</version>
+                <configuration>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven.enforcer.version}</version>
+                <version>${maven-plugins-enforcer.version}</version>
                 <executions>
                     <execution>
                         <id>enforce</id>
@@ -136,37 +170,35 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.version}</version>
+                <version>${maven-plugins-compiler.version}</version>
                 <configuration>
-
                     <release>${java.version}</release>
-                    <showWarnings>true</showWarnings>
-                    <fork>true</fork> <!-- Required for JDK16+ -->
                     <compilerArgs>
-                        <arg>-Werror</arg>
                         <arg>-Xlint:all</arg>
-                        
+                        <arg>-Werror</arg>
                         <!-- Error prone settings-->
                         <arg>-XDcompilePolicy=simple</arg>
-                        <arg>-Xplugin:ErrorProne</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
-                        <!-- Following are required on JDK16+ -->
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                        <arg>-Xplugin:ErrorProne \
+                             -Xep:NullAway:ERROR \
+                             -XepOpt:NullAway:JSpecifyMode=true \
+                             -XepOpt:NullAway:TreatGeneratedAsUnannotated=true \
+                             -XepOpt:NullAway:CheckOptionalEmptiness=true \
+                             -XepOpt:NullAway:HandleTestAssertionLibraries=true \
+                             -XepOpt:NullAway:AssertsEnabled=true \
+                             -XepOpt:NullAway:AnnotatedPackages=info.jab.cli
+                        </arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>com.google.errorprone</groupId>
                             <artifactId>error_prone_core</artifactId>
                             <version>${error-prone.version}</version>
+                        </path>
+                        <path>
+                            <groupId>com.uber.nullaway</groupId>
+                            <artifactId>nullaway</artifactId>
+                            <version>${nullaway.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -175,41 +207,45 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
+                <version>${maven-plugins-surefire.version}</version>
                 <configuration>
                     <skipAfterFailureCount>1</skipAfterFailureCount>
                     <forkCount>1</forkCount>
                     <reuseForks>true</reuseForks>
                     <useFile>false</useFile>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar"
+                    </argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${maven-plugins-versions.version}</version>
+                <configuration>
+                    <allowSnapshots>false</allowSnapshots>
                 </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven.jar.version}</version>
+                <version>${maven-plugins-jar.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>info.jab.jbang.Setup</mainClass>
+                            <mainClass>info.jab.cli.Setup</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>${maven.versions.version}</version>
-                <configuration>
-                    <allowSnapshots>false</allowSnapshots>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven.shade.version}</version>
+                <version>${maven-plugins-shade.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -235,7 +271,7 @@
                             <transformers>
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>info.jab.jbang.Setup</mainClass>
+                                    <mainClass>info.jab.cli.Setup</mainClass>
                                 </transformer>
                             </transformers>
 
@@ -249,7 +285,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>${maven-plugins-resources.version}</version>
                 <executions>
                     <execution>
                         <id>copy-cursor-rules-java</id>
@@ -359,62 +395,108 @@
                             </resources>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${maven.jacoco.version}</version>
-                <executions>
                     <execution>
-                        <id>prepare-agent</id>
+                        <id>copy-gitignore</id>
+                        <phase>compile</phase>
                         <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>check</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
+                            <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>${coverage.level}%</minimum>
-                                        </limit>
-                                        <limit>
-                                            <counter>BRANCH</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>${coverage.level}%</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
+                            <outputDirectory>${project.build.outputDirectory}/gitignore</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>templates/gitignore-template</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>${maven-plugins-jxr.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>${maven-plugins-git-commit-id.version}</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <commitIdGenerationMode>full</commitIdGenerationMode>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>jacoco</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${maven-plugins-jacoco.version}</version>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>check</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <rule>
+                                            <element>BUNDLE</element>
+                                            <limits>
+                                                <limit>
+                                                    <counter>LINE</counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <minimum>${coverage.level}%</minimum>
+                                                </limit>
+                                                <limit>
+                                                    <counter>BRANCH</counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <minimum>${coverage.level}%</minimum>
+                                                </limit>
+                                            </limits>
+                                        </rule>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <reporting>
         <plugins>
@@ -422,7 +504,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
+                <version>${maven-plugins-surefire.version}</version>
                 <configuration>
                     <outputName>junit-report</outputName>
                     <showSuccess>true</showSuccess>
@@ -433,9 +515,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>${maven-plugins-jxr.version}</version>
             </plugin>
         </plugins>
     </reporting>
 
-</project> 
+</project>
