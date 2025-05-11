@@ -3,6 +3,7 @@ package info.jab.cli;
 import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
+import info.jab.cli.behaviours.GitIgnore;
 import info.jab.cli.behaviours.GithubAction;
 import info.jab.cli.behaviours.Maven;
 import info.jab.cli.behaviours.QuarkusCli;
@@ -53,6 +54,9 @@ class InitCommandTest {
     @Mock
     private Sdkman mockSdkman;
 
+    @Mock
+    private GitIgnore mockGitIgnore;
+
     private InitCommand initCommand;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -70,7 +74,8 @@ class InitCommandTest {
                 mockCursor,
                 mockGithubAction,
                 mockEditorConfig,
-                mockSdkman
+                mockSdkman,
+                mockGitIgnore
         );
 
         // Capture console output for assertions

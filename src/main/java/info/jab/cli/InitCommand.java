@@ -5,6 +5,7 @@ import org.jspecify.annotations.NonNull;
 import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
+import info.jab.cli.behaviours.GitIgnore;
 import info.jab.cli.behaviours.GithubAction;
 import info.jab.cli.behaviours.Maven;
 import info.jab.cli.behaviours.QuarkusCli;
@@ -63,6 +64,11 @@ public class InitCommand implements Runnable {
         description = "Add an initial SDKMAN Init file.")
     private boolean sdkmanOption = false;
 
+    @Option(
+        names = {"-gi", "--gitignore"},
+        description = "Add an initial .gitignore file.")
+    private boolean gitignoreOption = false;
+
     private final DevContainer devContainer;
     private final Maven maven;
     private final SpringCli springCli;
@@ -71,6 +77,7 @@ public class InitCommand implements Runnable {
     private final GithubAction githubAction;
     private final EditorConfig editorConfig;
     private final Sdkman sdkman;
+    private final GitIgnore gitignore;
 
     public InitCommand() {
         this.devContainer = new DevContainer();
@@ -81,6 +88,7 @@ public class InitCommand implements Runnable {
         this.githubAction = new GithubAction();
         this.editorConfig = new EditorConfig();
         this.sdkman = new Sdkman();
+        this.gitignore = new GitIgnore();
     }
 
     public InitCommand(
@@ -91,7 +99,8 @@ public class InitCommand implements Runnable {
         @NonNull Cursor cursor,
         @NonNull GithubAction githubAction,
         @NonNull EditorConfig editorConfig,
-        @NonNull Sdkman sdkman) {
+        @NonNull Sdkman sdkman,
+        @NonNull GitIgnore gitignore) {
         this.devContainer = devContainer;
         this.maven = maven;
         this.cursor = cursor;
@@ -100,6 +109,7 @@ public class InitCommand implements Runnable {
         this.githubAction = githubAction;
         this.editorConfig = editorConfig;
         this.sdkman = sdkman;
+        this.gitignore = gitignore;
     }
 
     public String runInitFeature() {
@@ -111,7 +121,8 @@ public class InitCommand implements Runnable {
             !devcontainerOption &&
             !githubActionOption &&
             !editorConfigOption &&
-            !sdkmanOption) {
+            !sdkmanOption &&
+            !gitignoreOption) {
             return "type 'init --help' to see available options";
         }
 
@@ -138,6 +149,9 @@ public class InitCommand implements Runnable {
         }
         if(sdkmanOption) {
             sdkman.execute();
+        }
+        if(gitignoreOption) {
+            gitignore.execute();
         }
         return "Command executed successfully";
     }
