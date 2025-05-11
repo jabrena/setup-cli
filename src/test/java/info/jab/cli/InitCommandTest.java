@@ -167,19 +167,18 @@ class InitCommandTest {
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"invalid", "not-supported"})
-    void shouldNotExecuteCursorFeatureWithInvalidOptions(String invalidOption) throws Exception {
+    @Test
+    void shouldNotExecuteCursorFeatureWithInvalidOption() throws Exception {
         // Given
-        String[] args = {"--cursor", invalidOption};
+        String[] args = {"--cursor", "invalid"};
 
         // When
         int exitCode = cmd.execute(args);
 
         // Then
         verify(mockCursor, never()).execute(any());
-        assertThat(exitCode).isEqualTo(0); // Picocli handles invalid param gracefully? Check behaviour.
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("type 'init --help' to see available options");
     }
 
     @Test

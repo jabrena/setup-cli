@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -48,11 +49,10 @@ class CursorTest {
         // Given
         String invalidOption = "invalid-option";
 
-        // When
-        cursor.execute(invalidOption);
-
-        // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEmpty();
+        // When & Then
+        assertThatThrownBy(() -> cursor.execute(invalidOption))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Invalid parameter: " + invalidOption);
         verify(mockCopyFiles, never()).copyFilesToDirectory(any(), anyString(), any(Path.class));
     }
 

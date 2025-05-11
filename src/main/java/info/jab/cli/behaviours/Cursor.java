@@ -32,8 +32,12 @@ public class Cursor implements Behaviour1 {
 
     @Override
     public void execute(@NonNull String parameter) {
+        //Validate parameter
         if (Objects.isNull(parameter)) {
             return;
+        }
+        if(!CursorOptions.isValidOption(parameter)) {
+            throw new IllegalArgumentException("Invalid parameter: " + parameter);
         }
 
         //TODO: not maintain the list of files.

@@ -22,7 +22,7 @@ import com.github.lalyos.jfiglet.FigletFont;
 public class Setup implements Runnable {
 
     // Field for dependency injection in tests
-    private InitCommand initCommand;
+    private final InitCommand initCommand;
 
     // Constructor that accepts an InitCommand (for testing)
     public Setup(@NonNull InitCommand initCommand) {
@@ -45,6 +45,7 @@ public class Setup implements Runnable {
             System.out.println();
             String asciiArt = FigletFont.convertOneLine("Setup CLI");
             System.out.println(colorize(asciiArt, Attribute.GREEN_TEXT()));
+            GitInfoPrinter.printGitInfo();
         } catch (IOException e) {
             System.out.println("Error printing banner: " + e.getMessage());
         }

@@ -104,7 +104,7 @@ public class InitCommand implements Runnable {
 
     public String runInitFeature() {
 
-        if(cursorOption.equals("NA") &&
+        if(!CursorOptions.isValidOption(cursorOption) &&
             !mavenOption &&
             !springCliOption &&
             !quarkusCliOption &&
