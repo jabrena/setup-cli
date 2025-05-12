@@ -39,7 +39,7 @@
         <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
         <maven-plugins-jxr.version>3.6.0</maven-plugins-jxr.version>
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
-
+        <maven-plugins-jreleaser.version>1.18.0</maven-plugins-jreleaser.version>
         <!-- Coverage -->
         <coverage.level>80</coverage.level>
     </properties>
@@ -179,13 +179,13 @@
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
                         <arg>-Xplugin:ErrorProne \
-                             -Xep:NullAway:ERROR \
-                             -XepOpt:NullAway:JSpecifyMode=true \
-                             -XepOpt:NullAway:TreatGeneratedAsUnannotated=true \
-                             -XepOpt:NullAway:CheckOptionalEmptiness=true \
-                             -XepOpt:NullAway:HandleTestAssertionLibraries=true \
-                             -XepOpt:NullAway:AssertsEnabled=true \
-                             -XepOpt:NullAway:AnnotatedPackages=info.jab.cli
+                            -Xep:NullAway:ERROR \
+                            -XepOpt:NullAway:JSpecifyMode=true \
+                            -XepOpt:NullAway:TreatGeneratedAsUnannotated=true \
+                            -XepOpt:NullAway:CheckOptionalEmptiness=true \
+                            -XepOpt:NullAway:HandleTestAssertionLibraries=true \
+                            -XepOpt:NullAway:AssertsEnabled=true \
+                            -XepOpt:NullAway:AnnotatedPackages=info.jab.cli
                         </arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
@@ -485,6 +485,22 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jrelease</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jreleaser</groupId>
+                        <artifactId>jreleaser-maven-plugin</artifactId>
+                        <version>${maven-plugins-jreleaser.version}</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <configFile>jreleaser.yml</configFile>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
