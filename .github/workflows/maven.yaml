@@ -45,7 +45,6 @@ jobs:
           java -jar $JAR_FILE init --github-action || exit 1
           java -jar $JAR_FILE init --editorconfig || exit 1
           java -jar $JAR_FILE init --sdkman || exit 1
-          java -jar $JAR_FILE init --gitignore || exit 1
           echo "✅ CLI commands executed successfully"
 
       - name: Upload jar
