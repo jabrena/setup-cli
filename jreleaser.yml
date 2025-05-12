@@ -1,0 +1,60 @@
+project:
+  name: Setup-CLI
+  description: Setup CLI
+  longDescription: 'Setup CLI'
+  copyright: The Setup Authors
+  java:
+    version: 24
+
+signing:
+  active: ALWAYS
+  armored: true
+
+assemble:
+  archive:
+    setup:
+      active: ALWAYS
+      stereotype: NONE
+      options:
+        longFileMode: POSIX
+      formats:
+        - ZIP
+        - TGZ
+      fileSets:
+        - input: target/staging-deploy
+          includes:
+            - '**/*.*'
+
+files:
+  active: ALWAYS
+  artifacts:
+    - path: 'target/setup-{{projectVersion}}.jar'
+
+deploy:
+  maven:
+    nexus2:
+      sonatype:
+        active: ALWAYS
+        snapshotSupported: false
+        url: https://oss.sonatype.org/service/local
+        snapshotUrl: https://oss.sonatype.org/content/repositories/snapshots
+        stagingProfileId: XXX
+        closeRepository: false
+        releaseRepository: false
+        stagingRepositories:
+          - target/staging-deploy
+    pomchecker:
+      failOnWarning: false
+      failOnError: false
+      strict: false
+
+release:
+  github:
+    overwrite: true
+    releaseName: '{{tagName}}'
+    tagName: '{{projectVersion}}'
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
