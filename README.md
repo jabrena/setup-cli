@@ -51,7 +51,6 @@ java -jar ./target/setup-0.8.0.jar init --quarkus-cli
 java -jar ./target/setup-0.8.0.jar init --github-action
 java -jar ./target/setup-0.8.0.jar init --editorconfig
 java -jar ./target/setup-0.8.0.jar init --sdkman
-java -jar ./target/setup-0.8.0.jar init --gitignore
 jar tf ./target/setup-0.8.0.jar
 ```
 
