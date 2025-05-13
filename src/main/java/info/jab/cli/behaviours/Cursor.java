@@ -17,6 +17,7 @@ public class Cursor implements Behaviour1 {
 
     private static final String CURSOR_RULES_JAVA_PATH = "cursor-rules-java/";
     private static final String CURSOR_RULES_TASKS_PATH = "cursor-rules-tasks/";
+    private static final String CURSOR_RULES_AGILE_PATH = "cursor-rules-agile/";
 
     // Instantiate CopyFiles
     private final CopyFiles copyFiles;
@@ -58,6 +59,8 @@ public class Cursor implements Behaviour1 {
             "1000-create-prd.mdc",
             "1001-generate-tasks-from-prd.mdc",
             "1002-task-list.mdc");
+        List<String> ruleAgileFiles = List.of(
+            "2000-agile-user-story.mdc");
 
         //Spring Boot support (Alpha)
         if(parameter.equals("java-spring-boot")) {
@@ -75,6 +78,8 @@ public class Cursor implements Behaviour1 {
 
             if(parameter.equals("tasks")) {
                 copyFiles.copyFilesToDirectory(ruleProcessesFiles, CURSOR_RULES_TASKS_PATH, rulesPath);
+            } else if(parameter.equals("agile")) {
+                copyFiles.copyFilesToDirectory(ruleAgileFiles, CURSOR_RULES_AGILE_PATH, rulesPath);
             } else {
                 copyFiles.copyFilesToDirectory(ruleJavaFiles, CURSOR_RULES_JAVA_PATH, rulesPath);
             }

@@ -97,4 +97,32 @@ class CursorTest {
             .contains("Cursor rules added successfully");
         verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
     }
+
+    @Test
+    void testExecuteWithTasksParam() {
+        // Given
+        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(any(), anyString(), any(Path.class));
+
+        // When
+        cursor.execute("tasks");
+
+        // Then
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
+            .contains("Cursor rules added successfully");
+        verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-tasks/"), any(Path.class));
+    }
+
+    @Test
+    void testExecuteWithAgileParam() {
+        // Given
+        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(any(), anyString(), any(Path.class));
+
+        // When
+        cursor.execute("agile");
+
+        // Then
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
+            .contains("Cursor rules added successfully");
+        verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-agile/"), any(Path.class));
+    }
 }
