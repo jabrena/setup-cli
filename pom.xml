@@ -6,7 +6,7 @@
 
     <groupId>info.jab.cli</groupId>
     <artifactId>setup</artifactId>
-    <version>0.8.0</version>
+    <version>0.9.0</version>
 
     <properties>
         <maven.version>3.9.9</maven.version>
@@ -179,13 +179,13 @@
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
                         <arg>-Xplugin:ErrorProne \
-                             -Xep:NullAway:ERROR \
-                             -XepOpt:NullAway:JSpecifyMode=true \
-                             -XepOpt:NullAway:TreatGeneratedAsUnannotated=true \
-                             -XepOpt:NullAway:CheckOptionalEmptiness=true \
-                             -XepOpt:NullAway:HandleTestAssertionLibraries=true \
-                             -XepOpt:NullAway:AssertsEnabled=true \
-                             -XepOpt:NullAway:AnnotatedPackages=info.jab.cli
+                            -Xep:NullAway:ERROR \
+                            -XepOpt:NullAway:JSpecifyMode=true \
+                            -XepOpt:NullAway:TreatGeneratedAsUnannotated=true \
+                            -XepOpt:NullAway:CheckOptionalEmptiness=true \
+                            -XepOpt:NullAway:HandleTestAssertionLibraries=true \
+                            -XepOpt:NullAway:AssertsEnabled=true \
+                            -XepOpt:NullAway:AnnotatedPackages=info.jab.cli
                         </arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
@@ -313,6 +313,28 @@
                             <resources>
                                 <resource>
                                     <directory>templates/cursor-rules-tasks</directory>
+                                    <filtering>false</filtering>
+                                    <excludes>
+                                        <exclude>.gitignore</exclude>
+                                        <exclude>LICENSE</exclude>
+                                        <exclude>*.md</exclude>
+                                        <exclude>*.png</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-cursor-rules-agile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-agile</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>templates/cursor-rules-agile</directory>
                                     <filtering>false</filtering>
                                     <excludes>
                                         <exclude>.gitignore</exclude>

@@ -4,3 +4,6 @@
 [submodule "templates/cursor-rules-java"]
 	path = templates/cursor-rules-java
 	url = https://github.com/jabrena/cursor-rules-java
+[submodule "templates/cursor-rules-agile"]
+	path = templates/cursor-rules-agile
+	url = https://github.com/jabrena/cursor-rules-agile

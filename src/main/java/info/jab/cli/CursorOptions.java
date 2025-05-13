@@ -11,7 +11,8 @@ public class CursorOptions implements Iterable<String> {
         "java",
         "java-spring-boot",
         "java-quarkus",
-        "tasks");
+        "tasks",
+        "agile");
 
     @Override
     public Iterator<String> iterator() {

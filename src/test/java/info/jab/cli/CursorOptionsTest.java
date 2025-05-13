@@ -14,7 +14,7 @@ class CursorOptionsTest {
     void testIterator() {
         // Given
         CursorOptions cursorOptions = new CursorOptions();
-        List<String> expectedValues = List.of("java", "java-spring-boot", "java-quarkus", "tasks");
+        List<String> expectedValues = List.of("java", "java-spring-boot", "java-quarkus", "tasks", "agile");
 
         // When
         Iterator<String> iterator = cursorOptions.iterator();
@@ -34,6 +34,7 @@ class CursorOptionsTest {
         String validSpringBoot = "java-spring-boot";
         String validQuarkus = "java-quarkus";
         String validTasks = "tasks";
+        String validAgile = "agile";
         String invalidOption = "invalid-option";
         String emptyOption = "";
 
@@ -43,6 +44,7 @@ class CursorOptionsTest {
         assertThat(CursorOptions.isValidOption(validSpringBoot)).isTrue();
         assertThat(CursorOptions.isValidOption(validQuarkus)).isTrue();
         assertThat(CursorOptions.isValidOption(validTasks)).isTrue();
+        assertThat(CursorOptions.isValidOption(validAgile)).isTrue();
         assertThat(CursorOptions.isValidOption(invalidOption)).isFalse();
         assertThat(CursorOptions.isValidOption(emptyOption)).isFalse();
     }
