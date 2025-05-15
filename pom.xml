@@ -41,7 +41,7 @@
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
 
         <!-- Coverage -->
-        <coverage.level>60</coverage.level>
+        <coverage.level>80</coverage.level>
     </properties>
 
     <dependencyManagement>
@@ -469,6 +469,9 @@
     <profiles>
         <profile>
             <id>jacoco</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>

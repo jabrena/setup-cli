@@ -1,6 +1,8 @@
 # Setup CLI
 
-Setup is a Command line utility designed to help developers when they start working with a new repository.
+Setup is a Command line utility designed to help developers when they start working with a new repository using Maven.
+
+[![CI Builds](https://github.com/jabrena/setup-cli/actions/workflows/maven.yaml/badge.svg)](https://github.com/jabrena/setup-cli/actions/workflows/maven.yaml)
 
 ![](./docs/setup-cli-screenshot.png)
 

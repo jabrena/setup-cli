@@ -4,14 +4,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 import com.diogonunes.jcolor.Attribute;
 import static com.diogonunes.jcolor.Ansi.colorize;
 
 public class GitInfoPrinter {
 
-    public static void printGitInfo() {
-        try (InputStream input = GitInfoPrinter.class.getClassLoader().getResourceAsStream("git.properties")) {
+    private final Supplier<InputStream> gitPropertiesStreamSupplier;
+
+    public GitInfoPrinter() {
+        this(() -> GitInfoPrinter.class.getClassLoader().getResourceAsStream("git.properties"));
+    }
+
+    GitInfoPrinter(Supplier<InputStream> gitPropertiesStreamSupplier) {
+        this.gitPropertiesStreamSupplier = gitPropertiesStreamSupplier;
+    }
+
+    public void printGitInfo() {
+        try (InputStream input = gitPropertiesStreamSupplier.get()) {
             //Preconditions
             if (Objects.isNull(input)) {
                 System.out.println("git.properties not found");
