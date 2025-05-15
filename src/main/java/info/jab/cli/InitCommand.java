@@ -7,6 +7,7 @@ import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
 import info.jab.cli.behaviours.Maven;
+import info.jab.cli.behaviours.MavenPlugins;
 import info.jab.cli.behaviours.QuarkusCli;
 import info.jab.cli.behaviours.Sdkman;
 import info.jab.cli.behaviours.SpringCli;
@@ -63,6 +64,12 @@ public class InitCommand implements Runnable {
         description = "Add an initial SDKMAN Init file.")
     private boolean sdkmanOption = false;
 
+    @Option(
+        names = {"-mp", "--maven-plugins"},
+        description = "Add an initial Maven Plugins: ${COMPLETION-CANDIDATES}.",
+        completionCandidates = MavenPluginsOptions.class)
+    private String mavenPluginsOption = "NA";
+
     private final DevContainer devContainer;
     private final Maven maven;
     private final SpringCli springCli;
@@ -71,6 +78,7 @@ public class InitCommand implements Runnable {
     private final GithubAction githubAction;
     private final EditorConfig editorConfig;
     private final Sdkman sdkman;
+    private final MavenPlugins mavenPlugins;
 
     public InitCommand() {
         this.devContainer = new DevContainer();
@@ -81,6 +89,7 @@ public class InitCommand implements Runnable {
         this.githubAction = new GithubAction();
         this.editorConfig = new EditorConfig();
         this.sdkman = new Sdkman();
+        this.mavenPlugins = new MavenPlugins();
     }
 
     public InitCommand(
@@ -91,7 +100,8 @@ public class InitCommand implements Runnable {
         @NonNull Cursor cursor,
         @NonNull GithubAction githubAction,
         @NonNull EditorConfig editorConfig,
-        @NonNull Sdkman sdkman) {
+        @NonNull Sdkman sdkman,
+        @NonNull MavenPlugins mavenPlugins) {
         this.devContainer = devContainer;
         this.maven = maven;
         this.cursor = cursor;
@@ -100,6 +110,7 @@ public class InitCommand implements Runnable {
         this.githubAction = githubAction;
         this.editorConfig = editorConfig;
         this.sdkman = sdkman;
+        this.mavenPlugins = mavenPlugins;
     }
 
     public String runInitFeature() {
@@ -111,7 +122,8 @@ public class InitCommand implements Runnable {
             !devcontainerOption &&
             !githubActionOption &&
             !editorConfigOption &&
-            !sdkmanOption) {
+            !sdkmanOption &&
+            !MavenPluginsOptions.isValidOption(mavenPluginsOption)) {
             return "type 'init --help' to see available options";
         }
 
@@ -138,6 +150,9 @@ public class InitCommand implements Runnable {
         }
         if(sdkmanOption) {
             sdkman.execute();
+        }
+        if(MavenPluginsOptions.isValidOption(mavenPluginsOption)) {
+            mavenPlugins.execute(mavenPluginsOption);
         }
         return "Command executed successfully";
     }
