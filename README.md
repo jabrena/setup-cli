@@ -12,13 +12,13 @@ Setup is a Command line utility designed to help developers when they start work
 sdk env install
 
 # Update cursor rules in local
-./load-remove-git-submodules-cursor-rules-java.sh r
-./load-remove-git-submodules-cursor-rules-tasks.sh r
-./load-remove-git-submodules-cursor-rules-agile.sh r
+./manage_submodules.sh r java
+./manage_submodules.sh r tasks
+./manage_submodules.sh r agile
 touch .gitmodules
-./load-remove-git-submodules-cursor-rules-java.sh c
-./load-remove-git-submodules-cursor-rules-tasks.sh c
-./load-remove-git-submodules-cursor-rules-agile.sh c
+./manage_submodules.sh c java
+./manage_submodules.sh c tasks
+./manage_submodules.sh c agile
 
 # Setup cli
 ./mvnw clean validate -U
