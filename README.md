@@ -27,7 +27,6 @@ touch .gitmodules
 ./mvnw clean verify jacoco:report -Pjacoco
 jwebserver -p 8000 -d "$(pwd)/target/site/jacoco"
 
-
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
 ./mvnw versions:display-property-updates
