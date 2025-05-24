@@ -1,12 +1,13 @@
 package info.jab.cli.io;
 
-import org.apache.commons.io.FileUtils;
-
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+
+import org.apache.commons.io.FileUtils;
 
 public class CopyFiles {
 
@@ -28,6 +29,28 @@ public class CopyFiles {
             }
         } catch (IOException e) {
             throw new RuntimeException("Error copying rules files", e);
+        }
+    }
+
+    public void copyDirectory(Path sourceDir, Path destinationDir) {
+        try {
+            FileUtils.copyDirectory(sourceDir.toFile(), destinationDir.toFile());
+        } catch (IOException e) {
+            throw new RuntimeException("Error copying directory from " + sourceDir + " to " + destinationDir, e);
+        }
+    }
+
+    public void copyDirectoryExcludingFiles(Path sourceDir, Path destinationDir, List<String> excludedFiles) {
+        try {
+            FileFilter filter = pathname -> {
+                if (pathname.isDirectory()) {
+                    return true; // Always copy directories to explore their contents
+                }
+                return !excludedFiles.contains(pathname.getName());
+            };
+            FileUtils.copyDirectory(sourceDir.toFile(), destinationDir.toFile(), filter);
+        } catch (IOException e) {
+            throw new RuntimeException("Error copying directory from " + sourceDir + " to " + destinationDir + " excluding files", e);
         }
     }
 }

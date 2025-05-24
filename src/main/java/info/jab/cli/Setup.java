@@ -45,14 +45,14 @@ public class Setup implements Runnable {
             System.out.println();
             String asciiArt = FigletFont.convertOneLine("Setup CLI");
             System.out.println(colorize(asciiArt, Attribute.GREEN_TEXT()));
-            GitInfoPrinter.printGitInfo();
+            new GitInfoPrinter().printGitInfo();
         } catch (IOException e) {
             System.out.println("Error printing banner: " + e.getMessage());
         }
     }
 
     // Refactored method to contain the core CLI logic for easier testing
-    public static int runCLI(String[] args) {
+    protected static int runCLI(String[] args) {
         if(args.length == 0) {
             System.out.println("Please specify a command. Use --help to see available options.");
             return 0; // Return 0 as per original logic

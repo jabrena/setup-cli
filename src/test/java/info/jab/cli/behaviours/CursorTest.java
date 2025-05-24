@@ -1,25 +1,26 @@
 package info.jab.cli.behaviours;
 
-import info.jab.cli.io.CopyFiles;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import static org.mockito.Mockito.verify;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import info.jab.cli.io.CopyFiles;
 
 @ExtendWith(MockitoExtension.class)
 class CursorTest {
@@ -53,13 +54,15 @@ class CursorTest {
         assertThatThrownBy(() -> cursor.execute(invalidOption))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessageContaining("Invalid parameter: " + invalidOption);
-        verify(mockCopyFiles, never()).copyFilesToDirectory(any(), anyString(), any(Path.class));
+        verify(mockCopyFiles, never()).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles, never()).copyDirectoryExcludingFiles(any(Path.class), any(Path.class), anyList());
+        verify(mockCopyFiles, never()).copyDirectory(any(Path.class), any(Path.class));
     }
 
     @Test
     void testExecuteWithValidJavaParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(any(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
 
         // When
         cursor.execute("java");
@@ -67,13 +70,13 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
+        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
     }
 
     @Test
     void testExecuteWithJavaSpringBootParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(any(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
 
         // When
         cursor.execute("java-spring-boot");
@@ -81,13 +84,13 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
+        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
     }
 
     @Test
     void testExecuteWithJavaQuarkusParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(any(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
 
         // When
         cursor.execute("java-quarkus");
@@ -95,13 +98,13 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-java/"), any(Path.class));
+        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
     }
 
     @Test
     void testExecuteWithTasksParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(any(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
 
         // When
         cursor.execute("tasks");
@@ -109,13 +112,13 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-tasks/"), any(Path.class));
+        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
     }
 
     @Test
     void testExecuteWithAgileParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(any(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
 
         // When
         cursor.execute("agile");
@@ -123,6 +126,6 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(any(), eq("cursor-rules-agile/"), any(Path.class));
+        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
     }
 }
