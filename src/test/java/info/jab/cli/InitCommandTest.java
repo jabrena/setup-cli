@@ -5,7 +5,6 @@ import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
 import info.jab.cli.behaviours.Maven;
-import info.jab.cli.behaviours.MavenPlugins;
 import info.jab.cli.behaviours.QuarkusCli;
 import info.jab.cli.behaviours.Sdkman;
 import info.jab.cli.behaviours.SpringCli;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import picocli.CommandLine;
@@ -54,9 +52,6 @@ class InitCommandTest {
     @Mock
     private Sdkman mockSdkman;
 
-    @Mock
-    private MavenPlugins mockMavenPlugins;
-
     private InitCommand initCommand;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -74,8 +69,7 @@ class InitCommandTest {
                 mockCursor,
                 mockGithubAction,
                 mockEditorConfig,
-                mockSdkman,
-                mockMavenPlugins
+                mockSdkman
         );
 
         // Capture console output for assertions

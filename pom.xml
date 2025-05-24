@@ -9,9 +9,10 @@
     <version>0.10.0</version>
 
     <properties>
-        <maven.version>3.9.9</maven.version>
         <java.version>24</java.version>
+        <maven.version>3.9.9</maven.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Dependencies -->
         <picocli.version>4.7.7</picocli.version>
@@ -32,12 +33,13 @@
         <error-prone.version>2.38.0</error-prone.version>
         <nullaway.version>0.11.0</nullaway.version>
         <maven-plugins-surefire.version>3.5.3</maven-plugins-surefire.version>
+        <maven-plugins-failsafe.version>3.5.3</maven-plugins-failsafe.version>
+        <maven-plugins-jxr.version>3.6.0</maven-plugins-jxr.version>
         <maven-plugins-jacoco.version>0.8.13</maven-plugins-jacoco.version>
         <maven-plugins-jar.version>3.4.2</maven-plugins-jar.version>
         <maven-plugins-shade.version>3.6.0</maven-plugins-shade.version>
         <maven-plugins-versions.version>2.18.0</maven-plugins-versions.version>
         <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
-        <maven-plugins-jxr.version>3.6.0</maven-plugins-jxr.version>
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
 
         <!-- Coverage -->
@@ -213,8 +215,34 @@
                 <version>${maven-plugins-surefire.version}</version>
                 <configuration>
                     <skipAfterFailureCount>1</skipAfterFailureCount>
+                    <includes>
+						<include>**/*Test.java</include>
+					</includes>
+					<excludes>
+						<exclude>**/*IT.java</exclude>
+					</excludes>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-plugins-failsafe.version}</version>
+				<configuration>
+					<includes>
+						<include>**/*IT.java</include>
+					</includes>
+					<excludes>
+						<exclude>**/*Test.java</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
@@ -422,22 +450,6 @@
                             <resources>
                                 <resource>
                                     <directory>templates/gitignore-template</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-maven-plugins</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/maven-plugins</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/maven-plugins-template</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
