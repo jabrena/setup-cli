@@ -22,6 +22,9 @@ touch .gitmodules
 
 # Setup cli
 ./mvnw clean validate -U
+./mvnw buildplan:list-phase
+./mvnw license:third-party-report
+jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify
 ./mvnw clean verify surefire-report:report
 ./mvnw clean verify jacoco:report -Pjacoco
@@ -73,7 +76,9 @@ jbang setup@jabrena
 - https://github.com/jabrena/cursor-rules-java
 - https://github.com/jabrena/cursor-rules-tasks
 - https://github.com/jabrena/cursor-rules-agile
+- https://github.com/jabrena/cursor-rules-examples
 - https://github.com/jabrena/jbang-catalog
+- https://github.com/jabrena/setup-cli
 
 ### Developer links
 
