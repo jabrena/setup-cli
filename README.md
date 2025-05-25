@@ -73,6 +73,7 @@ jbang setup@jabrena
 
 - https://www.cursor.com/
 - https://docs.cursor.com/context/rules-for-ai
+- ...
 - https://github.com/jabrena/cursor-rules-java
 - https://github.com/jabrena/cursor-rules-tasks
 - https://github.com/jabrena/cursor-rules-agile
