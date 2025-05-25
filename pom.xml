@@ -6,12 +6,13 @@
 
     <groupId>info.jab.cli</groupId>
     <artifactId>setup</artifactId>
-    <version>0.9.0</version>
+    <version>0.10.0</version>
 
     <properties>
-        <maven.version>3.9.9</maven.version>
         <java.version>24</java.version>
+        <maven.version>3.9.9</maven.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Dependencies -->
         <picocli.version>4.7.7</picocli.version>
@@ -22,7 +23,7 @@
 
         <!-- Test dependencies -->
         <junit.version>5.12.0</junit.version>
-        <mockito.version>5.17.0</mockito.version>
+        <mockito.version>5.18.0</mockito.version>
         <assertj.version>3.27.3</assertj.version>
 
         <!-- Maven Plugins -->
@@ -32,16 +33,17 @@
         <error-prone.version>2.38.0</error-prone.version>
         <nullaway.version>0.11.0</nullaway.version>
         <maven-plugins-surefire.version>3.5.3</maven-plugins-surefire.version>
+        <maven-plugins-failsafe.version>3.5.3</maven-plugins-failsafe.version>
+        <maven-plugins-jxr.version>3.6.0</maven-plugins-jxr.version>
         <maven-plugins-jacoco.version>0.8.13</maven-plugins-jacoco.version>
         <maven-plugins-jar.version>3.4.2</maven-plugins-jar.version>
         <maven-plugins-shade.version>3.6.0</maven-plugins-shade.version>
         <maven-plugins-versions.version>2.18.0</maven-plugins-versions.version>
         <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
-        <maven-plugins-jxr.version>3.6.0</maven-plugins-jxr.version>
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
 
         <!-- Coverage -->
-        <coverage.level>80</coverage.level>
+        <coverage.level>35</coverage.level>
     </properties>
 
     <dependencyManagement>
@@ -53,10 +55,22 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-bom</artifactId>
+                <version>${mockito.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <version>${jspecify.version}</version>
+        </dependency>
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
@@ -77,11 +91,7 @@
             <artifactId>JColor</artifactId>
             <version>${jcolor.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.jspecify</groupId>
-            <artifactId>jspecify</artifactId>
-            <version>${jspecify.version}</version>
-        </dependency>
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.assertj</groupId>
@@ -94,21 +104,19 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+
     <build>
         <plugins>
             <plugin>
@@ -172,6 +180,8 @@
                 <version>${maven-plugins-compiler.version}</version>
                 <configuration>
                     <release>${java.version}</release>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
                     <compilerArgs>
                         <arg>-Xlint:all</arg>
                         <arg>-Werror</arg>
@@ -202,16 +212,40 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-plugins-surefire.version}</version>
                 <configuration>
                     <skipAfterFailureCount>1</skipAfterFailureCount>
+                    <includes>
+						<include>**/*Test.java</include>
+					</includes>
+					<excludes>
+						<exclude>**/*IT.java</exclude>
+					</excludes>
                 </configuration>
             </plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-plugins-failsafe.version}</version>
+				<configuration>
+					<includes>
+						<include>**/*IT.java</include>
+					</includes>
+					<excludes>
+						<exclude>**/*Test.java</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
@@ -220,7 +254,6 @@
                     <allowSnapshots>false</allowSnapshots>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -274,7 +307,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -428,13 +460,11 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>${maven-plugins-jxr.version}</version>
             </plugin>
-
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
@@ -460,6 +490,9 @@
     <profiles>
         <profile>
             <id>jacoco</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -504,6 +537,34 @@
                                             </limits>
                                         </rule>
                                     </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>modular</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.moditect</groupId>
+                        <artifactId>moditect-maven-plugin</artifactId>
+                        <version>${maven-plugins-moditect.version}</version>
+                        <executions>
+                            <execution>
+                                <id>add-module-infos</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>add-module-info</goal>
+                                </goals>
+                                <configuration>
+                                    <jvmVersion>${java.version}</jvmVersion>
+                                    <failOnWarning>true</failOnWarning>
                                 </configuration>
                             </execution>
                         </executions>

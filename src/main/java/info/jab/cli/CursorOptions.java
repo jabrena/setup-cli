@@ -1,22 +1,48 @@
 package info.jab.cli;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.jspecify.annotations.NonNull;
 
-public class CursorOptions implements Iterable<String> {
-    private static final List<String> OPTIONS = List.of(
-        "java",
-        "java-spring-boot",
-        "java-quarkus",
-        "tasks",
-        "agile");
+public class CursorOptions implements Iterable<String>{
+
+    public enum CursorOption {
+        JAVA("java"),
+        JAVA_SPRING_BOOT("java-spring-boot"),
+        JAVA_QUARKUS("java-quarkus"),
+        TASKS("tasks"),
+        AGILE("agile");
+
+        private final String value;
+
+        CursorOption(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static List<String> getOptionValues() {
+            return Arrays.stream(CursorOption.values())
+                    .map(CursorOption::getValue)
+                    .toList();
+        }
+
+        public static Optional<CursorOption> fromString(String text) {
+            return Arrays.stream(CursorOption.values())
+                    .filter(option -> option.value.equalsIgnoreCase(text))
+                    .findFirst();
+        }
+    }
 
     @Override
     public Iterator<String> iterator() {
-        return OPTIONS.iterator();
+        return CursorOption.getOptionValues().iterator();
     }
 
     /**
@@ -29,10 +55,10 @@ public class CursorOptions implements Iterable<String> {
         if (Objects.isNull(parameter)) {
             return false;
         }
-        return OPTIONS.contains(parameter);
+        return CursorOption.fromString(parameter).isPresent();
     }
 
     public static List<String> getOptions() {
-        return OPTIONS;
+        return CursorOption.getOptionValues();
     }
 }

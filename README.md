@@ -1,6 +1,8 @@
 # Setup CLI
 
-Setup is a Command line utility designed to help developers when they start working with a new repository.
+Setup is a Command line utility designed to help developers when they start working with a new repository using Maven.
+
+[![CI Builds](https://github.com/jabrena/setup-cli/actions/workflows/maven.yaml/badge.svg)](https://github.com/jabrena/setup-cli/actions/workflows/maven.yaml)
 
 ![](./docs/setup-cli-screenshot.png)
 
@@ -10,27 +12,29 @@ Setup is a Command line utility designed to help developers when they start work
 sdk env install
 
 # Update cursor rules in local
-./load-remove-git-submodules-cursor-rules-java.sh r
-./load-remove-git-submodules-cursor-rules-tasks.sh r
-./load-remove-git-submodules-cursor-rules-agile.sh r
+./manage_submodules.sh r java
+./manage_submodules.sh r tasks
+./manage_submodules.sh r agile
 touch .gitmodules
-./load-remove-git-submodules-cursor-rules-java.sh c
-./load-remove-git-submodules-cursor-rules-tasks.sh c
-./load-remove-git-submodules-cursor-rules-agile.sh c
+./manage_submodules.sh c java
+./manage_submodules.sh c tasks
+./manage_submodules.sh c agile
 
 # Setup cli
 ./mvnw clean validate -U
+./mvnw buildplan:list-phase
+./mvnw license:third-party-report
+jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify
 ./mvnw clean verify surefire-report:report
 ./mvnw clean verify jacoco:report -Pjacoco
 jwebserver -p 8000 -d "$(pwd)/target/site/jacoco"
 
-
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
 ./mvnw versions:display-property-updates
 
-./mvnw versions:set -DnewVersion=0.9.0
+./mvnw versions:set -DnewVersion=0.10.0
 ./mvnw versions:commit
 ```
 
@@ -38,23 +42,23 @@ jwebserver -p 8000 -d "$(pwd)/target/site/jacoco"
 
 ```bash
 ./mvnw clean package
-java -jar ./target/setup-0.9.0.jar
-java -jar ./target/setup-0.9.0.jar --help
-java -jar ./target/setup-0.9.0.jar init
-java -jar ./target/setup-0.9.0.jar init --help
-java -jar ./target/setup-0.9.0.jar init --devcontainer
-java -jar ./target/setup-0.9.0.jar init --cursor java
-java -jar ./target/setup-0.9.0.jar init --cursor tasks
-java -jar ./target/setup-0.9.0.jar init --cursor agile
-java -jar ./target/setup-0.9.0.jar init --cursor java-spring-boot
-java -jar ./target/setup-0.9.0.jar init --cursor java-quarkus
-java -jar ./target/setup-0.9.0.jar init --maven
-java -jar ./target/setup-0.9.0.jar init --spring-cli
-java -jar ./target/setup-0.9.0.jar init --quarkus-cli
-java -jar ./target/setup-0.9.0.jar init --github-action
-java -jar ./target/setup-0.9.0.jar init --editorconfig
-java -jar ./target/setup-0.9.0.jar init --sdkman
-jar tf ./target/setup-0.9.0.jar
+java -jar ./target/setup-0.10.0.jar
+java -jar ./target/setup-0.10.0.jar --help
+java -jar ./target/setup-0.10.0.jar init
+java -jar ./target/setup-0.10.0.jar init --help
+java -jar ./target/setup-0.10.0.jar init --devcontainer
+java -jar ./target/setup-0.10.0.jar init --cursor java
+java -jar ./target/setup-0.10.0.jar init --cursor tasks
+java -jar ./target/setup-0.10.0.jar init --cursor agile
+java -jar ./target/setup-0.10.0.jar init --cursor java-spring-boot
+java -jar ./target/setup-0.10.0.jar init --cursor java-quarkus
+java -jar ./target/setup-0.10.0.jar init --maven
+java -jar ./target/setup-0.10.0.jar init --spring-cli
+java -jar ./target/setup-0.10.0.jar init --quarkus-cli
+java -jar ./target/setup-0.10.0.jar init --github-action
+java -jar ./target/setup-0.10.0.jar init --editorconfig
+java -jar ./target/setup-0.10.0.jar init --sdkman
+jar tf ./target/setup-0.10.0.jar
 ```
 
 ## How to use from Jbang
@@ -69,10 +73,13 @@ jbang setup@jabrena
 
 - https://www.cursor.com/
 - https://docs.cursor.com/context/rules-for-ai
+- ...
 - https://github.com/jabrena/cursor-rules-java
 - https://github.com/jabrena/cursor-rules-tasks
 - https://github.com/jabrena/cursor-rules-agile
+- https://github.com/jabrena/cursor-rules-examples
 - https://github.com/jabrena/jbang-catalog
+- https://github.com/jabrena/setup-cli
 
 ### Developer links
 
