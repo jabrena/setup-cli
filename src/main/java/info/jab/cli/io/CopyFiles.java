@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
@@ -104,6 +105,14 @@ public class CopyFiles {
             });
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException("Error copying folder from " + classpathFolder + " to " + destination + " excluding files", e);
+        }
+    }
+
+    public void copyContentToFile(String content, Path destination) {
+        try {
+            Files.write(destination, content.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new RuntimeException("Error copying content to file", e);
         }
     }
 }

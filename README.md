@@ -62,6 +62,7 @@ java -jar ./target/setup-0.10.0.jar init --editorconfig
 java -jar ./target/setup-0.10.0.jar init --sdkman
 java -jar ./target/setup-0.10.0.jar init --visualvm
 java -jar ./target/setup-0.10.0.jar init --jmc
+java -jar ./target/setup-0.10.0.jar init --gitignore
 jar tf ./target/setup-0.10.0.jar
 ```
 

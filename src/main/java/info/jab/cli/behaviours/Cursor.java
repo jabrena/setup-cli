@@ -3,12 +3,10 @@ package info.jab.cli.behaviours;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.jspecify.annotations.NonNull;
 
-import info.jab.cli.CursorOptions;
 import info.jab.cli.CursorOptions.CursorOption;
 import info.jab.cli.io.CopyFiles;
 
@@ -40,20 +38,13 @@ public class Cursor implements Behaviour1 {
 
     @Override
     public void execute(@NonNull String parameter) {
-        if (Objects.isNull(parameter)) {
-            return;
-        }
-        if (!CursorOptions.isValidOption(parameter)) {
-            throw new IllegalArgumentException("Invalid parameter: " + parameter);
-        }
+        //Preconditions
+        CursorOption option = CursorOption.fromString(parameter)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid parameter: " + parameter));
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path cursorPath = currentPath.resolve(".cursor");
         Path rulesPath = cursorPath.resolve("rules");
-
-        CursorOption option = CursorOption.fromString(parameter)
-            .orElseThrow(() -> new IllegalStateException(
-                "Internal error: Parameter '" + parameter + "' was validated but fromString returned empty."));
 
         switch (option) {
             case JAVA -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, JVM_FRAMEWORKS_SPECIFIC_FILES);

@@ -24,6 +24,7 @@ import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
+import info.jab.cli.behaviours.Gitignore;
 import info.jab.cli.behaviours.JMC;
 import info.jab.cli.behaviours.Maven;
 import info.jab.cli.behaviours.QuarkusCli;
@@ -65,6 +66,9 @@ class InitCommandTest {
     @Mock
     private JMC mockJMC;
 
+    @Mock
+    private Gitignore mockGitignore;
+
     private InitCommand initCommand;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -84,7 +88,8 @@ class InitCommandTest {
                 mockEditorConfig,
                 mockSdkman,
                 mockVisualvm,
-                mockJMC
+                mockJMC,
+                mockGitignore
         );
 
         // Capture console output for assertions
@@ -250,7 +255,8 @@ class InitCommandTest {
             "--editorconfig",
             "--sdkman",
             "--visualvm",
-            "--jmc"
+            "--jmc",
+            "--gitignore"
         };
 
         // When
@@ -267,6 +273,7 @@ class InitCommandTest {
         verify(mockSdkman, times(1)).execute();
         verify(mockVisualvm, times(1)).execute();
         verify(mockJMC, times(1)).execute();
+        verify(mockGitignore, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }

@@ -2,10 +2,14 @@ package info.jab.cli.behaviours;
 
 public class SpringCli implements Behaviour0 {
 
+    private String commands = """
+            sdk install springboot
+            spring init -d=web,actuator,devtools --build=maven --force ./
+            ./mvnw clean verify
+            """;
+
     @Override
     public void execute() {
-        System.out.println("sdk install springboot");
-        System.out.println("spring init -d=web,actuator,devtools --build=maven --force ./");
-        System.out.println("./mvnw clean verify");
+        commands.lines().forEach(System.out::println);
     }
 }

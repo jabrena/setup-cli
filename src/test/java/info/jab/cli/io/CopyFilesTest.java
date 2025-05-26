@@ -1,6 +1,7 @@
 package info.jab.cli.io;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -184,5 +185,121 @@ class CopyFilesTest {
 
         assertThat(Files.exists(copiedFile1)).isTrue();
         assertThat(Files.exists(copiedFile2)).isTrue();
+    }
+
+    @Test
+    void shouldCopyContentToFileSuccessfully() throws IOException {
+        // Given
+        String content = "Hello, World!\nThis is a test file.";
+        Path destinationFile = tempDir.resolve("test-output.txt");
+
+        // When
+        copyFiles.copyContentToFile(content, destinationFile);
+
+        // Then
+        assertThat(Files.exists(destinationFile)).isTrue();
+        assertThat(Files.isRegularFile(destinationFile)).isTrue();
+
+        String actualContent = Files.readString(destinationFile, StandardCharsets.UTF_8);
+        assertThat(actualContent).isEqualTo(content);
+    }
+
+    @Test
+    void shouldCopyEmptyContentToFile() throws IOException {
+        // Given
+        String emptyContent = "";
+        Path destinationFile = tempDir.resolve("empty-file.txt");
+
+        // When
+        copyFiles.copyContentToFile(emptyContent, destinationFile);
+
+        // Then
+        assertThat(Files.exists(destinationFile)).isTrue();
+        assertThat(Files.isRegularFile(destinationFile)).isTrue();
+
+        String actualContent = Files.readString(destinationFile, StandardCharsets.UTF_8);
+        assertThat(actualContent).isEmpty();
+    }
+
+    @Test
+    void shouldOverwriteExistingFileWithCopyContentToFile() throws IOException {
+        // Given
+        String originalContent = "Original content";
+        String newContent = "New content that should replace the original";
+        Path destinationFile = tempDir.resolve("overwrite-test.txt");
+
+        // Create file with original content
+        Files.writeString(destinationFile, originalContent, StandardCharsets.UTF_8);
+        assertThat(Files.readString(destinationFile, StandardCharsets.UTF_8)).isEqualTo(originalContent);
+
+        // When
+        copyFiles.copyContentToFile(newContent, destinationFile);
+
+        // Then
+        assertThat(Files.exists(destinationFile)).isTrue();
+        String actualContent = Files.readString(destinationFile, StandardCharsets.UTF_8);
+        assertThat(actualContent).isEqualTo(newContent);
+        assertThat(actualContent).doesNotContain(originalContent);
+    }
+
+    @Test
+    void shouldCopyMultilineContentToFile() throws IOException {
+        // Given
+        String multilineContent = """
+            Line 1
+            Line 2 with special chars: !@#$%^&*()
+            Line 3 with unicode: 你好世界
+            Line 4 with tabs	and spaces
+            """;
+        Path destinationFile = tempDir.resolve("multiline-test.txt");
+
+        // When
+        copyFiles.copyContentToFile(multilineContent, destinationFile);
+
+        // Then
+        assertThat(Files.exists(destinationFile)).isTrue();
+        String actualContent = Files.readString(destinationFile, StandardCharsets.UTF_8);
+        assertThat(actualContent).isEqualTo(multilineContent);
+        assertThat(actualContent).contains("Line 1");
+        assertThat(actualContent).contains("special chars: !@#$%^&*()");
+        assertThat(actualContent).contains("unicode: 你好世界");
+        assertThat(actualContent).contains("tabs	and spaces");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenParentDirectoriesDoNotExist() {
+        // Given
+        String content = "Content for nested file";
+        Path nestedFile = tempDir.resolve("nested").resolve("deep").resolve("file.txt");
+
+        // Verify parent directories don't exist initially
+        Path parentDir = nestedFile.getParent();
+        assertThat(parentDir).isNotNull();
+        assertThat(Files.exists(parentDir)).isFalse();
+
+        // When & Then
+        assertThatThrownBy(() -> copyFiles.copyContentToFile(content, nestedFile))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Error copying content to file");
+    }
+
+    @Test
+    void shouldThrowRuntimeExceptionWhenCopyContentToFileFailsWithInvalidPath() {
+        // Given
+        String content = "Test content";
+        // Create an invalid path (trying to write to a directory that exists as a file)
+        Path invalidPath = tempDir.resolve("invalid-path.txt").resolve("cannot-create-file-here.txt");
+
+        try {
+            // Create a file at the parent path to make it invalid
+            Files.writeString(tempDir.resolve("invalid-path.txt"), "blocking file", StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException("Test setup failed", e);
+        }
+
+        // When / Then
+        assertThatThrownBy(() -> copyFiles.copyContentToFile(content, invalidPath))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Error copying content to file");
     }
 }

@@ -6,6 +6,7 @@ import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
+import info.jab.cli.behaviours.Gitignore;
 import info.jab.cli.behaviours.JMC;
 import info.jab.cli.behaviours.Maven;
 import info.jab.cli.behaviours.QuarkusCli;
@@ -76,6 +77,11 @@ public class InitCommand implements Runnable {
         hidden = true)
     private boolean jmcOption = false;
 
+    @Option(
+        names = {"-gi", "--gitignore"},
+        description = "Add an initial .gitignore file.")
+    private boolean gitignoreOption = false;
+
     private final DevContainer devContainer;
     private final Maven maven;
     private final SpringCli springCli;
@@ -86,6 +92,7 @@ public class InitCommand implements Runnable {
     private final Sdkman sdkman;
     private final Visualvm visualvm;
     private final JMC jmc;
+    private final Gitignore gitignore;
 
     public InitCommand() {
         this.devContainer = new DevContainer();
@@ -98,6 +105,7 @@ public class InitCommand implements Runnable {
         this.sdkman = new Sdkman();
         this.visualvm = new Visualvm();
         this.jmc = new JMC();
+        this.gitignore = new Gitignore();
     }
 
     public InitCommand(
@@ -110,7 +118,8 @@ public class InitCommand implements Runnable {
         @NonNull EditorConfig editorConfig,
         @NonNull Sdkman sdkman,
         @NonNull Visualvm visualvm,
-        @NonNull JMC jmc) {
+        @NonNull JMC jmc,
+        @NonNull Gitignore gitignore) {
         this.devContainer = devContainer;
         this.maven = maven;
         this.cursor = cursor;
@@ -121,6 +130,7 @@ public class InitCommand implements Runnable {
         this.sdkman = sdkman;
         this.visualvm = visualvm;
         this.jmc = jmc;
+        this.gitignore = gitignore;
     }
 
     public String runInitFeature() {
@@ -134,7 +144,8 @@ public class InitCommand implements Runnable {
             !editorConfigOption &&
             !sdkmanOption &&
             !visualvmOption &&
-            !jmcOption) {
+            !jmcOption &&
+            !gitignoreOption) {
             return "type 'init --help' to see available options";
         }
 
@@ -167,6 +178,9 @@ public class InitCommand implements Runnable {
         }
         if(jmcOption) {
             jmc.execute();
+        }
+        if(gitignoreOption) {
+            gitignore.execute();
         }
         return "Command executed successfully";
     }
