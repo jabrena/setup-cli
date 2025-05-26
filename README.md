@@ -29,6 +29,7 @@ jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify surefire-report:report
 ./mvnw clean verify jacoco:report -Pjacoco
 jwebserver -p 8000 -d "$(pwd)/target/site/jacoco"
+./mvnw clean verify -Ppitest
 
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates

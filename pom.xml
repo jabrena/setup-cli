@@ -40,6 +40,8 @@
         <maven-plugins-versions.version>2.18.0</maven-plugins-versions.version>
         <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
+        <maven-plugins-pitest.version>1.19.4</maven-plugins-pitest.version>
+        <maven-plugins-pitest-junit5.version>1.2.3</maven-plugins-pitest-junit5.version>
 
         <!-- Coverage -->
         <coverage.level>70</coverage.level>
@@ -539,34 +541,56 @@
                 </plugins>
             </build>
         </profile>
+
         <profile>
-            <id>modular</id>
+            <id>pitest</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.moditect</groupId>
-                        <artifactId>moditect-maven-plugin</artifactId>
-                        <version>${maven-plugins-moditect.version}</version>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>${maven-plugins-pitest.version}</version>
+                        <configuration>
+                            <targetClasses>
+                                <param>info.jab.cli.*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>info.jab.cli.*</param>
+                            </targetTests>
+                            <outputFormats>
+                                <outputFormat>HTML</outputFormat>
+                                <outputFormat>XML</outputFormat>
+                            </outputFormats>
+                            <mutationThreshold>${coverage.level}</mutationThreshold>
+                            <coverageThreshold>${coverage.level}</coverageThreshold>
+                            <timestampedReports>false</timestampedReports>
+                            <verbose>false</verbose>
+                            <threads>4</threads>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.pitest</groupId>
+                                <artifactId>pitest-junit5-plugin</artifactId>
+                                <version>${maven-plugins-pitest-junit5.version}</version>
+                            </dependency>
+                        </dependencies>
                         <executions>
                             <execution>
-                                <id>add-module-infos</id>
-                                <phase>package</phase>
+                                <id>pitest-mutation-testing</id>
                                 <goals>
-                                    <goal>add-module-info</goal>
+                                    <goal>mutationCoverage</goal>
                                 </goals>
-                                <configuration>
-                                    <jvmVersion>${java.version}</jvmVersion>
-                                    <failOnWarning>true</failOnWarning>
-                                </configuration>
+                                <phase>verify</phase>
                             </execution>
                         </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
+
     </profiles>
 
     <reporting>
