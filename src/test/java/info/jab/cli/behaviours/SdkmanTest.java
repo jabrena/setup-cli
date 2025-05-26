@@ -5,7 +5,6 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +34,6 @@ class SdkmanTest {
     void should_execute_copy_and_print_message() {
         // Given
         Path expectedPath = Paths.get(System.getProperty("user.dir"));
-        List<String> expectedFiles = List.of(".sdkmanrc");
         String expectedResourcePath = "sdkman/";
 
         // When

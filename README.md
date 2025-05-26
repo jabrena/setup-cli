@@ -48,10 +48,10 @@ java -jar ./target/setup-0.10.0.jar init
 java -jar ./target/setup-0.10.0.jar init --help
 java -jar ./target/setup-0.10.0.jar init --devcontainer
 java -jar ./target/setup-0.10.0.jar init --cursor java
-java -jar ./target/setup-0.10.0.jar init --cursor tasks
-java -jar ./target/setup-0.10.0.jar init --cursor agile
 java -jar ./target/setup-0.10.0.jar init --cursor java-spring-boot
 java -jar ./target/setup-0.10.0.jar init --cursor java-quarkus
+java -jar ./target/setup-0.10.0.jar init --cursor tasks
+java -jar ./target/setup-0.10.0.jar init --cursor agile
 java -jar ./target/setup-0.10.0.jar init --maven
 java -jar ./target/setup-0.10.0.jar init --spring-cli
 java -jar ./target/setup-0.10.0.jar init --quarkus-cli

@@ -1,21 +1,13 @@
 package info.jab.cli.io;
 
-import org.apache.commons.io.FileUtils;
+import java.io.IOException;
+import java.nio.file.Path;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CopyFilesTest {
 
@@ -65,22 +57,14 @@ class CopyFilesTest {
     */
 
     @Test
-    void shouldThrowRuntimeExceptionWhenResourceNotFound() {
+    void shouldThrowRuntimeExceptionWhenClasspathFolderNotFoundInCopyClasspathFolder() {
         // Given
-        String resourceBasePath = "nonexistent/copyfiles/path/";
-        String fileName = "nonexistent-file.mdc";
-        List<String> ruleFiles = List.of(fileName);
+        String nonexistentClasspathFolder = "nonexistent/folder/";
 
         // When / Then
-        assertThatThrownBy(() -> copyFiles.copyFilesToDirectory(ruleFiles, resourceBasePath, rulesDir))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Error copying rules files")
-                .cause()
-                .isInstanceOf(IOException.class)
-                .hasMessageContaining("Resource not found at " + resourceBasePath + fileName);
-
-         // Check that the directory was still created
-         assertThat(Files.exists(rulesDir)).isTrue();
+        assertThatThrownBy(() -> copyFiles.copyClasspathFolder(nonexistentClasspathFolder, rulesDir))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Classpath folder not found: " + nonexistentClasspathFolder);
     }
 
     /*

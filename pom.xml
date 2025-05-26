@@ -16,7 +16,6 @@
 
         <!-- Dependencies -->
         <picocli.version>4.7.7</picocli.version>
-        <commons-io.version>2.19.0</commons-io.version>
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
         <jspecify.version>1.0.0</jspecify.version>
@@ -75,11 +74,6 @@
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
             <version>${picocli.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.lalyos</groupId>

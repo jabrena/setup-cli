@@ -54,9 +54,6 @@ class CursorTest {
         assertThatThrownBy(() -> cursor.execute(invalidOption))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessageContaining("Invalid parameter: " + invalidOption);
-        verify(mockCopyFiles, never()).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
-        verify(mockCopyFiles, never()).copyDirectoryExcludingFiles(any(Path.class), any(Path.class), anyList());
-        verify(mockCopyFiles, never()).copyDirectory(any(Path.class), any(Path.class));
         verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
         verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
