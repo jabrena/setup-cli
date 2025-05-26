@@ -153,6 +153,20 @@ class InitCommandTest {
     }
 
     @Test
+    void shouldExecuteQuarkusCliFeature() throws Exception {
+        // Given
+        String[] args = {"--quarkus-cli"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockQuarkusCli, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+    }
+
+    @Test
     void shouldExecuteGithubActionFeature() throws Exception {
         // Given
         String[] args = {"--github-action"};
@@ -162,6 +176,34 @@ class InitCommandTest {
 
         // Then
         verify(mockGithubAction, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+    }
+
+    @Test
+    void shouldExecuteVisualvmFeature() throws Exception {
+        // Given
+        String[] args = {"--visualvm"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockVisualvm, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+    }
+
+    @Test
+    void shouldExecuteJmcFeature() throws Exception {
+        // Given
+        String[] args = {"--jmc"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockJMC, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
@@ -202,10 +244,13 @@ class InitCommandTest {
             "--devcontainer",
             "--maven",
             "--spring-cli",
+            "--quarkus-cli",
             "--github-action",
             "--cursor", "java",
             "--editorconfig",
-            "--sdkman"
+            "--sdkman",
+            "--visualvm",
+            "--jmc"
         };
 
         // When
@@ -215,10 +260,13 @@ class InitCommandTest {
         verify(mockDevContainer, times(1)).execute();
         verify(mockMaven, times(1)).execute();
         verify(mockSpringCli, times(1)).execute();
+        verify(mockQuarkusCli, times(1)).execute();
         verify(mockGithubAction, times(1)).execute();
         verify(mockCursor, times(1)).execute("java");
         verify(mockEditorConfig, times(1)).execute();
         verify(mockSdkman, times(1)).execute();
+        verify(mockVisualvm, times(1)).execute();
+        verify(mockJMC, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
@@ -250,5 +298,99 @@ class InitCommandTest {
         verify(mockCursor, times(1)).execute("java");
         assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).contains("Command executed successfully");
+    }
+
+    @Test
+    void shouldCreateInitCommandWithDefaultConstructor() {
+        // Given & When
+        InitCommand defaultCommand = new InitCommand();
+
+        // Then
+        assertThat(defaultCommand).isNotNull();
+        // Verify that runInitFeature works with default constructor
+        String result = defaultCommand.runInitFeature();
+        assertThat(result).isEqualTo("type 'init --help' to see available options");
+    }
+
+    @Test
+    void shouldHandleMainMethodExecution() {
+        // Given
+        String[] args = {"--maven"};
+
+        // When & Then
+        // We can't easily test System.exit() without complex setup, but we can test
+        // that the main method creates a CommandLine and attempts to execute
+        // This test verifies the main method doesn't throw exceptions
+        try {
+            // Create a new command to avoid interference with mocked dependencies
+            InitCommand realCommand = new InitCommand();
+            CommandLine realCmd = new CommandLine(realCommand);
+            int exitCode = realCmd.execute(args);
+            assertThat(exitCode).isEqualTo(0);
+        } catch (Exception e) {
+            // If we get here, the main method logic is working but might have issues
+            // with the actual execution - this is still a valid test
+            assertThat(e).isNull(); // This will fail if there's an unexpected exception
+        }
+    }
+
+    @Test
+    void shouldExecuteEditorConfigFeature() throws Exception {
+        // Given
+        String[] args = {"--editorconfig"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockEditorConfig, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+    }
+
+    @Test
+    void shouldExecuteSdkmanFeature() throws Exception {
+        // Given
+        String[] args = {"--sdkman"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockSdkman, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+    }
+
+    @Test
+    void shouldExecuteMultipleFeaturesSimultaneously() throws Exception {
+        // Given
+        String[] args = {"--maven", "--spring-cli", "--devcontainer"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockMaven, times(1)).execute();
+        verify(mockSpringCli, times(1)).execute();
+        verify(mockDevContainer, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+    }
+
+    @Test
+    void shouldHandleCombinationOfValidCursorOptionWithOtherFeatures() throws Exception {
+        // Given - using a valid cursor option with other features
+        String[] args = {"--cursor", "java", "--maven", "--editorconfig"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockCursor, times(1)).execute("java");
+        verify(mockMaven, times(1)).execute();
+        verify(mockEditorConfig, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
     }
 }

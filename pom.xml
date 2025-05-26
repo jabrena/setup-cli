@@ -42,9 +42,10 @@
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
         <maven-plugins-pitest.version>1.19.4</maven-plugins-pitest.version>
         <maven-plugins-pitest-junit5.version>1.2.3</maven-plugins-pitest-junit5.version>
+        <maven-plugins-dependency-check.version>11.1.0</maven-plugins-dependency-check.version>
 
         <!-- Coverage -->
-        <coverage.level>70</coverage.level>
+        <coverage.level>80</coverage.level>
     </properties>
 
     <dependencyManagement>
@@ -568,7 +569,6 @@
                             <coverageThreshold>${coverage.level}</coverageThreshold>
                             <timestampedReports>false</timestampedReports>
                             <verbose>false</verbose>
-                            <threads>4</threads>
                         </configuration>
                         <dependencies>
                             <dependency>
@@ -589,7 +589,43 @@
                     </plugin>
                 </plugins>
             </build>
+                </profile>
+
+        <profile>
+            <id>security</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${maven-plugins-dependency-check.version}</version>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/dependency-check</outputDirectory>
+                            <format>ALL</format>
+                            <failBuildOnCVSS>7</failBuildOnCVSS>
+                            <suppressionFile>dependency-check-suppressions.xml</suppressionFile>
+                            <skipProvidedScope>false</skipProvidedScope>
+                            <skipRuntimeScope>false</skipRuntimeScope>
+                            <skipSystemScope>false</skipSystemScope>
+                            <skipTestScope>true</skipTestScope>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>dependency-check</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
+
 
     </profiles>
 

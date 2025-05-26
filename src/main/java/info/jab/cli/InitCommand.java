@@ -72,7 +72,8 @@ public class InitCommand implements Runnable {
 
     @Option(
         names = {"-j", "--jmc"},
-        description = "Run JMC to monitor the application.")
+        description = "Run JMC to monitor the application.",
+        hidden = true)
     private boolean jmcOption = false;
 
     private final DevContainer devContainer;

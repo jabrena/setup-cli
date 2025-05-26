@@ -30,6 +30,7 @@ jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify jacoco:report -Pjacoco
 jwebserver -p 8000 -d "$(pwd)/target/site/jacoco"
 ./mvnw clean verify -Ppitest
+./mvnw clean verify -Psecurity
 
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
