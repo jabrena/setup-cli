@@ -17,6 +17,11 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
 @Command(
     name = "init",
     description = "Initialize a new repository with some useful features for Developers.",
@@ -73,8 +78,7 @@ public class InitCommand implements Runnable {
 
     @Option(
         names = {"-j", "--jmc"},
-        description = "Run JMC to monitor the application.",
-        hidden = true)
+        description = "Run JMC to monitor the application.")
     private boolean jmcOption = false;
 
     @Option(
@@ -133,55 +137,50 @@ public class InitCommand implements Runnable {
         this.gitignore = gitignore;
     }
 
-    public String runInitFeature() {
+    // Functional approach using records for better type safety and extensibility
+    private record FeatureConfig(String name, Supplier<Boolean> isEnabled, Runnable action) {}
 
-        if(!CursorOptions.isValidOption(cursorOption) &&
-            !mavenOption &&
-            !springCliOption &&
-            !quarkusCliOption &&
-            !devcontainerOption &&
-            !githubActionOption &&
-            !editorConfigOption &&
-            !sdkmanOption &&
-            !visualvmOption &&
-            !jmcOption &&
-            !gitignoreOption) {
+    protected String runInitFeature() {
+        // Define all features in a declarative way
+        List<FeatureConfig> features = List.of(
+            new FeatureConfig("devcontainer", () -> devcontainerOption, devContainer::execute),
+            new FeatureConfig("maven", () -> mavenOption, maven::execute),
+            new FeatureConfig("spring-cli", () -> springCliOption, springCli::execute),
+            new FeatureConfig("quarkus-cli", () -> quarkusCliOption, quarkusCli::execute),
+            new FeatureConfig("github-action", () -> githubActionOption, githubAction::execute),
+            new FeatureConfig("editor-config", () -> editorConfigOption, editorConfig::execute),
+            new FeatureConfig("sdkman", () -> sdkmanOption, sdkman::execute),
+            new FeatureConfig("visualvm", () -> visualvmOption, visualvm::execute),
+            new FeatureConfig("jmc", () -> jmcOption, jmc::execute),
+            new FeatureConfig("gitignore", () -> gitignoreOption, gitignore::execute)
+        );
+
+        // Handle cursor option with its special parameter requirement
+        Optional<FeatureConfig> cursorFeature = CursorOptions.isValidOption(cursorOption)
+            ? Optional.of(new FeatureConfig("cursor", () -> true, () -> cursor.execute(cursorOption)))
+            : Optional.empty();
+
+        // Combine all features
+        Stream<FeatureConfig> allFeatures = Stream.concat(
+            features.stream(),
+            cursorFeature.stream()
+        );
+
+        // Find enabled features
+        List<FeatureConfig> enabledFeatures = allFeatures
+            .filter(feature -> feature.isEnabled().get())
+            .toList();
+
+        // Check if any features are enabled
+        if (enabledFeatures.isEmpty()) {
             return "type 'init --help' to see available options";
         }
 
-        if(devcontainerOption) {
-            devContainer.execute();
-        }
-        if(mavenOption) {
-            maven.execute();
-        }
-        if(springCliOption) {
-            springCli.execute();
-        }
-        if(quarkusCliOption) {
-            quarkusCli.execute();
-        }
-        if(CursorOptions.isValidOption(cursorOption)) {
-            cursor.execute(cursorOption);
-        }
-        if(githubActionOption) {
-            githubAction.execute();
-        }
-        if(editorConfigOption) {
-            editorConfig.execute();
-        }
-        if(sdkmanOption) {
-            sdkman.execute();
-        }
-        if(visualvmOption) {
-            visualvm.execute();
-        }
-        if(jmcOption) {
-            jmc.execute();
-        }
-        if(gitignoreOption) {
-            gitignore.execute();
-        }
+        // Execute all enabled features
+        enabledFeatures.forEach(feature -> {
+            feature.action().run();
+        });
+
         return "Command executed successfully";
     }
 

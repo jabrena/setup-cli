@@ -10,6 +10,7 @@ Setup is a Command line utility designed to help developers when they start work
 
 ```bash
 sdk env install
+sdk default java 24.0.1-g
 
 # Update cursor rules in local
 ./manage_submodules.sh r java
@@ -72,6 +73,12 @@ jar tf ./target/setup-0.10.0.jar
 jbang cache clear
 jbang catalog list jabrena
 jbang setup@jabrena
+```
+
+## Release process
+
+```bash
+git tag -l --sort=-creatordate --format='%(refname:short) - %(creatordate:format:%d/%m/%Y)'
 ```
 
 ## References

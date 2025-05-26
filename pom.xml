@@ -42,7 +42,7 @@
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
         <maven-plugins-pitest.version>1.19.4</maven-plugins-pitest.version>
         <maven-plugins-pitest-junit5.version>1.2.3</maven-plugins-pitest-junit5.version>
-        <maven-plugins-dependency-check.version>11.1.0</maven-plugins-dependency-check.version>
+        <maven-plugins-dependency-check.version>12.1.1</maven-plugins-dependency-check.version>
 
         <!-- Coverage -->
         <coverage.level>80</coverage.level>
@@ -216,33 +216,33 @@
                 <configuration>
                     <skipAfterFailureCount>1</skipAfterFailureCount>
                     <includes>
-						<include>**/*Test.java</include>
-					</includes>
-					<excludes>
-						<exclude>**/*IT.java</exclude>
-					</excludes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-plugins-failsafe.version}</version>
-				<configuration>
-					<includes>
-						<include>**/*IT.java</include>
-					</includes>
-					<excludes>
-						<exclude>**/*Test.java</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*Test.java</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
@@ -589,7 +589,7 @@
                     </plugin>
                 </plugins>
             </build>
-                </profile>
+        </profile>
 
         <profile>
             <id>security</id>
@@ -606,11 +606,17 @@
                             <outputDirectory>${project.build.directory}/dependency-check</outputDirectory>
                             <format>ALL</format>
                             <failBuildOnCVSS>7</failBuildOnCVSS>
-                            <suppressionFile>dependency-check-suppressions.xml</suppressionFile>
                             <skipProvidedScope>false</skipProvidedScope>
                             <skipRuntimeScope>false</skipRuntimeScope>
                             <skipSystemScope>false</skipSystemScope>
-                            <skipTestScope>true</skipTestScope>
+                            <skipTestScope>false</skipTestScope>
+                            <!-- Performance and reliability improvements -->
+                            <nvdApiDelay>4000</nvdApiDelay>
+                            <nvdMaxRetryCount>3</nvdMaxRetryCount>
+                            <nvdValidForHours>24</nvdValidForHours>
+                            <!-- Skip analyzers that might cause issues -->
+                            <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>
+                            <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
                         </configuration>
                         <executions>
                             <execution>

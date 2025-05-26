@@ -5,13 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.9.0]
+## [0.10.0] 27/5/2025
+
+### Added
+
+- Added support for .gitignore
+- Added support for JMC
+- Added support for Visualvm
+- Added JSpecify support
+- Added PiTest support as Profile
+- Added Depenency check as Profile
+
+### Changed
+
+- Better copy file operations with NIO
+- Upgraded .sdkmanrc
+- Renamed cursor options for Spring-Boot & Quarkus (Better for the users)
+- Refactored submodule script
+
+## [0.9.0] 13/05/2025
 
 ### Added
 
 - Added initial cursor rules for Agile.
 
-## [0.8.0]
+## [0.8.0] 12/05/2025
 
 ### Added
 
@@ -26,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved development to the package info.jab.cli
 - Moved jacoco to specific profile -Pjacoco
 
-## [0.7.0]
+## [0.7.0] 27/04/2025
 
 ### Added
 
@@ -40,13 +58,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved Tests
 - Improved compilation with Error-prone support
 
-## [0.6.1]
+## [0.6.1] 06/04/2025
 
 ### Changed
 
 - Improved terminal width visualization
 
-## [0.6.0]
+## [0.6.0] 06/04/2025
 
 ### Added
 
@@ -61,14 +79,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved Maven behaviour
 - Added Graphviz in Devcontainer support
 
-## [0.5.0]
+## [0.5.0] 13/03/2025
 
 ### Added
 
 - Fixed small issue in GA Pipeline
 - Improved the internal implementation to reduce maintenance
 
-## [0.4.0]
+## [0.4.1] 02/03/2025
 
 ### Added
 
