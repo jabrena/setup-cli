@@ -6,10 +6,12 @@ import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
+import info.jab.cli.behaviours.JMC;
 import info.jab.cli.behaviours.Maven;
 import info.jab.cli.behaviours.QuarkusCli;
 import info.jab.cli.behaviours.Sdkman;
 import info.jab.cli.behaviours.SpringCli;
+import info.jab.cli.behaviours.Visualvm;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -63,6 +65,16 @@ public class InitCommand implements Runnable {
         description = "Add an initial SDKMAN Init file.")
     private boolean sdkmanOption = false;
 
+    @Option(
+        names = {"-vv", "--visualvm"},
+        description = "Run VisualVM to monitor the application.")
+    private boolean visualvmOption = false;
+
+    @Option(
+        names = {"-j", "--jmc"},
+        description = "Run JMC to monitor the application.")
+    private boolean jmcOption = false;
+
     private final DevContainer devContainer;
     private final Maven maven;
     private final SpringCli springCli;
@@ -71,6 +83,8 @@ public class InitCommand implements Runnable {
     private final GithubAction githubAction;
     private final EditorConfig editorConfig;
     private final Sdkman sdkman;
+    private final Visualvm visualvm;
+    private final JMC jmc;
 
     public InitCommand() {
         this.devContainer = new DevContainer();
@@ -81,6 +95,8 @@ public class InitCommand implements Runnable {
         this.githubAction = new GithubAction();
         this.editorConfig = new EditorConfig();
         this.sdkman = new Sdkman();
+        this.visualvm = new Visualvm();
+        this.jmc = new JMC();
     }
 
     public InitCommand(
@@ -91,7 +107,9 @@ public class InitCommand implements Runnable {
         @NonNull Cursor cursor,
         @NonNull GithubAction githubAction,
         @NonNull EditorConfig editorConfig,
-        @NonNull Sdkman sdkman) {
+        @NonNull Sdkman sdkman,
+        @NonNull Visualvm visualvm,
+        @NonNull JMC jmc) {
         this.devContainer = devContainer;
         this.maven = maven;
         this.cursor = cursor;
@@ -100,6 +118,8 @@ public class InitCommand implements Runnable {
         this.githubAction = githubAction;
         this.editorConfig = editorConfig;
         this.sdkman = sdkman;
+        this.visualvm = visualvm;
+        this.jmc = jmc;
     }
 
     public String runInitFeature() {
@@ -111,7 +131,9 @@ public class InitCommand implements Runnable {
             !devcontainerOption &&
             !githubActionOption &&
             !editorConfigOption &&
-            !sdkmanOption) {
+            !sdkmanOption &&
+            !visualvmOption &&
+            !jmcOption) {
             return "type 'init --help' to see available options";
         }
 
@@ -138,6 +160,12 @@ public class InitCommand implements Runnable {
         }
         if(sdkmanOption) {
             sdkman.execute();
+        }
+        if(visualvmOption) {
+            visualvm.execute();
+        }
+        if(jmcOption) {
+            jmc.execute();
         }
         return "Command executed successfully";
     }

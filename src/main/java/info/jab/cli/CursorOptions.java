@@ -12,8 +12,8 @@ public class CursorOptions implements Iterable<String>{
 
     public enum CursorOption {
         JAVA("java"),
-        JAVA_SPRING_BOOT("java-spring-boot"),
-        JAVA_QUARKUS("java-quarkus"),
+        SPRING_BOOT("spring-boot"),
+        QUARKUS("quarkus"),
         TASKS("tasks"),
         AGILE("agile");
 

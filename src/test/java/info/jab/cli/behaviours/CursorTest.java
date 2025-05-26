@@ -57,12 +57,14 @@ class CursorTest {
         verify(mockCopyFiles, never()).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
         verify(mockCopyFiles, never()).copyDirectoryExcludingFiles(any(Path.class), any(Path.class), anyList());
         verify(mockCopyFiles, never()).copyDirectory(any(Path.class), any(Path.class));
+        verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
+        verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
     @Test
     void testExecuteWithValidJavaParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
         cursor.execute("java");
@@ -70,41 +72,41 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
     @Test
     void testExecuteWithJavaSpringBootParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
-        cursor.execute("java-spring-boot");
+        cursor.execute("spring-boot");
 
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
     @Test
     void testExecuteWithJavaQuarkusParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
-        cursor.execute("java-quarkus");
+        cursor.execute("quarkus");
 
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
     @Test
     void testExecuteWithTasksParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
 
         // When
         cursor.execute("tasks");
@@ -112,13 +114,13 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
     }
 
     @Test
     void testExecuteWithAgileParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
 
         // When
         cursor.execute("agile");
@@ -126,6 +128,6 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
     }
 }

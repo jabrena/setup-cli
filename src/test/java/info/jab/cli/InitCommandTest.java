@@ -1,29 +1,36 @@
 package info.jab.cli;
 
-import info.jab.cli.behaviours.Cursor;
-import info.jab.cli.behaviours.DevContainer;
-import info.jab.cli.behaviours.EditorConfig;
-import info.jab.cli.behaviours.GithubAction;
-import info.jab.cli.behaviours.Maven;
-import info.jab.cli.behaviours.QuarkusCli;
-import info.jab.cli.behaviours.Sdkman;
-import info.jab.cli.behaviours.SpringCli;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import info.jab.cli.behaviours.Cursor;
+import info.jab.cli.behaviours.DevContainer;
+import info.jab.cli.behaviours.EditorConfig;
+import info.jab.cli.behaviours.GithubAction;
+import info.jab.cli.behaviours.JMC;
+import info.jab.cli.behaviours.Maven;
+import info.jab.cli.behaviours.QuarkusCli;
+import info.jab.cli.behaviours.Sdkman;
+import info.jab.cli.behaviours.SpringCli;
+import info.jab.cli.behaviours.Visualvm;
 import picocli.CommandLine;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class InitCommandTest {
@@ -52,6 +59,12 @@ class InitCommandTest {
     @Mock
     private Sdkman mockSdkman;
 
+    @Mock
+    private Visualvm mockVisualvm;
+
+    @Mock
+    private JMC mockJMC;
+
     private InitCommand initCommand;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -69,7 +82,9 @@ class InitCommandTest {
                 mockCursor,
                 mockGithubAction,
                 mockEditorConfig,
-                mockSdkman
+                mockSdkman,
+                mockVisualvm,
+                mockJMC
         );
 
         // Capture console output for assertions

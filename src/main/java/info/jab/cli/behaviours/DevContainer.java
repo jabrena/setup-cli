@@ -2,7 +2,6 @@ package info.jab.cli.behaviours;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import org.jspecify.annotations.NonNull;
 
@@ -26,9 +25,7 @@ public class DevContainer implements Behaviour0 {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path devcontainerPath = currentPath.resolve(".devcontainer");
 
-        List<String> files = List.of("devcontainer.json");
-
-        copyFiles.copyFilesToDirectory(files, "devcontainer/", devcontainerPath);
+        copyFiles.copyClasspathFolder( "devcontainer/", devcontainerPath);
 
         System.out.println("Devcontainer support added successfully");
     }

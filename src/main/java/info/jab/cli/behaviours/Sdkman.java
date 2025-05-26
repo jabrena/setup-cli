@@ -1,9 +1,9 @@
 package info.jab.cli.behaviours;
 
-import info.jab.cli.io.CopyFiles;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+
+import info.jab.cli.io.CopyFiles;
 
 public class Sdkman implements Behaviour0 {
 
@@ -26,9 +26,7 @@ public class Sdkman implements Behaviour0 {
 
     void copySdkmanFiles() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        List<String> files = List.of(".sdkmanrc");
         String resourcePath = "sdkman/";
-
-        copyFiles.copyFilesToDirectory(files, resourcePath, currentPath);
+        copyFiles.copyClasspathFolder(resourcePath, currentPath);
     }
 }

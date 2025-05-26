@@ -373,6 +373,7 @@
                                         <exclude>LICENSE</exclude>
                                         <exclude>*.md</exclude>
                                         <exclude>*.png</exclude>
+                                        <exclude>docs/**</exclude>
                                     </excludes>
                                 </resource>
                             </resources>
