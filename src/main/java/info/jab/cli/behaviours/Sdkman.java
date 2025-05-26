@@ -1,9 +1,11 @@
 package info.jab.cli.behaviours;
 
-import info.jab.cli.io.CopyFiles;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+
+import org.jspecify.annotations.NonNull;
+
+import info.jab.cli.io.CopyFiles;
 
 public class Sdkman implements Behaviour0 {
 
@@ -14,21 +16,16 @@ public class Sdkman implements Behaviour0 {
     }
 
     // Constructor for testing with a mock
-    Sdkman(CopyFiles copyFiles) {
+    Sdkman(@NonNull CopyFiles copyFiles) {
         this.copyFiles = copyFiles;
     }
 
     @Override
     public void execute() {
-        copySdkmanFiles();
-        System.out.println("SDKMAN support added successfully");
-    }
-
-    void copySdkmanFiles() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        List<String> files = List.of(".sdkmanrc");
         String resourcePath = "sdkman/";
+        copyFiles.copyClasspathFolder(resourcePath, currentPath);
 
-        copyFiles.copyFilesToDirectory(files, resourcePath, currentPath);
+        System.out.println("SDKMAN support added successfully");
     }
 }

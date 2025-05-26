@@ -1,0 +1,158 @@
+name: Weekly Security Review
+
+on:
+  schedule:
+    # Run every Monday at 6:00 AM UTC
+    - cron: '0 6 * * 1'
+  workflow_dispatch:  # Allow manual triggering
+    inputs:
+      fail_on_high_severity:
+        description: 'Fail build on high severity vulnerabilities'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  security-review:
+    name: Security Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write  # For uploading SARIF results
+
+    steps:
+      # Reuse checkout step from CI pipeline
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # Fetches all submodules
+
+      # Reuse Java setup from CI pipeline
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'graalvm' # See 'Supported distributions' for available options
+          java-version: '24'
+
+      # Cache Maven dependencies for faster builds
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Run security analysis with the security profile
+      - name: Run security analysis
+        run: |
+          echo "🔍 Running security analysis with OWASP dependency check..."
+          ./mvnw clean verify -Psecurity --batch-mode --no-transfer-progress
+        env:
+          # Set fail threshold based on input or default to true
+          FAIL_ON_HIGH: ${{ github.event.inputs.fail_on_high_severity || 'true' }}
+
+      # Get project version for artifact naming (reused from CI pipeline)
+      - name: Get Maven project version
+        id: get_version
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+      # Upload dependency check reports
+      - name: Upload dependency check reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report-${{ steps.get_version.outputs.VERSION }}
+          path: |
+            ./target/dependency-check/
+          retention-days: 30
+        if: always()  # Upload even if security check fails
+
+      # Upload SARIF results to GitHub Security tab
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ./target/dependency-check/dependency-check-report.sarif
+        if: always() && hashFiles('./target/dependency-check/dependency-check-report.sarif') != ''
+
+      # Create issue on security vulnerabilities found
+      - name: Create security issue
+        uses: actions/github-script@v7
+        if: failure()
+        with:
+          script: |
+            const fs = require('fs');
+            const path = './target/dependency-check/dependency-check-report.json';
+
+            if (fs.existsSync(path)) {
+              const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+              const vulnerabilities = report.dependencies?.filter(dep =>
+                dep.vulnerabilities && dep.vulnerabilities.length > 0
+              ) || [];
+
+              if (vulnerabilities.length > 0) {
+                const highSeverity = vulnerabilities.some(dep =>
+                  dep.vulnerabilities.some(vuln =>
+                    vuln.cvssv3?.baseScore >= 7.0 || vuln.cvssv2?.score >= 7.0
+                  )
+                );
+
+                const title = `🚨 Security vulnerabilities detected - ${new Date().toISOString().split('T')[0]}`;
+                const body = `
+            ## Security Vulnerability Report
+
+            **Date:** ${new Date().toISOString()}
+            **High Severity Found:** ${highSeverity ? '❌ Yes' : '✅ No'}
+            **Total Dependencies with Vulnerabilities:** ${vulnerabilities.length}
+
+            ### Summary
+            The weekly security scan has detected vulnerabilities in project dependencies.
+
+            ### Next Steps
+            1. Review the detailed [dependency check report](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            2. Update vulnerable dependencies to secure versions
+            3. If updates are not available, consider alternative dependencies or mitigation strategies
+
+            ### Artifacts
+            - Download the full security report from the workflow artifacts
+            - Check the Security tab for SARIF results
+
+            **Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                `;
+
+                github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: title,
+                  body: body,
+                  labels: ['security', 'vulnerability', 'dependencies']
+                });
+              }
+            }
+
+      # Summary step
+      - name: Security review summary
+        run: |
+          echo "🔒 Weekly Security Review Completed"
+          echo "📊 Reports uploaded as artifacts"
+          echo "🔍 Check the Security tab for detailed SARIF results"
+          if [ -f "./target/dependency-check/dependency-check-report.json" ]; then
+            echo "📋 Dependency check report generated successfully"
+          else
+            echo "⚠️  No dependency check report found"
+          fi
+        if: always()
+
+  # Optional: Notify on completion
+  notify:
+    name: Notify Security Review Completion
+    runs-on: ubuntu-latest
+    needs: security-review
+    if: always()
+
+    steps:
+      - name: Notify completion
+        run: |
+          if [ "${{ needs.security-review.result }}" == "success" ]; then
+            echo "✅ Weekly security review completed successfully"
+          else
+            echo "❌ Weekly security review failed - check for vulnerabilities"
+          fi

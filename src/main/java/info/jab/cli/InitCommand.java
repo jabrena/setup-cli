@@ -6,13 +6,21 @@ import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
+import info.jab.cli.behaviours.Gitignore;
+import info.jab.cli.behaviours.JMC;
 import info.jab.cli.behaviours.Maven;
 import info.jab.cli.behaviours.QuarkusCli;
 import info.jab.cli.behaviours.Sdkman;
 import info.jab.cli.behaviours.SpringCli;
+import info.jab.cli.behaviours.Visualvm;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @Command(
     name = "init",
@@ -63,6 +71,21 @@ public class InitCommand implements Runnable {
         description = "Add an initial SDKMAN Init file.")
     private boolean sdkmanOption = false;
 
+    @Option(
+        names = {"-vv", "--visualvm"},
+        description = "Run VisualVM to monitor the application.")
+    private boolean visualvmOption = false;
+
+    @Option(
+        names = {"-j", "--jmc"},
+        description = "Run JMC to monitor the application.")
+    private boolean jmcOption = false;
+
+    @Option(
+        names = {"-gi", "--gitignore"},
+        description = "Add an initial .gitignore file.")
+    private boolean gitignoreOption = false;
+
     private final DevContainer devContainer;
     private final Maven maven;
     private final SpringCli springCli;
@@ -71,6 +94,9 @@ public class InitCommand implements Runnable {
     private final GithubAction githubAction;
     private final EditorConfig editorConfig;
     private final Sdkman sdkman;
+    private final Visualvm visualvm;
+    private final JMC jmc;
+    private final Gitignore gitignore;
 
     public InitCommand() {
         this.devContainer = new DevContainer();
@@ -81,6 +107,9 @@ public class InitCommand implements Runnable {
         this.githubAction = new GithubAction();
         this.editorConfig = new EditorConfig();
         this.sdkman = new Sdkman();
+        this.visualvm = new Visualvm();
+        this.jmc = new JMC();
+        this.gitignore = new Gitignore();
     }
 
     public InitCommand(
@@ -91,7 +120,10 @@ public class InitCommand implements Runnable {
         @NonNull Cursor cursor,
         @NonNull GithubAction githubAction,
         @NonNull EditorConfig editorConfig,
-        @NonNull Sdkman sdkman) {
+        @NonNull Sdkman sdkman,
+        @NonNull Visualvm visualvm,
+        @NonNull JMC jmc,
+        @NonNull Gitignore gitignore) {
         this.devContainer = devContainer;
         this.maven = maven;
         this.cursor = cursor;
@@ -100,45 +132,55 @@ public class InitCommand implements Runnable {
         this.githubAction = githubAction;
         this.editorConfig = editorConfig;
         this.sdkman = sdkman;
+        this.visualvm = visualvm;
+        this.jmc = jmc;
+        this.gitignore = gitignore;
     }
 
-    public String runInitFeature() {
+    // Functional approach using records for better type safety and extensibility
+    private record FeatureConfig(String name, Supplier<Boolean> isEnabled, Runnable action) {}
 
-        if(!CursorOptions.isValidOption(cursorOption) &&
-            !mavenOption &&
-            !springCliOption &&
-            !quarkusCliOption &&
-            !devcontainerOption &&
-            !githubActionOption &&
-            !editorConfigOption &&
-            !sdkmanOption) {
+    protected String runInitFeature() {
+        // Define all features in a declarative way
+        List<FeatureConfig> features = List.of(
+            new FeatureConfig("devcontainer", () -> devcontainerOption, devContainer::execute),
+            new FeatureConfig("maven", () -> mavenOption, maven::execute),
+            new FeatureConfig("spring-cli", () -> springCliOption, springCli::execute),
+            new FeatureConfig("quarkus-cli", () -> quarkusCliOption, quarkusCli::execute),
+            new FeatureConfig("github-action", () -> githubActionOption, githubAction::execute),
+            new FeatureConfig("editor-config", () -> editorConfigOption, editorConfig::execute),
+            new FeatureConfig("sdkman", () -> sdkmanOption, sdkman::execute),
+            new FeatureConfig("visualvm", () -> visualvmOption, visualvm::execute),
+            new FeatureConfig("jmc", () -> jmcOption, jmc::execute),
+            new FeatureConfig("gitignore", () -> gitignoreOption, gitignore::execute)
+        );
+
+        // Handle cursor option with its special parameter requirement
+        Optional<FeatureConfig> cursorFeature = CursorOptions.isValidOption(cursorOption)
+            ? Optional.of(new FeatureConfig("cursor", () -> true, () -> cursor.execute(cursorOption)))
+            : Optional.empty();
+
+        // Combine all features
+        Stream<FeatureConfig> allFeatures = Stream.concat(
+            features.stream(),
+            cursorFeature.stream()
+        );
+
+        // Find enabled features
+        List<FeatureConfig> enabledFeatures = allFeatures
+            .filter(feature -> feature.isEnabled().get())
+            .toList();
+
+        // Check if any features are enabled
+        if (enabledFeatures.isEmpty()) {
             return "type 'init --help' to see available options";
         }
 
-        if(devcontainerOption) {
-            devContainer.execute();
-        }
-        if(mavenOption) {
-            maven.execute();
-        }
-        if(springCliOption) {
-            springCli.execute();
-        }
-        if(quarkusCliOption) {
-            quarkusCli.execute();
-        }
-        if(CursorOptions.isValidOption(cursorOption)) {
-            cursor.execute(cursorOption);
-        }
-        if(githubActionOption) {
-            githubAction.execute();
-        }
-        if(editorConfigOption) {
-            editorConfig.execute();
-        }
-        if(sdkmanOption) {
-            sdkman.execute();
-        }
+        // Execute all enabled features
+        enabledFeatures.forEach(feature -> {
+            feature.action().run();
+        });
+
         return "Command executed successfully";
     }
 

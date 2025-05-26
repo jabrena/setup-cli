@@ -16,6 +16,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -54,15 +55,30 @@ class CursorTest {
         assertThatThrownBy(() -> cursor.execute(invalidOption))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessageContaining("Invalid parameter: " + invalidOption);
-        verify(mockCopyFiles, never()).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
-        verify(mockCopyFiles, never()).copyDirectoryExcludingFiles(any(Path.class), any(Path.class), anyList());
-        verify(mockCopyFiles, never()).copyDirectory(any(Path.class), any(Path.class));
+        verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
+        verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
+    }
+
+    @Test
+    @SuppressWarnings("NullAway")
+    void testExecuteWithNullParam() {
+        // Given
+        String nullParameter = null;
+
+        // When & Then
+        assertThatThrownBy(() -> cursor.execute(nullParameter))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Invalid parameter: null");
+
+        // Should not call any copy methods when exception is thrown
+        verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
+        verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
     @Test
     void testExecuteWithValidJavaParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
         cursor.execute("java");
@@ -70,41 +86,41 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
     @Test
     void testExecuteWithJavaSpringBootParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
-        cursor.execute("java-spring-boot");
+        cursor.execute("spring-boot");
 
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
     @Test
     void testExecuteWithJavaQuarkusParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
-        cursor.execute("java-quarkus");
+        cursor.execute("quarkus");
 
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
     @Test
     void testExecuteWithTasksParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
 
         // When
         cursor.execute("tasks");
@@ -112,13 +128,13 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
     }
 
     @Test
     void testExecuteWithAgileParam() {
         // Given
-        Mockito.doNothing().when(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
 
         // When
         cursor.execute("agile");
@@ -126,6 +142,110 @@ class CursorTest {
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
             .contains("Cursor rules added successfully");
-        verify(mockCopyFiles).copyFilesToDirectory(anyList(), anyString(), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
+    }
+
+    @Test
+    void testExecuteWithCopyFailureForJavaParam() {
+        // Given
+        doThrow(new RuntimeException("Copy operation failed"))
+            .when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
+
+        // When & Then
+        assertThatThrownBy(() -> cursor.execute("java"))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Copy operation failed");
+
+        verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
+
+        // Should not print success message when operation fails
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
+        assertThat(output).doesNotContain("Cursor rules added successfully");
+    }
+
+    @Test
+    void testExecuteWithCopyFailureForTasksParam() {
+        // Given
+        doThrow(new RuntimeException("Copy operation failed"))
+            .when(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
+
+        // When & Then
+        assertThatThrownBy(() -> cursor.execute("tasks"))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Copy operation failed");
+
+        verify(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
+
+        // Should not print success message when operation fails
+        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
+        assertThat(output).doesNotContain("Cursor rules added successfully");
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        // When
+        Cursor cursorWithDefaultConstructor = new Cursor();
+
+        // Then
+        assertThat(cursorWithDefaultConstructor).isNotNull();
+        // The default constructor should create a Cursor instance that can be used
+        // We can't easily test the internal CopyFiles instance, but we can verify
+        // that the object is properly constructed
+    }
+
+    @Test
+    void testExecuteWithCaseInsensitiveParam() {
+        // Given
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
+
+        // When
+        cursor.execute("AGILE"); // Test uppercase
+
+        // Then
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
+            .contains("Cursor rules added successfully");
+        verify(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
+    }
+
+    @Test
+    void testExecuteWithMixedCaseParam() {
+        // Given
+        Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
+
+        // When
+        cursor.execute("Spring-Boot"); // Test mixed case
+
+        // Then
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
+            .contains("Cursor rules added successfully");
+        verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
+    }
+
+    @Test
+    void testExecuteWithEmptyStringParam() {
+        // Given
+        String emptyParameter = "";
+
+        // When & Then
+        assertThatThrownBy(() -> cursor.execute(emptyParameter))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Invalid parameter: " + emptyParameter);
+
+        verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
+        verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
+    }
+
+    @Test
+    void testExecuteWithWhitespaceParam() {
+        // Given
+        String whitespaceParameter = "   ";
+
+        // When & Then
+        assertThatThrownBy(() -> cursor.execute(whitespaceParameter))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Invalid parameter: " + whitespaceParameter);
+
+        verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
+        verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 }

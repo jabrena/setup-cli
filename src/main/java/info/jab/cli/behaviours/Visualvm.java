@@ -1,11 +1,12 @@
 package info.jab.cli.behaviours;
 
-public class SpringCli implements Behaviour0 {
+public class Visualvm implements Behaviour0 {
 
     private String commands = """
-            sdk install springboot
-            spring init -d=web,actuator,devtools --build=maven --force ./
-            ./mvnw clean verify
+            sdk install visualvm
+            sdk install java 21.0.2-graalce
+            sdk default java 21.0.2-graalce
+            visualvm
             """;
 
     @Override

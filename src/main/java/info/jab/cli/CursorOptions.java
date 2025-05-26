@@ -12,12 +12,17 @@ public class CursorOptions implements Iterable<String>{
 
     public enum CursorOption {
         JAVA("java"),
-        JAVA_SPRING_BOOT("java-spring-boot"),
-        JAVA_QUARKUS("java-quarkus"),
+        SPRING_BOOT("spring-boot"),
+        QUARKUS("quarkus"),
         TASKS("tasks"),
         AGILE("agile");
 
         private final String value;
+
+        // Static final list computed once for better performance
+        private static final List<String> OPTION_VALUES = Arrays.stream(CursorOption.values())
+                .map(CursorOption::getValue)
+                .toList();
 
         CursorOption(String value) {
             this.value = value;
@@ -28,9 +33,7 @@ public class CursorOptions implements Iterable<String>{
         }
 
         public static List<String> getOptionValues() {
-            return Arrays.stream(CursorOption.values())
-                    .map(CursorOption::getValue)
-                    .toList();
+            return OPTION_VALUES;
         }
 
         public static Optional<CursorOption> fromString(String text) {

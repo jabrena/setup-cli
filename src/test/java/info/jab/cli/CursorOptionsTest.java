@@ -1,12 +1,11 @@
 package info.jab.cli;
 
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class CursorOptionsTest {
 
@@ -14,7 +13,7 @@ class CursorOptionsTest {
     void testIterator() {
         // Given
         CursorOptions cursorOptions = new CursorOptions();
-        List<String> expectedValues = List.of("java", "java-spring-boot", "java-quarkus", "tasks", "agile");
+        List<String> expectedValues = List.of("java", "spring-boot", "quarkus", "tasks", "agile");
 
         // When
         Iterator<String> iterator = cursorOptions.iterator();
@@ -31,8 +30,8 @@ class CursorOptionsTest {
     void testIsValidOption() {
         // Given
         String validJava = "java";
-        String validSpringBoot = "java-spring-boot";
-        String validQuarkus = "java-quarkus";
+        String validSpringBoot = "spring-boot";
+        String validQuarkus = "quarkus";
         String validTasks = "tasks";
         String validAgile = "agile";
         String invalidOption = "invalid-option";

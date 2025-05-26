@@ -16,7 +16,6 @@
 
         <!-- Dependencies -->
         <picocli.version>4.7.7</picocli.version>
-        <commons-io.version>2.19.0</commons-io.version>
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
         <jspecify.version>1.0.0</jspecify.version>
@@ -41,9 +40,12 @@
         <maven-plugins-versions.version>2.18.0</maven-plugins-versions.version>
         <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
+        <maven-plugins-pitest.version>1.19.4</maven-plugins-pitest.version>
+        <maven-plugins-pitest-junit5.version>1.2.3</maven-plugins-pitest-junit5.version>
+        <maven-plugins-dependency-check.version>12.1.1</maven-plugins-dependency-check.version>
 
         <!-- Coverage -->
-        <coverage.level>35</coverage.level>
+        <coverage.level>80</coverage.level>
     </properties>
 
     <dependencyManagement>
@@ -75,11 +77,6 @@
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
             <version>${picocli.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.lalyos</groupId>
@@ -219,33 +216,33 @@
                 <configuration>
                     <skipAfterFailureCount>1</skipAfterFailureCount>
                     <includes>
-						<include>**/*Test.java</include>
-					</includes>
-					<excludes>
-						<exclude>**/*IT.java</exclude>
-					</excludes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-plugins-failsafe.version}</version>
-				<configuration>
-					<includes>
-						<include>**/*IT.java</include>
-					</includes>
-					<excludes>
-						<exclude>**/*Test.java</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*Test.java</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
@@ -373,6 +370,7 @@
                                         <exclude>LICENSE</exclude>
                                         <exclude>*.md</exclude>
                                         <exclude>*.png</exclude>
+                                        <exclude>docs/**</exclude>
                                     </excludes>
                                 </resource>
                             </resources>
@@ -544,34 +542,97 @@
                 </plugins>
             </build>
         </profile>
+
         <profile>
-            <id>modular</id>
+            <id>pitest</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.moditect</groupId>
-                        <artifactId>moditect-maven-plugin</artifactId>
-                        <version>${maven-plugins-moditect.version}</version>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>${maven-plugins-pitest.version}</version>
+                        <configuration>
+                            <targetClasses>
+                                <param>info.jab.cli.*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>info.jab.cli.*</param>
+                            </targetTests>
+                            <outputFormats>
+                                <outputFormat>HTML</outputFormat>
+                                <outputFormat>XML</outputFormat>
+                            </outputFormats>
+                            <mutationThreshold>${coverage.level}</mutationThreshold>
+                            <coverageThreshold>${coverage.level}</coverageThreshold>
+                            <timestampedReports>false</timestampedReports>
+                            <verbose>false</verbose>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.pitest</groupId>
+                                <artifactId>pitest-junit5-plugin</artifactId>
+                                <version>${maven-plugins-pitest-junit5.version}</version>
+                            </dependency>
+                        </dependencies>
                         <executions>
                             <execution>
-                                <id>add-module-infos</id>
-                                <phase>package</phase>
+                                <id>pitest-mutation-testing</id>
                                 <goals>
-                                    <goal>add-module-info</goal>
+                                    <goal>mutationCoverage</goal>
                                 </goals>
-                                <configuration>
-                                    <jvmVersion>${java.version}</jvmVersion>
-                                    <failOnWarning>true</failOnWarning>
-                                </configuration>
+                                <phase>verify</phase>
                             </execution>
                         </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>security</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${maven-plugins-dependency-check.version}</version>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/dependency-check</outputDirectory>
+                            <format>ALL</format>
+                            <failBuildOnCVSS>7</failBuildOnCVSS>
+                            <skipProvidedScope>false</skipProvidedScope>
+                            <skipRuntimeScope>false</skipRuntimeScope>
+                            <skipSystemScope>false</skipSystemScope>
+                            <skipTestScope>false</skipTestScope>
+                            <!-- Performance and reliability improvements -->
+                            <nvdApiDelay>4000</nvdApiDelay>
+                            <nvdMaxRetryCount>3</nvdMaxRetryCount>
+                            <nvdValidForHours>24</nvdValidForHours>
+                            <!-- Skip analyzers that might cause issues -->
+                            <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>
+                            <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>dependency-check</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
     </profiles>
 
     <reporting>

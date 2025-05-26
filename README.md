@@ -10,6 +10,7 @@ Setup is a Command line utility designed to help developers when they start work
 
 ```bash
 sdk env install
+sdk default java 24.0.1-g
 
 # Update cursor rules in local
 ./manage_submodules.sh r java
@@ -29,6 +30,8 @@ jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify surefire-report:report
 ./mvnw clean verify jacoco:report -Pjacoco
 jwebserver -p 8000 -d "$(pwd)/target/site/jacoco"
+./mvnw clean verify -Ppitest
+./mvnw clean verify -Psecurity
 
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
@@ -48,16 +51,19 @@ java -jar ./target/setup-0.10.0.jar init
 java -jar ./target/setup-0.10.0.jar init --help
 java -jar ./target/setup-0.10.0.jar init --devcontainer
 java -jar ./target/setup-0.10.0.jar init --cursor java
-java -jar ./target/setup-0.10.0.jar init --cursor tasks
-java -jar ./target/setup-0.10.0.jar init --cursor agile
 java -jar ./target/setup-0.10.0.jar init --cursor java-spring-boot
 java -jar ./target/setup-0.10.0.jar init --cursor java-quarkus
+java -jar ./target/setup-0.10.0.jar init --cursor tasks
+java -jar ./target/setup-0.10.0.jar init --cursor agile
 java -jar ./target/setup-0.10.0.jar init --maven
 java -jar ./target/setup-0.10.0.jar init --spring-cli
 java -jar ./target/setup-0.10.0.jar init --quarkus-cli
 java -jar ./target/setup-0.10.0.jar init --github-action
 java -jar ./target/setup-0.10.0.jar init --editorconfig
 java -jar ./target/setup-0.10.0.jar init --sdkman
+java -jar ./target/setup-0.10.0.jar init --visualvm
+java -jar ./target/setup-0.10.0.jar init --jmc
+java -jar ./target/setup-0.10.0.jar init --gitignore
 jar tf ./target/setup-0.10.0.jar
 ```
 
@@ -67,6 +73,12 @@ jar tf ./target/setup-0.10.0.jar
 jbang cache clear
 jbang catalog list jabrena
 jbang setup@jabrena
+```
+
+## Release process
+
+```bash
+git tag -l --sort=-creatordate --format='%(refname:short) - %(creatordate:format:%d/%m/%Y)'
 ```
 
 ## References

@@ -1,12 +1,11 @@
 package info.jab.cli.behaviours;
 
-import info.jab.cli.io.CopyFiles;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import org.jspecify.annotations.NonNull;
+
+import info.jab.cli.io.CopyFiles;
 
 public class EditorConfig implements Behaviour0 {
 
@@ -24,9 +23,8 @@ public class EditorConfig implements Behaviour0 {
     @Override
     public void execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        List<String> files = List.of(".editorconfig");
 
-        copyFiles.copyFilesToDirectory(files, "editorconfig/", currentPath);
+        copyFiles.copyClasspathFolder( "editorconfig/", currentPath);
         System.out.println("EditorConfig support added successfully");
     }
 }
