@@ -27,9 +27,10 @@ touch .gitmodules
 ./mvnw license:third-party-report
 jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify
+jwebserver -p 8001 -d "$(pwd)/target/timeline/"
 ./mvnw clean verify surefire-report:report
 ./mvnw clean verify jacoco:report -Pjacoco
-jwebserver -p 8000 -d "$(pwd)/target/site/jacoco"
+jwebserver -p 8003 -d "$(pwd)/target/site/jacoco"
 ./mvnw clean verify -Ppitest
 ./mvnw clean verify -Psecurity
 
@@ -86,12 +87,14 @@ git tag -l --sort=-creatordate --format='%(refname:short) - %(creatordate:format
 - https://www.cursor.com/
 - https://docs.cursor.com/context/rules-for-ai
 - ...
-- https://github.com/jabrena/cursor-rules-java
-- https://github.com/jabrena/cursor-rules-tasks
+- https://github.com/jabrena/cursor-rules-methodology
 - https://github.com/jabrena/cursor-rules-agile
+- https://github.com/jabrena/cursor-rules-tasks
+- https://github.com/jabrena/cursor-rules-java
 - https://github.com/jabrena/cursor-rules-examples
-- https://github.com/jabrena/jbang-catalog
+- https://github.com/jabrena/101-cursor
 - https://github.com/jabrena/setup-cli
+- https://github.com/jabrena/jbang-catalog
 
 ### Developer links
 
