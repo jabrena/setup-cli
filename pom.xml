@@ -386,8 +386,6 @@
                                         <exclude>LICENSE</exclude>
                                         <exclude>*.md</exclude>
                                         <exclude>*.png</exclude>
-                                        <exclude>examples/**</exclude>
-                                        <exclude>prompts/**</exclude>
                                     </excludes>
                                 </resource>
                             </resources>
