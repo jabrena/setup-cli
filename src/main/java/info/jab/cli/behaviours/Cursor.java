@@ -15,7 +15,7 @@ public class Cursor implements Behaviour1 {
     // Resource base paths within the JAR/classpath
     private static final String CURSOR_RULES_JAVA_BASE_PATH = "cursor-rules-java/.cursor/rules/";
     private static final String CURSOR_RULES_TASKS_BASE_PATH = "cursor-rules-tasks/";
-    private static final String CURSOR_RULES_AGILE_BASE_PATH = "cursor-rules-agile/";
+    private static final String CURSOR_RULES_AGILE_BASE_PATH = "cursor-rules-agile/.cursor/rules/";
 
     private static final List<String> QUARKUS_SPECIFIC_FILES = List.of("401-framework-quarkus.mdc");
     private static final List<String> SPRING_BOOT_SPECIFIC_FILES = List.of("301-framework-spring-boot.mdc", "304-java-rest-api-design.mdc");

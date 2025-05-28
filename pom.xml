@@ -340,7 +340,7 @@
                                     <excludes>
                                         <exclude>.gitignore</exclude>
                                         <exclude>LICENSE</exclude>
-                                        <exclude>README.md</exclude>
+                                        <exclude>*.md</exclude>
                                         <exclude>docs/**</exclude>
                                     </excludes>
                                 </resource>
@@ -386,7 +386,8 @@
                                         <exclude>LICENSE</exclude>
                                         <exclude>*.md</exclude>
                                         <exclude>*.png</exclude>
-                                        <exclude>docs/**</exclude>
+                                        <exclude>examples/**</exclude>
+                                        <exclude>prompts/**</exclude>
                                     </excludes>
                                 </resource>
                             </resources>

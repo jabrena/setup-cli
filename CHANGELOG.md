@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.10.0] 27/5/2025
+## [0.10.0] 29/5/2025
 
 ### Added
 
@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded .sdkmanrc
 - Renamed cursor options for Spring-Boot & Quarkus (Better for the users)
 - Refactored submodule script
+- Updated Cursor rules for Java
+- Updated Cursor rules for Agile
 
 ## [0.9.0] 13/05/2025
 
