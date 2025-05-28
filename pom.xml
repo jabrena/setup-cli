@@ -25,6 +25,10 @@
         <mockito.version>5.18.0</mockito.version>
         <assertj.version>3.27.3</assertj.version>
 
+        <!-- Maven Extensions -->
+        <maven-extensions-timeline.version>2.0.1</maven-extensions-timeline.version>
+        <maven-extensions-build-cache.version>1.2.0</maven-extensions-build-cache.version>
+
         <!-- Maven Plugins -->
         <maven-plugins-flatten.version>1.7.0</maven-plugins-flatten.version>
         <maven-plugins-enforcer.version>3.5.0</maven-plugins-enforcer.version>
@@ -113,8 +117,20 @@
         </dependency>
     </dependencies>
 
-
     <build>
+        <extensions>
+            <extension>
+                <groupId>io.takari.maven</groupId>
+                <artifactId>maven-timeline</artifactId>
+                <version>${maven-extensions-timeline.version}</version>
+            </extension>
+            <extension>
+                <groupId>org.apache.maven.extensions</groupId>
+                <artifactId>maven-build-cache-extension</artifactId>
+                <version>${maven-extensions-build-cache.version}</version>
+            </extension>
+        </extensions>
+
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
