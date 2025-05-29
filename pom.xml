@@ -348,7 +348,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>copy-cursor-rules-processes</id>
+                        <id>copy-cursor-rules-tasks</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -386,6 +386,7 @@
                                         <exclude>LICENSE</exclude>
                                         <exclude>*.md</exclude>
                                         <exclude>*.png</exclude>
+                                        <exclude>docs/**</exclude>
                                     </excludes>
                                 </resource>
                             </resources>
