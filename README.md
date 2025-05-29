@@ -10,7 +10,6 @@ Setup is a Command line utility designed to help developers when they start work
 
 ```bash
 sdk env install
-sdk default java 24.0.1-g
 
 # Update cursor rules in local
 ./manage_submodules.sh r java
