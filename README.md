@@ -83,6 +83,18 @@ git tag -l --sort=-creatordate --format='%(refname:short) - %(creatordate:format
 
 ## References
 
+- https://picocli.info/
+- https://github.com/jbangdev/jbang-jash
+- https://containers.dev/
+- https://sdkman.io/
+- https://sdkman.io/usage/#env-command
+- https://sdkman.io/sdks/jmc
+- https://sdkman.io/sdks/visualvm
+- https://maven.apache.org/guides/index.html
+- https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
+- https://docs.spring.io/spring-boot/cli/index.html
+- https://keepachangelog.com/en/1.1.0/
+- https://www.eclemma.org/jacoco/trunk/doc/maven.html
 - https://www.cursor.com/
 - https://docs.cursor.com/context/rules-for-ai
 - ...
@@ -94,20 +106,5 @@ git tag -l --sort=-creatordate --format='%(refname:short) - %(creatordate:format
 - https://github.com/jabrena/101-cursor
 - https://github.com/jabrena/setup-cli
 - https://github.com/jabrena/jbang-catalog
-
-### Developer links
-
-- https://picocli.info/
-- https://github.com/jbangdev/jbang-jash
-- https://code.visualstudio.com/docs/devcontainers/containers
-- https://www.jetbrains.com/help/idea/dev-containers-starting-page.html
-- https://github.com/spring-projects/spring-petclinic/tree/main/.devcontainer
-- https://sdkman.io/
-- https://sdkman.io/usage/#env-command
-- https://maven.apache.org/guides/index.html
-- https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
-- https://docs.spring.io/spring-boot/cli/index.html
-- https://keepachangelog.com/en/1.1.0/
-- https://www.eclemma.org/jacoco/trunk/doc/maven.html
 
 Powered by [Cursor](https://www.cursor.com/)
