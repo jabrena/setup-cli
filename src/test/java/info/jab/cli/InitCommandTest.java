@@ -153,7 +153,7 @@ class InitCommandTest {
     void shouldExecuteSpringCliFeature() throws Exception {
         // Given
         when(mockSpringCli.execute()).thenReturn(Either.right("SpringCli executed successfully"));
-        String[] args = {"--spring-cli"};
+        String[] args = {"--spring-boot"};
 
         // When
         int exitCode = cmd.execute(args);
@@ -168,7 +168,7 @@ class InitCommandTest {
     void shouldExecuteQuarkusCliFeature() throws Exception {
         // Given
         when(mockQuarkusCli.execute()).thenReturn(Either.right("QuarkusCli executed successfully"));
-        String[] args = {"--quarkus-cli"};
+        String[] args = {"--quarkus"};
 
         // When
         int exitCode = cmd.execute(args);

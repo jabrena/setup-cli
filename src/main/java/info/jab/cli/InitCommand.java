@@ -46,35 +46,6 @@ public class InitCommand implements Runnable {
 
     static class ExclusiveOptions {
 
-        // Explicit constructor to fix linter error
-        public ExclusiveOptions() {
-            super();
-        }
-
-        @Option(
-            names = {"-dc", "--devcontainer"},
-            description = "Add an initial Devcontainer support for Java.",
-            order = 9)
-        boolean devcontainerOption;
-
-        @Option(
-            names = {"-m", "--maven"},
-            description = "Create a new Maven project.",
-            order = 2)
-        boolean mavenOption;
-
-        @Option(
-            names = {"-sc", "--spring-cli"},
-            description = "Create a new Spring Boot project.",
-            order = 3)
-        boolean springCliOption;
-
-        @Option(
-            names = {"-qc", "--quarkus-cli"},
-            description = "Create a new Quarkus project.",
-            order = 4)
-        boolean quarkusCliOption;
-
         @Option(
             names = {"-c", "--cursor"},
             description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.",
@@ -85,16 +56,22 @@ public class InitCommand implements Runnable {
         String cursorOption;
 
         @Option(
-            names = {"-ga", "--github-action"},
-            description = "Add an initial GitHub Actions workflow for Maven.",
-            order = 8)
-        boolean githubActionOption;
+            names = {"-m", "--maven"},
+            description = "Create a new Maven project.",
+            order = 2)
+        boolean mavenOption;
 
         @Option(
-            names = {"-ec", "--editorconfig"},
-            description = "Add an initial .editorconfig file.",
-            order = 6)
-        boolean editorConfigOption;
+            names = {"-sb", "--spring-boot"},
+            description = "Create a new Spring Boot project.",
+            order = 3)
+        boolean springCliOption;
+
+        @Option(
+            names = {"-q", "--quarkus"},
+            description = "Create a new Quarkus project.",
+            order = 4)
+        boolean quarkusCliOption;
 
         @Option(
             names = {"-s", "--sdkman"},
@@ -103,36 +80,56 @@ public class InitCommand implements Runnable {
         boolean sdkmanOption;
 
         @Option(
-            names = {"-vv", "--visualvm"},
-            description = "Run VisualVM to monitor the application.",
-            order = 10)
-        boolean visualvmOption;
-
-        @Option(
-            names = {"-j", "--jmc"},
-            description = "Run JMC to monitor the application.",
-            order = 11)
-        boolean jmcOption;
+            names = {"-ec", "--editorconfig"},
+            description = "Add an initial .editorconfig file.",
+            order = 6)
+        boolean editorConfigOption;
 
         @Option(
             names = {"-gi", "--gitignore"},
             description = "Add an initial .gitignore file.",
             order = 7)
         boolean gitignoreOption;
+
+        @Option(
+            names = {"-ga", "--github-action"},
+            description = "Add an initial GitHub Actions workflow for Maven.",
+            order = 8)
+        boolean githubActionOption;
+
+        @Option(
+            names = {"-dc", "--devcontainer"},
+            description = "Add an initial Devcontainer support for Java.",
+            order = 9)
+        boolean devcontainerOption;
+
+        @Option(
+            names = {"-vv", "--visualvm"},
+            description = "Run VisualVM to monitor the application.",
+            order = 10,
+            hidden = true)
+        boolean visualvmOption;
+
+        @Option(
+            names = {"-j", "--jmc"},
+            description = "Run JMC to monitor the application.",
+            order = 11,
+            hidden = true)
+        boolean jmcOption;
     }
 
     // Behavior instances
-    private final DevContainer devContainer;
-    private final Maven maven;
     private final Cursor cursor;
+    private final Maven maven;
     private final SpringCli springCli;
     private final QuarkusCli quarkusCli;
     private final GithubAction githubAction;
-    private final EditorConfig editorConfig;
     private final Sdkman sdkman;
+    private final EditorConfig editorConfig;
+    private final Gitignore gitignore;
+    private final DevContainer devContainer;
     private final Visualvm visualvm;
     private final JMC jmc;
-    private final Gitignore gitignore;
 
     public InitCommand() {
         this.devContainer = new DevContainer();

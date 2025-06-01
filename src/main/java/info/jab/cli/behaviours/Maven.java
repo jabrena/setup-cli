@@ -51,6 +51,7 @@ public class Maven implements Behaviour0 {
 
     @Override
     public Either<String, String> execute() {
+        //Preconditions
         if (!isMavenAvailable()) {
             logger.error("Maven (mvn) command is not available on this system");
             logger.error("Please install Maven and ensure it's in your PATH.");
@@ -63,7 +64,6 @@ public class Maven implements Behaviour0 {
             return Either.left("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
         }
 
-        // Alternative 4: Execute only the first non-empty command
         return commands.lines()
                 .filter(line -> !line.trim().isEmpty())
                 .findFirst()
@@ -90,10 +90,8 @@ public class Maven implements Behaviour0 {
         Either<String, String> result = commandExecutor.execute("mvn --version");
 
         if (result.isRight()) {
-            logger.info("Maven is available: {}", result.get().lines().findFirst().orElse("Version info not available"));
             return true;
         } else {
-            logger.warn("Maven version check failed with exit code: {}", result.getLeft());
             return false;
         }
     }
