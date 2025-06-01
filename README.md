@@ -65,11 +65,8 @@ java -jar ./target/setup-0.11.0.jar --help
 java -jar ./target/setup-0.11.0.jar init
 java -jar ./target/setup-0.11.0.jar init --help
 java -jar ./target/setup-0.11.0.jar init --devcontainer
-java -jar ./target/setup-0.11.0.jar init --cursor java
-java -jar ./target/setup-0.11.0.jar init --cursor spring-boot
-java -jar ./target/setup-0.11.0.jar init --cursor quarkus
-java -jar ./target/setup-0.11.0.jar init --cursor tasks
-java -jar ./target/setup-0.11.0.jar init --cursor agile
+java -jar ./target/setup-0.11.0.jar init --cursor https://github.com/jabrena/cursor-rules-java
+java -jar ./target/setup-0.11.0.jar init --cursor https://github.com/jabrena/cursor-rules-agile
 java -jar ./target/setup-0.11.0.jar init --maven
 java -jar ./target/setup-0.11.0.jar init --spring-boot
 java -jar ./target/setup-0.11.0.jar init --quarkus

@@ -55,7 +55,7 @@ public class Cursor implements Behaviour1 {
 
         switch (option) {
             //case JAVA -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, JVM_FRAMEWORKS_SPECIFIC_FILES);
-            case JAVA -> gitFolderCopy.copyFolderFromRepo("https://github.com/jabrena/cursor-rules-java.git", ".cursor/rules", rulesPath.toString());
+            case JAVA -> gitFolderCopy.copyFolderFromRepo("https://github.com/jabrena/cursor-rules-java", ".cursor/rules", rulesPath.toString());
             case SPRING_BOOT -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, QUARKUS_SPECIFIC_FILES);
             case QUARKUS -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, SPRING_BOOT_SPECIFIC_FILES);
             case TASKS -> copyFiles.copyClasspathFolder(CURSOR_RULES_TASKS_BASE_PATH, rulesPath);
