@@ -3,9 +3,8 @@ package info.jab.cli.behaviours;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.jspecify.annotations.NonNull;
-
 import info.jab.cli.io.CopyFiles;
+import io.vavr.control.Either;
 
 public class EditorConfig implements Behaviour0 {
 
@@ -16,15 +15,15 @@ public class EditorConfig implements Behaviour0 {
     }
 
     // Constructor for testing with a mock
-    EditorConfig(@NonNull CopyFiles copyFiles) {
+    EditorConfig(CopyFiles copyFiles) {
         this.copyFiles = copyFiles;
     }
 
     @Override
-    public void execute() {
+    public Either<String, String> execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
 
         copyFiles.copyClasspathFolder( "editorconfig/", currentPath);
-        System.out.println("EditorConfig support added successfully");
+        return Either.right("EditorConfig support added successfully");
     }
 }

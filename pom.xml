@@ -17,7 +17,7 @@
         <!-- Dependencies -->
         <jspecify.version>1.0.0</jspecify.version>
         <slf4j.version>2.0.16</slf4j.version>
-        <logback.version>1.5.15</logback.version>
+        <logback.version>1.5.18</logback.version>
         <vavr.version>0.10.6</vavr.version>
         <picocli.version>4.7.7</picocli.version>
         <zt-exec.version>1.12</zt-exec.version>
@@ -25,8 +25,9 @@
         <jfiglet.version>0.0.9</jfiglet.version>
 
         <!-- Test dependencies -->
-        <junit.version>5.12.0</junit.version>
+        <junit.version>5.13.0</junit.version>
         <mockito.version>5.18.0</mockito.version>
+        <byte-buddy.version>1.17.5</byte-buddy.version>
         <assertj.version>3.27.3</assertj.version>
 
         <!-- Maven Extensions -->
@@ -142,6 +143,19 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Mockito needs these dependencies updated to fix the issue about org.mockito.plugins.MockMaker -->
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+            <version>${byte-buddy.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>${byte-buddy.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

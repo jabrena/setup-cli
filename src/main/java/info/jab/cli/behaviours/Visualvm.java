@@ -1,5 +1,7 @@
 package info.jab.cli.behaviours;
 
+import io.vavr.control.Either;
+
 public class Visualvm implements Behaviour0 {
 
     private String commands = """
@@ -10,7 +12,8 @@ public class Visualvm implements Behaviour0 {
             """;
 
     @Override
-    public void execute() {
+    public Either<String, String> execute() {
         commands.lines().forEach(System.out::println);
+        return Either.right("VisualVM command completed successfully");
     }
 }

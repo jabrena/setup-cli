@@ -41,7 +41,6 @@ class SdkmanTest {
 
         // Then
         verify(mockCopyFiles).copyClasspathFolder(expectedResourcePath, expectedPath);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("SDKMAN support added successfully");
 
         // Reset System.out to its original stream
         //TODO: Check if this line is needed. It should be handled in tearDown.

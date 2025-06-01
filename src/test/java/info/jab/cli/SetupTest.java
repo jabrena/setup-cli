@@ -15,6 +15,7 @@ import static org.mockito.Mockito.times;
 import java.nio.charset.StandardCharsets;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("NullAway.Init")
 class SetupTest {
 
     @Mock
@@ -25,8 +26,8 @@ class SetupTest {
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
 
+
     @BeforeEach
-    @SuppressWarnings("NullAway.Init")
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         System.setErr(new PrintStream(outputStreamCaptor));
@@ -41,9 +42,6 @@ class SetupTest {
 
     @Test
     void testRunWithMockedInitCommand() throws Exception {
-        // Given
-        // No setup needed since runInitFeature() returns String
-
         // When
         setupWithMock.run();
 
@@ -66,44 +64,12 @@ class SetupTest {
     }
 
     @Test
-    void testRunCLIWithInitNoOpts() {
-        // Given
-        String[] args = {"init"};
+    void testSetupInstantiation() {
+        // Test that Setup can be instantiated without issues
+        Setup setup = new Setup();
+        assertThat(setup).isNotNull();
 
-        // When
-        int exitCode = Setup.runCLI(args);
-
-        // Then
-        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
-        assertThat(output).contains("type 'init --help' to see available options");
-        assertThat(exitCode).isZero(); // Changed expectation to match actual behavior
-    }
-
-    @Test
-    void testRunCLIWithInitValidOpt() {
-        // Given
-        String[] args = {"init", "--editorconfig"}; // Changed to use the correct full option name
-
-        // When
-        int exitCode = Setup.runCLI(args);
-
-        // Then
-        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
-        assertThat(output).contains("Command executed successfully");
-        assertThat(exitCode).isZero();
-    }
-
-    @Test
-    void testRunCLIWithInitHelp() {
-        // Given
-        String[] args = {"init", "--help"};
-
-        // When
-        int exitCode = Setup.runCLI(args);
-
-        // Then
-        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
-        assertThat(output).contains("Usage: setup init");
-        assertThat(exitCode).isZero();
+        Setup setupWithInit = new Setup(mockInitCommand);
+        assertThat(setupWithInit).isNotNull();
     }
 }

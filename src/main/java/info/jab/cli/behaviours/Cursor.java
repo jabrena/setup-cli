@@ -9,6 +9,7 @@ import org.jspecify.annotations.NonNull;
 
 import info.jab.cli.CursorOptions.CursorOption;
 import info.jab.cli.io.CopyFiles;
+import io.vavr.control.Either;
 
 public class Cursor implements Behaviour1 {
 
@@ -32,16 +33,18 @@ public class Cursor implements Behaviour1 {
         this.copyFiles = new CopyFiles();
     }
 
-    Cursor(@NonNull CopyFiles copyFiles) {
+    Cursor(CopyFiles copyFiles) {
         this.copyFiles = copyFiles;
     }
 
     @Override
-    public void execute(@NonNull String parameter) {
-        //Preconditions
-        CursorOption option = CursorOption.fromString(parameter)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid parameter: " + parameter));
+    public Either<String, String> execute(@NonNull String parameter) {
+        return CursorOption.fromString(parameter)
+            .map(this::executeWithOption)
+            .orElse(Either.left("Invalid parameter: " + parameter));
+    }
 
+    private Either<String, String> executeWithOption(CursorOption option) {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path cursorPath = currentPath.resolve(".cursor");
         Path rulesPath = cursorPath.resolve("rules");
@@ -54,6 +57,6 @@ public class Cursor implements Behaviour1 {
             case AGILE -> copyFiles.copyClasspathFolder(CURSOR_RULES_AGILE_BASE_PATH, rulesPath);
         }
 
-        System.out.println("Cursor rules added successfully");
+        return Either.right("Cursor rules added successfully");
     }
 }

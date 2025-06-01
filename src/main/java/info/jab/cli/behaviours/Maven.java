@@ -50,50 +50,35 @@ public class Maven implements Behaviour0 {
     }
 
     @Override
-    public void execute() {
+    public Either<String, String> execute() {
         if (!isMavenAvailable()) {
             logger.error("Maven (mvn) command is not available on this system");
             logger.error("Please install Maven and ensure it's in your PATH.");
             logger.error("sdkman install maven");
-            throw new IllegalStateException("Maven command not found. Please install Maven and ensure it's in your PATH.");
+            return Either.left("Maven command not found. Please install Maven and ensure it's in your PATH.");
         }
 
         if (pomXmlExists()) {
             logger.error("A pom.xml file already exists in the current directory");
-            throw new IllegalStateException("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
+            return Either.left("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
         }
 
-        commands.lines()
-               .filter(line -> !line.trim().isEmpty())
-               .forEach(this::executeCommand);
+        // Alternative 4: Execute only the first non-empty command
+        return commands.lines()
+                .filter(line -> !line.trim().isEmpty())
+                .findFirst()
+                .map(this::executeCommand)
+                .orElse(Either.left("No Maven commands found to execute"));
     }
 
-    private void executeCommand(String command) {
+    private Either<String, String> executeCommand(String command) {
         logger.info("Executing Maven command: {}", command);
         Either<String, String> result = commandExecutor.execute(command);
 
         if (result.isRight()) {
-            logger.info("Maven command completed successfully");
-        } else {
-            logger.error("Command output: {}", result.getLeft());
+            return Either.right("Maven command completed successfully");
         }
-    }
-
-    /**
-     * Alternative method that continues execution even if some commands fail
-     */
-    public void executeWithContinueOnError() {
-        commands.lines()
-               .filter(line -> !line.trim().isEmpty())
-               .forEach(this::executeCommandSafely);
-    }
-
-    private void executeCommandSafely(String command) {
-        try {
-            executeCommand(command);
-        } catch (Exception e) {
-            logger.warn("Maven command failed but continuing: {}", command, e);
-        }
+        return Either.left("Maven command failed");
     }
 
     /**

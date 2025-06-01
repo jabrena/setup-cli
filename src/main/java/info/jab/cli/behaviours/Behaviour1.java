@@ -1,5 +1,7 @@
 package info.jab.cli.behaviours;
 
+import io.vavr.control.Either;
+
 interface Behaviour1 {
-    void execute(String parameter);
+    Either<String, String> execute(String parameter);
 }

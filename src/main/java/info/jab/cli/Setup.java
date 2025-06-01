@@ -24,14 +24,14 @@ public class Setup implements Runnable {
     // Field for dependency injection in tests
     private final InitCommand initCommand;
 
-    // Constructor that accepts an InitCommand (for testing)
-    public Setup(@NonNull InitCommand initCommand) {
-        this.initCommand = initCommand;
-    }
-
-    // Default constructor (used in production)
+    // Default constructor
     public Setup() {
         this.initCommand = new InitCommand();
+    }
+
+    // Constructor that accepts an InitCommand (for testing)
+    public Setup(InitCommand initCommand) {
+        this.initCommand = initCommand;
     }
 
     @Override

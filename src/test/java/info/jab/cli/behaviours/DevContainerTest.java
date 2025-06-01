@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,10 +54,6 @@ class DevContainerTest {
         devContainer.execute();
 
         // Then
-        // Verify the success message was printed
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .contains("Devcontainer support added successfully");
-
         // Verify the copyClasspathFolder method was called with correct arguments
         verify(copyFiles).copyClasspathFolder(expectedSourceDir, expectedDevcontainerPath);
     }

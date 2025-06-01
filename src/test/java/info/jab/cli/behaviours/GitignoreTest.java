@@ -57,6 +57,7 @@ class GitignoreTest {
             .cursor/
             .flattened-pom.xml
             *.log
+            .classpath
             """;
 
         // When
@@ -64,8 +65,6 @@ class GitignoreTest {
 
         // Then
         verify(copyFilesMock).copyContentToFile(eq(expectedContent), eq(expectedPath));
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .isEqualTo("Gitignore support added successfully");
     }
 
     @Test
@@ -80,6 +79,7 @@ class GitignoreTest {
             .cursor/
             .flattened-pom.xml
             *.log
+            .classpath
             """;
         doThrow(new RuntimeException("Simulated copy error"))
                 .when(copyFilesMock).copyContentToFile(eq(expectedContent), eq(expectedPath));
@@ -132,12 +132,9 @@ class GitignoreTest {
                 .cursor/
                 .flattened-pom.xml
                 *.log
+                .classpath
                 """;
             assertThat(actualContent).isEqualTo(expectedContent);
-
-            // Verify console output
-            assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-                .isEqualTo("Gitignore support added successfully");
 
         } finally {
             // Restore the original user.dir
@@ -177,6 +174,7 @@ class GitignoreTest {
                 .cursor/
                 .flattened-pom.xml
                 *.log
+                .classpath
                 """;
             assertThat(actualContent).isEqualTo(expectedContent);
             assertThat(actualContent).doesNotContain("Old gitignore content");
@@ -207,6 +205,7 @@ class GitignoreTest {
                 .cursor/
                 .flattened-pom.xml
                 *.log
+                .classpath
                 """),
             eq(expectedPath)
         );
@@ -223,6 +222,7 @@ class GitignoreTest {
             .cursor/
             .flattened-pom.xml
             *.log
+            .classpath
             """;
 
         // When
@@ -239,5 +239,6 @@ class GitignoreTest {
         assertThat(expectedContent).contains(".cursor/");       // Cursor IDE
         assertThat(expectedContent).contains(".flattened-pom.xml"); // Maven flatten plugin
         assertThat(expectedContent).contains("*.log");          // Log files
+        assertThat(expectedContent).contains(".classpath");      // Maven classpath file
     }
 }
