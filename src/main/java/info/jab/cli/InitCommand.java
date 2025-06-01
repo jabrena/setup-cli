@@ -135,7 +135,6 @@ public class InitCommand implements Runnable {
     private final Gitignore gitignore;
 
     public InitCommand() {
-        super();
         this.devContainer = new DevContainer();
         this.maven = new Maven();
         this.cursor = new Cursor();
@@ -162,7 +161,6 @@ public class InitCommand implements Runnable {
         JMC jmc,
         Gitignore gitignore
     ) {
-        super();
         this.devContainer = devContainer;
         this.maven = maven;
         this.springCli = springCli;
