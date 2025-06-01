@@ -8,3 +8,4 @@ target/
 .flattened-pom.xml
 *.log
 .classpath
+.quarkus/

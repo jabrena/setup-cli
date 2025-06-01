@@ -46,16 +46,14 @@ public class InitCommand implements Runnable {
 
     static class ExclusiveOptions {
 
-        // Explicit constructor to fix linter error
-        public ExclusiveOptions() {
-            super();
-        }
-
         @Option(
-            names = {"-dc", "--devcontainer"},
-            description = "Add an initial Devcontainer support for Java.",
-            order = 9)
-        boolean devcontainerOption;
+            names = {"-c", "--cursor"},
+            description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.",
+            completionCandidates = CursorOptions.class,
+            paramLabel = "<option>",
+            order = 1)
+        @Nullable
+        String cursorOption;
 
         @Option(
             names = {"-m", "--maven"},
@@ -76,19 +74,10 @@ public class InitCommand implements Runnable {
         boolean quarkusCliOption;
 
         @Option(
-            names = {"-c", "--cursor"},
-            description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.",
-            completionCandidates = CursorOptions.class,
-            paramLabel = "<option>",
-            order = 1)
-        @Nullable
-        String cursorOption;
-
-        @Option(
-            names = {"-ga", "--github-action"},
-            description = "Add an initial GitHub Actions workflow for Maven.",
-            order = 8)
-        boolean githubActionOption;
+            names = {"-s", "--sdkman"},
+            description = "Add an initial .sdkmanrc file.",
+            order = 5)
+        boolean sdkmanOption;
 
         @Option(
             names = {"-ec", "--editorconfig"},
@@ -97,42 +86,50 @@ public class InitCommand implements Runnable {
         boolean editorConfigOption;
 
         @Option(
-            names = {"-s", "--sdkman"},
-            description = "Add an initial .sdkmanrc file.",
-            order = 5)
-        boolean sdkmanOption;
+            names = {"-gi", "--gitignore"},
+            description = "Add an initial .gitignore file.",
+            order = 7)
+        boolean gitignoreOption;
+
+        @Option(
+            names = {"-ga", "--github-action"},
+            description = "Add an initial GitHub Actions workflow for Maven.",
+            order = 8)
+        boolean githubActionOption;
+
+        @Option(
+            names = {"-dc", "--devcontainer"},
+            description = "Add an initial Devcontainer support for Java.",
+            order = 9)
+        boolean devcontainerOption;
 
         @Option(
             names = {"-vv", "--visualvm"},
             description = "Run VisualVM to monitor the application.",
-            order = 10)
+            order = 10,
+            hidden = true)
         boolean visualvmOption;
 
         @Option(
             names = {"-j", "--jmc"},
             description = "Run JMC to monitor the application.",
-            order = 11)
+            order = 11,
+            hidden = true)
         boolean jmcOption;
-
-        @Option(
-            names = {"-gi", "--gitignore"},
-            description = "Add an initial .gitignore file.",
-            order = 7)
-        boolean gitignoreOption;
     }
 
     // Behavior instances
-    private final DevContainer devContainer;
-    private final Maven maven;
     private final Cursor cursor;
+    private final Maven maven;
     private final SpringCli springCli;
     private final QuarkusCli quarkusCli;
     private final GithubAction githubAction;
-    private final EditorConfig editorConfig;
     private final Sdkman sdkman;
+    private final EditorConfig editorConfig;
+    private final Gitignore gitignore;
+    private final DevContainer devContainer;
     private final Visualvm visualvm;
     private final JMC jmc;
-    private final Gitignore gitignore;
 
     public InitCommand() {
         this.devContainer = new DevContainer();
