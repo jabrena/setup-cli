@@ -14,12 +14,21 @@ import info.jab.cli.behaviours.Visualvm;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.ArgGroup;
+import io.vavr.control.Either;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+/**
+ * CLI command for initializing project setup features.
+ * This command supports various development tools and configurations.
+ * Only one feature can be executed at a time to ensure proper initialization.
+ */
 @Command(
     name = "init",
     description = "Initialize a new repository with some useful features for Developers.",
@@ -29,86 +38,89 @@ import java.util.stream.Stream;
 )
 public class InitCommand implements Runnable {
 
-    @SuppressWarnings("UnusedVariable")
-    @Option(names = "--version", versionHelp = true, order = 99)
-    private boolean version; // Always second
+    // Mutually exclusive options - only one can be selected at a time
+    @ArgGroup(exclusive = true, multiplicity = "1")
+    @Nullable
+    ExclusiveOptions exclusiveOptions;
 
-    @SuppressWarnings("UnusedVariable")
-    @Option(names = "--help", usageHelp = true, order = 100)
-    private boolean help; // Always first
+    static class ExclusiveOptions {
 
-    @Option(
-        names = {"-dc", "--devcontainer"},
-        description = "Add Devcontainer support for Java.",
-        order = 9)
-    private boolean devcontainerOption = false;
+        @Option(
+            names = {"-dc", "--devcontainer"},
+            description = "Add an initial Devcontainer support for Java.",
+            order = 9)
+        boolean devcontainerOption;
 
-    @Option(
-        names = {"-c", "--cursor"},
-        description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.",
-        completionCandidates = CursorOptions.class,
-        order = 1)
-    private String cursorOption = "NA";
+        @Option(
+            names = {"-m", "--maven"},
+            description = "Create a new Maven project.",
+            order = 2)
+        boolean mavenOption;
 
-    @Option(
-        names = {"-m", "--maven"},
-        description = "Create a new Maven project.",
-        order = 2)
-    private boolean mavenOption = false;
+        @Option(
+            names = {"-sc", "--spring-cli"},
+            description = "Create a new Spring Boot project.",
+            order = 3)
+        boolean springCliOption;
 
-    @Option(
-        names = {"-sc", "--spring-cli"},
-        description = "Create a new Spring Boot project.",
-        order = 3)
-    private boolean springCliOption = false;
+        @Option(
+            names = {"-qc", "--quarkus-cli"},
+            description = "Create a new Quarkus project.",
+            order = 4)
+        boolean quarkusCliOption;
 
-    @Option(
-        names = {"-qc", "--quarkus-cli"},
-        description = "Create a new Quarkus project.",
-        order = 4)
-    private boolean quarkusCliOption = false;
+        @Option(
+            names = {"-c", "--cursor"},
+            description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.",
+            completionCandidates = CursorOptions.class,
+            paramLabel = "<option>",
+            order = 1)
+        @Nullable
+        String cursorOption;
 
-    @Option(
-        names = {"-ga", "--github-action"},
-        description = "Add an initial GitHub Actions workflow for Maven.",
-        order = 8)
-    private boolean githubActionOption = false;
+        @Option(
+            names = {"-ga", "--github-action"},
+            description = "Add an initial GitHub Actions workflow for Maven.",
+            order = 8)
+        boolean githubActionOption;
 
-    @Option(
-        names = {"-ec", "--editorconfig"},
-        description = "Add an initial EditorConfig file.",
-        order = 6)
-    private boolean editorConfigOption = false;
+        @Option(
+            names = {"-ec", "--editorconfig"},
+            description = "Add an initial .editorconfig file.",
+            order = 6)
+        boolean editorConfigOption;
 
-    @Option(
-        names = {"-s", "--sdkman"},
-        description = "Add an initial SDKMAN Init file.",
-        order = 5)
-    private boolean sdkmanOption = false;
+        @Option(
+            names = {"-s", "--sdkman"},
+            description = "Add an initial .sdkmanrc file.",
+            order = 5)
+        boolean sdkmanOption;
 
-    @Option(
-        names = {"-vv", "--visualvm"},
-        description = "Run VisualVM to monitor the application.",
-        order = 10)
-    private boolean visualvmOption = false;
+        @Option(
+            names = {"-vv", "--visualvm"},
+            description = "Run VisualVM to monitor the application.",
+            order = 10)
+        boolean visualvmOption;
 
-    @Option(
-        names = {"-j", "--jmc"},
-        description = "Run JMC to monitor the application.",
-        order = 11)
-    private boolean jmcOption = false;
+        @Option(
+            names = {"-j", "--jmc"},
+            description = "Run JMC to monitor the application.",
+            order = 11)
+        boolean jmcOption;
 
-    @Option(
-        names = {"-gi", "--gitignore"},
-        description = "Add an initial .gitignore file.",
-        order = 7)
-    private boolean gitignoreOption = false;
+        @Option(
+            names = {"-gi", "--gitignore"},
+            description = "Add an initial .gitignore file.",
+            order = 7)
+        boolean gitignoreOption;
+    }
 
+    // Behavior instances
     private final DevContainer devContainer;
     private final Maven maven;
+    private final Cursor cursor;
     private final SpringCli springCli;
     private final QuarkusCli quarkusCli;
-    private final Cursor cursor;
     private final GithubAction githubAction;
     private final EditorConfig editorConfig;
     private final Sdkman sdkman;
@@ -117,6 +129,7 @@ public class InitCommand implements Runnable {
     private final Gitignore gitignore;
 
     public InitCommand() {
+        super();
         this.devContainer = new DevContainer();
         this.maven = new Maven();
         this.cursor = new Cursor();
@@ -141,12 +154,14 @@ public class InitCommand implements Runnable {
         Sdkman sdkman,
         Visualvm visualvm,
         JMC jmc,
-        Gitignore gitignore) {
+        Gitignore gitignore
+    ) {
+        super();
         this.devContainer = devContainer;
         this.maven = maven;
-        this.cursor = cursor;
         this.springCli = springCli;
         this.quarkusCli = quarkusCli;
+        this.cursor = cursor;
         this.githubAction = githubAction;
         this.editorConfig = editorConfig;
         this.sdkman = sdkman;
@@ -155,57 +170,74 @@ public class InitCommand implements Runnable {
         this.gitignore = gitignore;
     }
 
-    // Functional approach using records for better type safety and extensibility
-    private record FeatureConfig(String name, Supplier<Boolean> isEnabled, Runnable action) {}
-
-    protected String runInitFeature() {
-        // Define all features in a declarative way
-        List<FeatureConfig> features = List.of(
-            new FeatureConfig("devcontainer", () -> devcontainerOption, devContainer::execute),
-            new FeatureConfig("maven", () -> mavenOption, maven::execute),
-            new FeatureConfig("spring-cli", () -> springCliOption, springCli::execute),
-            new FeatureConfig("quarkus-cli", () -> quarkusCliOption, quarkusCli::execute),
-            new FeatureConfig("github-action", () -> githubActionOption, githubAction::execute),
-            new FeatureConfig("editor-config", () -> editorConfigOption, editorConfig::execute),
-            new FeatureConfig("sdkman", () -> sdkmanOption, sdkman::execute),
-            new FeatureConfig("visualvm", () -> visualvmOption, visualvm::execute),
-            new FeatureConfig("jmc", () -> jmcOption, jmc::execute),
-            new FeatureConfig("gitignore", () -> gitignoreOption, gitignore::execute)
-        );
-
-        // Handle cursor option with its special parameter requirement
-        Optional<FeatureConfig> cursorFeature = CursorOptions.isValidOption(cursorOption)
-            ? Optional.of(new FeatureConfig("cursor", () -> true, () -> cursor.execute(cursorOption)))
-            : Optional.empty();
-
-        // Combine all features
-        Stream<FeatureConfig> allFeatures = Stream.concat(
-            features.stream(),
-            cursorFeature.stream()
-        );
-
-        // Find enabled features
-        List<FeatureConfig> enabledFeatures = allFeatures
-            .filter(feature -> feature.isEnabled().get())
-            .toList();
-
-        // Check if any features are enabled
-        if (enabledFeatures.isEmpty()) {
-            return "type 'init --help' to see available options";
-        }
-
-        // Execute all enabled features
-        enabledFeatures.forEach(feature -> {
-            feature.action().run();
-        });
-
-        return "Command executed successfully";
-    }
-
     @Override
     public void run() {
         String result = runInitFeature();
         System.out.println(result);
+    }
+
+    @SuppressWarnings("NullAway") // CursorOptions.isValidOption handles null internally
+    protected String runInitFeature() {
+        if (exclusiveOptions == null) {
+            return "No feature selected. Use --help to see available options.";
+        }
+
+        if (exclusiveOptions.devcontainerOption) {
+            Either<String, String> result = devContainer.execute();
+            return result.isLeft() ? "Failed to execute devcontainer: " + result.getLeft() : result.get();
+        }
+
+        if (exclusiveOptions.mavenOption) {
+            Either<String, String> result = maven.execute();
+            return result.isLeft() ? "Failed to execute maven: " + result.getLeft() : result.get();
+        }
+
+        if (exclusiveOptions.springCliOption) {
+            Either<String, String> result = springCli.execute();
+            return result.isLeft() ? "Failed to execute spring-cli: " + result.getLeft() : result.get();
+        }
+
+        if (exclusiveOptions.quarkusCliOption) {
+            Either<String, String> result = quarkusCli.execute();
+            return result.isLeft() ? "Failed to execute quarkus-cli: " + result.getLeft() : result.get();
+        }
+
+        if (CursorOptions.isValidOption(exclusiveOptions.cursorOption)) {
+            Either<String, String> result = cursor.execute(exclusiveOptions.cursorOption);
+            return result.isLeft() ? "Failed to execute cursor: " + result.getLeft() : result.get();
+        }
+
+        if (exclusiveOptions.githubActionOption) {
+            Either<String, String> result = githubAction.execute();
+            return result.isLeft() ? "Failed to execute github-action: " + result.getLeft() : result.get();
+        }
+
+        if (exclusiveOptions.editorConfigOption) {
+            Either<String, String> result = editorConfig.execute();
+            return result.isLeft() ? "Failed to execute editor-config: " + result.getLeft() : result.get();
+        }
+
+        if (exclusiveOptions.sdkmanOption) {
+            Either<String, String> result = sdkman.execute();
+            return result.isLeft() ? "Failed to execute sdkman: " + result.getLeft() : result.get();
+        }
+
+        if (exclusiveOptions.visualvmOption) {
+            Either<String, String> result = visualvm.execute();
+            return result.isLeft() ? "Failed to execute visualvm: " + result.getLeft() : result.get();
+        }
+
+        if (exclusiveOptions.jmcOption) {
+            Either<String, String> result = jmc.execute();
+            return result.isLeft() ? "Failed to execute jmc: " + result.getLeft() : result.get();
+        }
+
+        if (exclusiveOptions.gitignoreOption) {
+            Either<String, String> result = gitignore.execute();
+            return result.isLeft() ? "Failed to execute gitignore: " + result.getLeft() : result.get();
+        }
+
+        return "No valid feature option provided.";
     }
 
     public static void main(String[] args) {

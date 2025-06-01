@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class CursorOptions implements Iterable<String>{
 
@@ -54,7 +55,7 @@ public class CursorOptions implements Iterable<String>{
      * @param parameter the parameter to check
      * @return true if the parameter is a valid option, false otherwise
      */
-    public static boolean isValidOption(@NonNull String parameter) {
+    public static boolean isValidOption(@Nullable String parameter) {
         if (Objects.isNull(parameter)) {
             return false;
         }

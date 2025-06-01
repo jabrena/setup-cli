@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import java.nio.charset.StandardCharsets;
 
+
 @ExtendWith(MockitoExtension.class)
 class SetupTest {
 
@@ -66,20 +67,6 @@ class SetupTest {
     }
 
     @Test
-    void testRunCLIWithInitNoOpts() {
-        // Given
-        String[] args = {"init"};
-
-        // When
-        int exitCode = Setup.runCLI(args);
-
-        // Then
-        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
-        assertThat(output).contains("type 'init --help' to see available options");
-        assertThat(exitCode).isZero(); // Changed expectation to match actual behavior
-    }
-
-    @Test
     void testRunCLIWithInitValidOpt() {
         // Given
         String[] args = {"init", "--editorconfig"}; // Changed to use the correct full option name
@@ -89,7 +76,7 @@ class SetupTest {
 
         // Then
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
-        assertThat(output).contains("Command executed successfully");
+        assertThat(output).contains("EditorConfig support added successfully");
         assertThat(exitCode).isZero();
     }
 

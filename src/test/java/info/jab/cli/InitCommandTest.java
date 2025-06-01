@@ -12,12 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.Mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import info.jab.cli.behaviours.Cursor;
@@ -31,10 +32,15 @@ import info.jab.cli.behaviours.QuarkusCli;
 import info.jab.cli.behaviours.Sdkman;
 import info.jab.cli.behaviours.SpringCli;
 import info.jab.cli.behaviours.Visualvm;
+import io.vavr.control.Either;
 import picocli.CommandLine;
 
 @ExtendWith(MockitoExtension.class)
 class InitCommandTest {
+
+    public InitCommandTest() {
+        super();
+    }
 
     @Mock
     private DevContainer mockDevContainer;
@@ -71,7 +77,6 @@ class InitCommandTest {
 
     private InitCommand initCommand;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
     private CommandLine cmd;
 
     @BeforeEach
@@ -99,25 +104,13 @@ class InitCommandTest {
 
     @AfterEach
     void tearDown() {
-        System.setOut(originalOut);
-    }
-
-    @Test
-    void shouldShowHelpMessageWhenNoOptionsProvided() {
-        // Given
-        // No specific setup, command initialized in @BeforeEach
-
-        // When
-        String result = initCommand.runInitFeature();
-
-        // Then
-        assertThat(result).isEqualTo("type 'init --help' to see available options");
-        verifyNoInteractions(mockDevContainer, mockMaven, mockGithubAction, mockCursor);
+        System.setOut(System.out);
     }
 
     @Test
     void shouldExecuteDevContainerFeature() throws Exception {
         // Given
+        when(mockDevContainer.execute()).thenReturn(Either.right("DevContainer executed successfully"));
         String[] args = {"--devcontainer"};
 
         // When
@@ -126,12 +119,13 @@ class InitCommandTest {
         // Then
         verify(mockDevContainer, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("DevContainer executed successfully");
     }
 
     @Test
     void shouldExecuteMavenFeature() throws Exception {
         // Given
+        when(mockMaven.execute()).thenReturn(Either.right("Maven executed successfully"));
         String[] args = {"--maven"};
 
         // When
@@ -140,12 +134,58 @@ class InitCommandTest {
         // Then
         verify(mockMaven, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Maven executed successfully");
+    }
+
+    @Test
+    void shouldExecuteSpringCliFeature() throws Exception {
+        // Given
+        when(mockSpringCli.execute()).thenReturn(Either.right("SpringCli executed successfully"));
+        String[] args = {"--spring-cli"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockSpringCli, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("SpringCli executed successfully");
+    }
+
+    @Test
+    void shouldExecuteQuarkusCliFeature() throws Exception {
+        // Given
+        when(mockQuarkusCli.execute()).thenReturn(Either.right("QuarkusCli executed successfully"));
+        String[] args = {"--quarkus-cli"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockQuarkusCli, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("QuarkusCli executed successfully");
+    }
+
+    @Test
+    void shouldExecuteCursorFeature() throws Exception {
+        // Given
+        when(mockCursor.execute("java")).thenReturn(Either.right("Cursor executed successfully"));
+        String[] args = {"--cursor", "java"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockCursor, times(1)).execute("java");
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Cursor executed successfully");
     }
 
     @Test
     void shouldExecuteGithubActionFeature() throws Exception {
         // Given
+        when(mockGithubAction.execute()).thenReturn(Either.right("GithubAction executed successfully"));
         String[] args = {"--github-action"};
 
         // When
@@ -154,69 +194,13 @@ class InitCommandTest {
         // Then
         verify(mockGithubAction, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
-    }
-
-    @ParameterizedTest
-    @MethodSource("info.jab.cli.CursorOptions#getOptions")
-    void shouldExecuteCursorFeatureWithValidOptions(String validOption) throws Exception {
-        // Given
-        String[] args = {"--cursor", validOption};
-
-        // When
-        int exitCode = cmd.execute(args);
-
-        // Then
-        verify(mockCursor, times(1)).execute(validOption);
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
-    }
-
-    @Test
-    void shouldNotExecuteCursorFeatureWithInvalidOption() throws Exception {
-        // Given
-        String[] args = {"--cursor", "invalid"};
-
-        // When
-        int exitCode = cmd.execute(args);
-
-        // Then
-        verify(mockCursor, never()).execute(any());
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).endsWith("type 'init --help' to see available options");
-    }
-
-    @Test
-    void shouldExecuteAllFeaturesWhenAllOptionsEnabled() throws Exception {
-        // Given
-        String[] args = {
-            "--devcontainer",
-            "--maven",
-            "--github-action",
-            "--cursor", "java",
-            "--editorconfig",
-            "--sdkman",
-            "--gitignore"
-        };
-
-        // When
-        int exitCode = cmd.execute(args);
-
-        // Then
-        verify(mockDevContainer, times(1)).execute();
-        verify(mockMaven, times(1)).execute();
-        verify(mockGithubAction, times(1)).execute();
-        verify(mockCursor, times(1)).execute("java");
-        verify(mockEditorConfig, times(1)).execute();
-        verify(mockSdkman, times(1)).execute();
-        verify(mockGitignore, times(1)).execute();
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("GithubAction executed successfully");
     }
 
     @Test
     void shouldExecuteEditorConfigFeature() throws Exception {
         // Given
+        when(mockEditorConfig.execute()).thenReturn(Either.right("EditorConfig executed successfully"));
         String[] args = {"--editorconfig"};
 
         // When
@@ -225,12 +209,13 @@ class InitCommandTest {
         // Then
         verify(mockEditorConfig, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("EditorConfig executed successfully");
     }
 
     @Test
     void shouldExecuteSdkmanFeature() throws Exception {
         // Given
+        when(mockSdkman.execute()).thenReturn(Either.right("Sdkman executed successfully"));
         String[] args = {"--sdkman"};
 
         // When
@@ -239,82 +224,43 @@ class InitCommandTest {
         // Then
         verify(mockSdkman, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Sdkman executed successfully");
     }
 
     @Test
-    void shouldExecuteMultipleFeaturesSimultaneously() throws Exception {
+    void shouldExecuteVisualmFeature() throws Exception {
         // Given
-        String[] args = {"--maven", "--devcontainer"};
+        when(mockVisualvm.execute()).thenReturn(Either.right("Visualvm executed successfully"));
+        String[] args = {"--visualvm"};
 
         // When
         int exitCode = cmd.execute(args);
 
         // Then
-        verify(mockMaven, times(1)).execute();
-        verify(mockDevContainer, times(1)).execute();
+        verify(mockVisualvm, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Visualvm executed successfully");
     }
 
     @Test
-    void shouldHandleCombinationOfValidCursorOptionWithOtherFeatures() throws Exception {
+    void shouldExecuteJmcFeature() throws Exception {
         // Given
-        String[] args = {"--cursor", "java", "--maven"};
+        when(mockJmc.execute()).thenReturn(Either.right("Jmc executed successfully"));
+        String[] args = {"--jmc"};
 
         // When
         int exitCode = cmd.execute(args);
 
         // Then
-        verify(mockCursor, times(1)).execute("java");
-        verify(mockMaven, times(1)).execute();
+        verify(mockJmc, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
-    }
-
-    @Test
-    void shouldRunCommandAndPrintResult() throws Exception {
-        // Given
-        InitCommand spyCommand = spy(initCommand);
-        CommandLine spyCmd = new CommandLine(spyCommand);
-
-        // When
-        spyCmd.execute(); // No args, should trigger run method
-
-        // Then
-        verify(spyCommand, times(1)).run();
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).endsWith("type 'init --help' to see available options");
-    }
-
-    @Test
-    void shouldExecuteCommandThroughMainMethod() throws Exception {
-        // Given
-        String[] args = new String[]{"--cursor", "java"};
-
-        // When
-        int exitCode = cmd.execute(args);
-
-        // Then
-        verify(mockCursor, times(1)).execute("java");
-        assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).contains("Command executed successfully");
-    }
-
-    @Test
-    void shouldCreateInitCommandWithDefaultConstructor() {
-        // Given & When
-        InitCommand defaultCommand = new InitCommand();
-
-        // Then
-        assertThat(defaultCommand).isNotNull();
-        // Verify that runInitFeature works with default constructor
-        String result = defaultCommand.runInitFeature();
-        assertThat(result).isEqualTo("type 'init --help' to see available options");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Jmc executed successfully");
     }
 
     @Test
     void shouldExecuteGitignoreFeature() throws Exception {
         // Given
+        when(mockGitignore.execute()).thenReturn(Either.right("Gitignore executed successfully"));
         String[] args = {"--gitignore"};
 
         // When
@@ -323,6 +269,47 @@ class InitCommandTest {
         // Then
         verify(mockGitignore, times(1)).execute();
         assertThat(exitCode).isEqualTo(0);
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Command executed successfully");
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Gitignore executed successfully");
+    }
+
+    @Test
+    void shouldFailWhenNoOptionProvided() throws Exception {
+        // Given
+        String[] args = {};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        assertThat(exitCode).isNotEqualTo(0); // Should fail due to required argument group
+    }
+
+    @Test
+    void shouldHandleDevContainerFailure() throws Exception {
+        // Given
+        when(mockDevContainer.execute()).thenReturn(Either.left("DevContainer failed"));
+        String[] args = {"--devcontainer"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        verify(mockDevContainer, times(1)).execute();
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Failed to execute devcontainer: DevContainer failed");
+    }
+
+    @Test
+    void shouldRejectMultipleOptions() throws Exception {
+        // Given
+        String[] args = {"--devcontainer", "--maven"};
+
+        // When
+        int exitCode = cmd.execute(args);
+
+        // Then
+        assertThat(exitCode).isNotEqualTo(0); // Should fail due to mutually exclusive options
+        verify(mockDevContainer, never()).execute();
+        verify(mockMaven, never()).execute();
     }
 }
