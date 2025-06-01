@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import java.util.Objects;
 
 /**
  * CLI command for initializing project setup features.
@@ -44,6 +45,11 @@ public class InitCommand implements Runnable {
     ExclusiveOptions exclusiveOptions;
 
     static class ExclusiveOptions {
+
+        // Explicit constructor to fix linter error
+        public ExclusiveOptions() {
+            super();
+        }
 
         @Option(
             names = {"-dc", "--devcontainer"},
@@ -172,76 +178,69 @@ public class InitCommand implements Runnable {
 
     @Override
     public void run() {
-        String result = runInitFeature();
-        System.out.println(result);
+        runInitFeature();
     }
 
     @SuppressWarnings("NullAway") // CursorOptions.isValidOption handles null internally
-    protected String runInitFeature() {
-        if (exclusiveOptions == null) {
-            return "No feature selected. Use --help to see available options.";
+    protected Integer runInitFeature() {
+        if (Objects.isNull(exclusiveOptions)) {
+            return handleError(Either.left("No feature selected. Use --help to see available options."));
         }
 
         if (exclusiveOptions.devcontainerOption) {
-            Either<String, String> result = devContainer.execute();
-            return result.isLeft() ? "Failed to execute devcontainer: " + result.getLeft() : result.get();
+            return handleSuccess(devContainer.execute());
         }
 
         if (exclusiveOptions.mavenOption) {
-            Either<String, String> result = maven.execute();
-            return result.isLeft() ? "Failed to execute maven: " + result.getLeft() : result.get();
+            return handleSuccess(maven.execute());
         }
 
         if (exclusiveOptions.springCliOption) {
-            Either<String, String> result = springCli.execute();
-            return result.isLeft() ? "Failed to execute spring-cli: " + result.getLeft() : result.get();
+            return handleSuccess(springCli.execute());
         }
 
         if (exclusiveOptions.quarkusCliOption) {
-            Either<String, String> result = quarkusCli.execute();
-            return result.isLeft() ? "Failed to execute quarkus-cli: " + result.getLeft() : result.get();
+            return handleSuccess(quarkusCli.execute());
         }
 
         if (CursorOptions.isValidOption(exclusiveOptions.cursorOption)) {
-            Either<String, String> result = cursor.execute(exclusiveOptions.cursorOption);
-            return result.isLeft() ? "Failed to execute cursor: " + result.getLeft() : result.get();
+            return handleSuccess(cursor.execute(exclusiveOptions.cursorOption));
         }
 
         if (exclusiveOptions.githubActionOption) {
-            Either<String, String> result = githubAction.execute();
-            return result.isLeft() ? "Failed to execute github-action: " + result.getLeft() : result.get();
+            return handleSuccess(githubAction.execute());
         }
 
         if (exclusiveOptions.editorConfigOption) {
-            Either<String, String> result = editorConfig.execute();
-            return result.isLeft() ? "Failed to execute editor-config: " + result.getLeft() : result.get();
+            return handleSuccess(editorConfig.execute());
         }
 
         if (exclusiveOptions.sdkmanOption) {
-            Either<String, String> result = sdkman.execute();
-            return result.isLeft() ? "Failed to execute sdkman: " + result.getLeft() : result.get();
+            return handleSuccess(sdkman.execute());
         }
 
         if (exclusiveOptions.visualvmOption) {
-            Either<String, String> result = visualvm.execute();
-            return result.isLeft() ? "Failed to execute visualvm: " + result.getLeft() : result.get();
+            return handleSuccess(visualvm.execute());
         }
 
         if (exclusiveOptions.jmcOption) {
-            Either<String, String> result = jmc.execute();
-            return result.isLeft() ? "Failed to execute jmc: " + result.getLeft() : result.get();
+            return handleSuccess(jmc.execute());
         }
 
         if (exclusiveOptions.gitignoreOption) {
-            Either<String, String> result = gitignore.execute();
-            return result.isLeft() ? "Failed to execute gitignore: " + result.getLeft() : result.get();
+            return handleSuccess(gitignore.execute());
         }
 
-        return "No valid feature option provided.";
+        return handleError(Either.left("No valid feature option provided."));
     }
 
-    public static void main(String[] args) {
-        int exitCode = new CommandLine(new InitCommand()).execute(args);
-        System.exit(exitCode);
+    private Integer handleError(Either<String, String> error) {
+        System.out.println(error.getLeft());
+        return 1;
+    }
+
+    private Integer handleSuccess(Either<String, String> success) {
+        System.out.println(success.get());
+        return 0;
     }
 }

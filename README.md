@@ -31,9 +31,10 @@ jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify -Dmaven.build.cache.enabled=false
 ./mvnw clean verify -Dmaven.build.cache.enabled=false -DENABLE_INTEGRATION_TESTS=true
 jwebserver -p 8001 -d "$(pwd)/target/timeline/"
-./mvnw clean verify surefire-report:report
+./mvnw clean test surefire-report:report -Dmaven.test.failure.ignore=true
+jwebserver -p 8004 -d "$(pwd)/target/reports"
 ./mvnw clean verify jacoco:report -Pjacoco
-jwebserver -p 8003 -d "$(pwd)/target/site/jacoco"
+jwebserver -p 8004 -d "$(pwd)/target/site/jacoco"
 ./mvnw clean verify -Ppitest
 ./mvnw clean verify -Psecurity
 
