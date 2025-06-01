@@ -235,19 +235,9 @@ public class InitCommand implements Runnable {
     }
 
     private Integer processResult(Either<String, String> result) {
-        if (result.isLeft()) {
-            return handleError(result);
-        }
-        return handleSuccess(result);
-    }
-
-    private Integer handleError(Either<String, String> error) {
-        System.out.println(error.getLeft());
-        return 1;
-    }
-
-    private Integer handleSuccess(Either<String, String> success) {
-        System.out.println(success.get());
-        return 0;
+        return result.fold(
+            error -> { System.out.println(error); return 1; },
+            success -> { System.out.println(success); return 0; }
+        );
     }
 }
