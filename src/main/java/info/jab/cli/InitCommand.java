@@ -54,19 +54,19 @@ public class InitCommand implements Runnable {
 
     @Option(
         names = {"-m", "--maven"},
-        description = "Show how to use Maven to create a new project.",
+        description = "Create a new Maven project.",
         order = 2)
     private boolean mavenOption = false;
 
     @Option(
         names = {"-sc", "--spring-cli"},
-        description = "Show how to use Spring CLI to create a new project.",
+        description = "Create a new Spring Boot project.",
         order = 3)
     private boolean springCliOption = false;
 
     @Option(
         names = {"-qc", "--quarkus-cli"},
-        description = "Show how to use Quarkus CLI to create a new project.",
+        description = "Create a new Quarkus project.",
         order = 4)
     private boolean quarkusCliOption = false;
 
