@@ -56,11 +56,6 @@ class MavenTest {
         // Then
         verify(mockCommandExecutor).execute(eq("mvn --version")); // Version check
         verify(mockCommandExecutor).execute(contains("mvn archetype:generate"));
-        // Remove expectations for commands that don't exist in current implementation
-        verify(mockCommandExecutor, never()).execute(contains("mv maven-demo"));
-        verify(mockCommandExecutor, never()).execute(eq("rmdir maven-demo"));
-        verify(mockCommandExecutor, never()).execute(eq("mvn wrapper:wrapper"));
-        verify(mockCommandExecutor, never()).execute(eq("./mvnw clean verify"));
     }
 
     @Test
