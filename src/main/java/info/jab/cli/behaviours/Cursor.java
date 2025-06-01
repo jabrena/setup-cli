@@ -9,6 +9,7 @@ import org.jspecify.annotations.NonNull;
 
 import info.jab.cli.CursorOptions.CursorOption;
 import info.jab.cli.io.CopyFiles;
+import info.jab.cli.io.GitFolderCopy;
 import io.vavr.control.Either;
 
 public class Cursor implements Behaviour1 {
@@ -21,6 +22,7 @@ public class Cursor implements Behaviour1 {
     private static final List<String> QUARKUS_SPECIFIC_FILES = List.of("401-framework-quarkus.mdc");
     private static final List<String> SPRING_BOOT_SPECIFIC_FILES = List.of("301-framework-spring-boot.mdc", "304-java-rest-api-design.mdc");
 
+    @SuppressWarnings("UnusedVariable")
     private static final List<String> JVM_FRAMEWORKS_SPECIFIC_FILES = Stream.of(
             SPRING_BOOT_SPECIFIC_FILES,
             QUARKUS_SPECIFIC_FILES)
@@ -49,8 +51,11 @@ public class Cursor implements Behaviour1 {
         Path cursorPath = currentPath.resolve(".cursor");
         Path rulesPath = cursorPath.resolve("rules");
 
+        GitFolderCopy gitFolderCopy = new GitFolderCopy();
+
         switch (option) {
-            case JAVA -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, JVM_FRAMEWORKS_SPECIFIC_FILES);
+            //case JAVA -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, JVM_FRAMEWORKS_SPECIFIC_FILES);
+            case JAVA -> gitFolderCopy.copyFolderFromRepo("https://github.com/jabrena/cursor-rules-java.git", ".cursor/rules", rulesPath.toString());
             case SPRING_BOOT -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, QUARKUS_SPECIFIC_FILES);
             case QUARKUS -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, SPRING_BOOT_SPECIFIC_FILES);
             case TASKS -> copyFiles.copyClasspathFolder(CURSOR_RULES_TASKS_BASE_PATH, rulesPath);

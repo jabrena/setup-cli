@@ -6,6 +6,14 @@ Setup is a Command line utility designed to help developers when they start work
 
 ![](./docs/setup-cli-screenshot.png)
 
+## Motivation
+
+PENDING
+
+## Getting started
+
+PENDING
+
 ## How to build in local
 
 ```bash
@@ -50,6 +58,7 @@ jwebserver -p 8004 -d "$(pwd)/target/site/jacoco"
 
 ```bash
 ./mvnw clean package
+./mvnw clean package -DskipTests
 ./mvnw clean package -Dmaven.build.cache.enabled=false
 java -jar ./target/setup-0.11.0.jar
 java -jar ./target/setup-0.11.0.jar --help
