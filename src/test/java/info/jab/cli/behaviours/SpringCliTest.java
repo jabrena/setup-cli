@@ -3,14 +3,28 @@ package info.jab.cli.behaviours;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.when;
+import info.jab.cli.io.CommandExecutor;
+import info.jab.cli.io.FileSystemChecker;
+import io.vavr.control.Either;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(MockitoExtension.class)
+@SuppressWarnings("NullAway")
 class SpringCliTest {
+
+    @Mock
+    private CommandExecutor mockCommandExecutor;
+
+    @Mock
+    private FileSystemChecker mockFileSystemChecker;
 
     private SpringCli springCli;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
@@ -22,7 +36,7 @@ class SpringCliTest {
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         System.setErr(new PrintStream(errorStreamCaptor));
-        springCli = new SpringCli();
+        springCli = new SpringCli(mockCommandExecutor, mockFileSystemChecker);
     }
 
     @AfterEach
@@ -34,41 +48,46 @@ class SpringCliTest {
     @Test
     void shouldPrintCommandsWhenSpringCliIsNotInstalled() throws IOException, InterruptedException {
         // Given
-        SpringCli springCli = new SpringCli();
+        when(mockCommandExecutor.execute("spring --version")).thenReturn(Either.left("Command not found"));
 
         // When
-        springCli.execute();
+        Either<String, String> result = springCli.execute();
 
         // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("sdk install springboot");
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("spring init -d=web,actuator,devtools");
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("./mvnw clean verify");
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).contains("Spring Boot command not found");
     }
 
     @Test
     void shouldExecuteCommandWhenSpringCliIsInstalled() throws IOException, InterruptedException {
         // Given
-        SpringCli springCli = new SpringCli();
+        when(mockFileSystemChecker.fileExists("pom.xml")).thenReturn(false);
+        when(mockCommandExecutor.execute("spring --version")).thenReturn(Either.right("Spring CLI v3.2.0"));
+        when(mockCommandExecutor.execute("spring init -d=web,actuator,devtools --build=maven --force ./"))
+            .thenReturn(Either.right("Project created successfully"));
 
         // When
-        springCli.execute();
+        Either<String, String> result = springCli.execute();
 
         // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("sdk install springboot");
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8)).contains("spring init");
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).contains("Spring Boot command completed successfully");
     }
 
     @Test
     void shouldHandleExceptionWhenExecutingCommand() throws IOException, InterruptedException {
         // Given
-        SpringCli springCli = new SpringCli();
+        when(mockFileSystemChecker.fileExists("pom.xml")).thenReturn(false);
+        when(mockCommandExecutor.execute("spring --version")).thenReturn(Either.right("Spring CLI v3.2.0"));
+        when(mockCommandExecutor.execute("spring init -d=web,actuator,devtools --build=maven --force ./"))
+            .thenReturn(Either.left("Command failed"));
 
         // When
-        springCli.execute();
+        Either<String, String> result = springCli.execute();
 
         // Then
-        // No error message is expected in the current implementation
-        assertThat(errorStreamCaptor.toString(StandardCharsets.UTF_8)).isEmpty();
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).contains("Spring Boot command failed");
     }
 
     @Test
@@ -83,14 +102,30 @@ class SpringCliTest {
     @Test
     void testExecute() {
         // Given
-        // No specific setup needed
+        when(mockFileSystemChecker.fileExists("pom.xml")).thenReturn(false);
+        when(mockCommandExecutor.execute("spring --version")).thenReturn(Either.right("Spring CLI v3.2.0"));
+        when(mockCommandExecutor.execute("spring init -d=web,actuator,devtools --build=maven --force ./"))
+            .thenReturn(Either.right("Project created successfully"));
 
         // When
-        springCli.execute();
+        Either<String, String> result = springCli.execute();
 
         // Then
-        // Verify the output contains the required information
-        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8).trim();
-        assertThat(output).contains("spring init");
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).contains("Spring Boot command completed successfully");
+    }
+
+    @Test
+    void shouldFailWhenPomXmlExists() {
+        // Given
+        when(mockFileSystemChecker.fileExists("pom.xml")).thenReturn(true);
+        when(mockCommandExecutor.execute("spring --version")).thenReturn(Either.right("Spring CLI v3.2.0"));
+
+        // When
+        Either<String, String> result = springCli.execute();
+
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).contains("Cannot create Maven project: pom.xml already exists in current directory");
     }
 }

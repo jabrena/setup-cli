@@ -64,13 +64,13 @@ public class InitCommand implements Runnable {
         boolean mavenOption;
 
         @Option(
-            names = {"-sc", "--spring-cli"},
+            names = {"-sb", "--spring-boot"},
             description = "Create a new Spring Boot project.",
             order = 3)
         boolean springCliOption;
 
         @Option(
-            names = {"-qc", "--quarkus-cli"},
+            names = {"-q", "--quarkus"},
             description = "Create a new Quarkus project.",
             order = 4)
         boolean quarkusCliOption;
