@@ -1,228 +1,217 @@
 package info.jab.cli;
 
+import org.jspecify.annotations.NonNull;
+
 import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
 import info.jab.cli.behaviours.Gitignore;
+import info.jab.cli.behaviours.JMC;
 import info.jab.cli.behaviours.Maven;
+import info.jab.cli.behaviours.QuarkusCli;
 import info.jab.cli.behaviours.Sdkman;
-import info.jab.cli.io.CommandExecutor;
-import info.jab.cli.io.FileSystemChecker;
-
-import org.jspecify.annotations.NonNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import info.jab.cli.behaviours.SpringCli;
+import info.jab.cli.behaviours.Visualvm;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @Command(
     name = "init",
-    description = "Initialize a new project with various configurations",
-    mixinStandardHelpOptions = true
+    description = "Initialize a new repository with some useful features for Developers.",
+    mixinStandardHelpOptions = true,
+    sortOptions = false,
+    usageHelpAutoWidth = true
 )
-public class InitCommand implements Callable<Integer>, Runnable {
+public class InitCommand implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(InitCommand.class);
+    @SuppressWarnings("UnusedVariable")
+    @Option(names = "--version", versionHelp = true, order = 99)
+    private boolean version; // Always second
 
-    @Option(
-        names = {"-m", "--maven"},
-        description = "Initialize a Maven project"
-    )
-    private boolean maven = false;
-
-    @Option(
-        names = {"-g", "--gitignore"},
-        description = "Add a .gitignore file"
-    )
-    private boolean gitignore = false;
+    @SuppressWarnings("UnusedVariable")
+    @Option(names = "--help", usageHelp = true, order = 100)
+    private boolean help; // Always first
 
     @Option(
-        names = {"-e", "--editorconfig"},
-        description = "Add an .editorconfig file"
-    )
-    private boolean editorconfig = false;
+        names = {"-dc", "--devcontainer"},
+        description = "Add Devcontainer support for Java.",
+        order = 9)
+    private boolean devcontainerOption = false;
 
     @Option(
         names = {"-c", "--cursor"},
         description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.",
         completionCandidates = CursorOptions.class,
-        arity = "1"
-    )
+        order = 1)
     private String cursorOption = "NA";
 
     @Option(
-        names = {"-d", "--devcontainer"},
-        description = "Add a .devcontainer configuration"
-    )
-    private boolean devcontainer = false;
+        names = {"-m", "--maven"},
+        description = "Show how to use Maven to create a new project.",
+        order = 2)
+    private boolean mavenOption = false;
 
     @Option(
-        names = {"-a", "--github-action"},
-        description = "Add a GitHub Action workflow"
-    )
-    private boolean githubAction = false;
+        names = {"-sc", "--spring-cli"},
+        description = "Show how to use Spring CLI to create a new project.",
+        order = 3)
+    private boolean springCliOption = false;
+
+    @Option(
+        names = {"-qc", "--quarkus-cli"},
+        description = "Show how to use Quarkus CLI to create a new project.",
+        order = 4)
+    private boolean quarkusCliOption = false;
+
+    @Option(
+        names = {"-ga", "--github-action"},
+        description = "Add an initial GitHub Actions workflow for Maven.",
+        order = 8)
+    private boolean githubActionOption = false;
+
+    @Option(
+        names = {"-ec", "--editorconfig"},
+        description = "Add an initial EditorConfig file.",
+        order = 6)
+    private boolean editorConfigOption = false;
 
     @Option(
         names = {"-s", "--sdkman"},
-        description = "Add SDKMAN configuration"
-    )
-    private boolean sdkman = false;
+        description = "Add an initial SDKMAN Init file.",
+        order = 5)
+    private boolean sdkmanOption = false;
 
     @Option(
-        names = {"--all"},
-        description = "Initialize with all available configurations"
-    )
-    private boolean all = false;
+        names = {"-vv", "--visualvm"},
+        description = "Run VisualVM to monitor the application.",
+        order = 10)
+    private boolean visualvmOption = false;
 
-    // Dependencies for testing
-    private final Maven mavenBehaviour;
-    private final Gitignore gitignoreBehaviour;
-    private final EditorConfig editorConfigBehaviour;
-    private final DevContainer devContainerBehaviour;
-    private final GithubAction githubActionBehaviour;
-    private final Sdkman sdkmanBehaviour;
+    @Option(
+        names = {"-j", "--jmc"},
+        description = "Run JMC to monitor the application.",
+        order = 11)
+    private boolean jmcOption = false;
+
+    @Option(
+        names = {"-gi", "--gitignore"},
+        description = "Add an initial .gitignore file.",
+        order = 7)
+    private boolean gitignoreOption = false;
+
+    private final DevContainer devContainer;
+    private final Maven maven;
+    private final SpringCli springCli;
+    private final QuarkusCli quarkusCli;
     private final Cursor cursor;
+    private final GithubAction githubAction;
+    private final EditorConfig editorConfig;
+    private final Sdkman sdkman;
+    private final Visualvm visualvm;
+    private final JMC jmc;
+    private final Gitignore gitignore;
 
-    // Default constructor for production use
     public InitCommand() {
-        CommandExecutor commandExecutor = new CommandExecutor();
-        FileSystemChecker fileSystemChecker = new FileSystemChecker();
-
-        this.mavenBehaviour = new Maven(commandExecutor, fileSystemChecker);
-        this.gitignoreBehaviour = new Gitignore();
-        this.editorConfigBehaviour = new EditorConfig();
-        this.devContainerBehaviour = new DevContainer();
-        this.githubActionBehaviour = new GithubAction();
-        this.sdkmanBehaviour = new Sdkman();
+        this.devContainer = new DevContainer();
+        this.maven = new Maven();
         this.cursor = new Cursor();
+        this.springCli = new SpringCli();
+        this.quarkusCli = new QuarkusCli();
+        this.githubAction = new GithubAction();
+        this.editorConfig = new EditorConfig();
+        this.sdkman = new Sdkman();
+        this.visualvm = new Visualvm();
+        this.jmc = new JMC();
+        this.gitignore = new Gitignore();
     }
 
-    // Constructor for dependency injection (testing)
     public InitCommand(
-        @NonNull Maven mavenBehaviour,
-        @NonNull Gitignore gitignoreBehaviour,
-        @NonNull EditorConfig editorConfigBehaviour,
-        @NonNull DevContainer devContainerBehaviour,
-        @NonNull GithubAction githubActionBehaviour,
-        @NonNull Sdkman sdkmanBehaviour,
+        @NonNull DevContainer devContainer,
+        @NonNull Maven maven,
+        @NonNull SpringCli springCli,
+        @NonNull QuarkusCli quarkusCli,
         @NonNull Cursor cursor,
-        @NonNull CommandExecutor commandExecutor,
-        @NonNull FileSystemChecker fileSystemChecker
-    ) {
-        this.mavenBehaviour = mavenBehaviour;
-        this.gitignoreBehaviour = gitignoreBehaviour;
-        this.editorConfigBehaviour = editorConfigBehaviour;
-        this.devContainerBehaviour = devContainerBehaviour;
-        this.githubActionBehaviour = githubActionBehaviour;
-        this.sdkmanBehaviour = sdkmanBehaviour;
+        @NonNull GithubAction githubAction,
+        @NonNull EditorConfig editorConfig,
+        @NonNull Sdkman sdkman,
+        @NonNull Visualvm visualvm,
+        @NonNull JMC jmc,
+        @NonNull Gitignore gitignore) {
+        this.devContainer = devContainer;
+        this.maven = maven;
         this.cursor = cursor;
+        this.springCli = springCli;
+        this.quarkusCli = quarkusCli;
+        this.githubAction = githubAction;
+        this.editorConfig = editorConfig;
+        this.sdkman = sdkman;
+        this.visualvm = visualvm;
+        this.jmc = jmc;
+        this.gitignore = gitignore;
     }
 
-    @Override
-    public void run() {
-        try {
-            call();
-        } catch (Exception e) {
-            logger.error("Error during execution: {}", e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
-    }
+    // Functional approach using records for better type safety and extensibility
+    private record FeatureConfig(String name, Supplier<Boolean> isEnabled, Runnable action) {}
 
-    public String runInitFeature() {
-        try {
-            List<FeatureConfig> features = buildFeatureList();
-
-            if (features.isEmpty()) {
-                return "type 'init --help' to see available options";
-            }
-
-            executeFeatures(features);
-            return "Command executed successfully";
-        } catch (Exception e) {
-            logger.error("Feature execution failed: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to execute features", e);
-        }
-    }
-
-    @Override
-    public Integer call() throws Exception {
-        logger.info("Starting project initialization...");
-
-        try {
-            List<FeatureConfig> features = buildFeatureList();
-
-            if (features.isEmpty()) {
-                logger.warn("No features selected for initialization");
-                System.out.println("type 'init --help' to see available options");
-                return 1;
-            }
-
-            executeFeatures(features);
-
-            logger.info("Project initialization completed successfully");
-            System.out.println("Command executed successfully");
-            return 0;
-
-        } catch (Exception e) {
-            logger.error("Project initialization failed: {}", e.getMessage(), e);
-            System.err.println("Error: " + e.getMessage());
-            return 1;
-        }
-    }
-
-    private List<FeatureConfig> buildFeatureList() {
-        List<FeatureConfig> features = new ArrayList<>();
+    protected String runInitFeature() {
+        // Define all features in a declarative way
+        List<FeatureConfig> features = List.of(
+            new FeatureConfig("devcontainer", () -> devcontainerOption, devContainer::execute),
+            new FeatureConfig("maven", () -> mavenOption, maven::execute),
+            new FeatureConfig("spring-cli", () -> springCliOption, springCli::execute),
+            new FeatureConfig("quarkus-cli", () -> quarkusCliOption, quarkusCli::execute),
+            new FeatureConfig("github-action", () -> githubActionOption, githubAction::execute),
+            new FeatureConfig("editor-config", () -> editorConfigOption, editorConfig::execute),
+            new FeatureConfig("sdkman", () -> sdkmanOption, sdkman::execute),
+            new FeatureConfig("visualvm", () -> visualvmOption, visualvm::execute),
+            new FeatureConfig("jmc", () -> jmcOption, jmc::execute),
+            new FeatureConfig("gitignore", () -> gitignoreOption, gitignore::execute)
+        );
 
         // Handle cursor option with its special parameter requirement
         Optional<FeatureConfig> cursorFeature = CursorOptions.isValidOption(cursorOption)
             ? Optional.of(new FeatureConfig("cursor", () -> true, () -> cursor.execute(cursorOption)))
             : Optional.empty();
 
-        // Add all selected features
-        List<FeatureConfig> allFeatures = List.of(
-            new FeatureConfig("maven", () -> maven || all, mavenBehaviour::execute),
-            new FeatureConfig("gitignore", () -> gitignore || all, gitignoreBehaviour::execute),
-            new FeatureConfig("editorconfig", () -> editorconfig || all, editorConfigBehaviour::execute),
-            new FeatureConfig("devcontainer", () -> devcontainer || all, devContainerBehaviour::execute),
-            new FeatureConfig("github-action", () -> githubAction || all, githubActionBehaviour::execute),
-            new FeatureConfig("sdkman", () -> sdkman || all, sdkmanBehaviour::execute)
+        // Combine all features
+        Stream<FeatureConfig> allFeatures = Stream.concat(
+            features.stream(),
+            cursorFeature.stream()
         );
 
-        // Add cursor feature if valid
-        cursorFeature.stream()
-            .forEach(features::add);
+        // Find enabled features
+        List<FeatureConfig> enabledFeatures = allFeatures
+            .filter(feature -> feature.isEnabled().get())
+            .toList();
 
-        // Add other features based on flags
-        allFeatures.stream()
-            .filter(feature -> feature.condition().get())
-            .forEach(features::add);
-
-        return features;
-    }
-
-    private void executeFeatures(List<FeatureConfig> features) {
-        for (FeatureConfig feature : features) {
-            try {
-                logger.info("Executing feature: {}", feature.name());
-                feature.action().run();
-                logger.info("Feature '{}' completed successfully", feature.name());
-            } catch (Exception e) {
-                logger.error("Feature '{}' failed: {}", feature.name(), e.getMessage(), e);
-                throw new RuntimeException("Failed to execute feature: " + feature.name(), e);
-            }
+        // Check if any features are enabled
+        if (enabledFeatures.isEmpty()) {
+            return "type 'init --help' to see available options";
         }
+
+        // Execute all enabled features
+        enabledFeatures.forEach(feature -> {
+            feature.action().run();
+        });
+
+        return "Command executed successfully";
     }
 
-    private record FeatureConfig(
-        String name,
-        java.util.function.Supplier<Boolean> condition,
-        Runnable action
-    ) {}
+    @Override
+    public void run() {
+        String result = runInitFeature();
+        System.out.println(result);
+    }
+
+    public static void main(String[] args) {
+        int exitCode = new CommandLine(new InitCommand()).execute(args);
+        System.exit(exitCode);
+    }
 }

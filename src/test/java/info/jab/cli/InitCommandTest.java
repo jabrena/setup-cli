@@ -18,7 +18,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import info.jab.cli.behaviours.Cursor;
@@ -26,45 +25,49 @@ import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
 import info.jab.cli.behaviours.Gitignore;
+import info.jab.cli.behaviours.JMC;
 import info.jab.cli.behaviours.Maven;
+import info.jab.cli.behaviours.QuarkusCli;
 import info.jab.cli.behaviours.Sdkman;
-import info.jab.cli.io.CommandExecutor;
-import info.jab.cli.io.FileSystemChecker;
+import info.jab.cli.behaviours.SpringCli;
+import info.jab.cli.behaviours.Visualvm;
 import picocli.CommandLine;
-
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.contains;
 
 @ExtendWith(MockitoExtension.class)
 class InitCommandTest {
 
     @Mock
-    private Maven mockMaven;
-
-    @Mock
-    private Gitignore mockGitignore;
-
-    @Mock
-    private EditorConfig mockEditorConfig;
-
-    @Mock
     private DevContainer mockDevContainer;
 
     @Mock
-    private GithubAction mockGithubAction;
+    private Maven mockMaven;
 
     @Mock
-    private Sdkman mockSdkman;
+    private SpringCli mockSpringCli;
+
+    @Mock
+    private QuarkusCli mockQuarkusCli;
 
     @Mock
     private Cursor mockCursor;
 
     @Mock
-    private CommandExecutor mockCommandExecutor;
+    private GithubAction mockGithubAction;
 
     @Mock
-    private FileSystemChecker mockFileSystemChecker;
+    private EditorConfig mockEditorConfig;
+
+    @Mock
+    private Sdkman mockSdkman;
+
+    @Mock
+    private Visualvm mockVisualvm;
+
+    @Mock
+    private JMC mockJmc;
+
+    @Mock
+    private Gitignore mockGitignore;
 
     private InitCommand initCommand;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
@@ -76,15 +79,17 @@ class InitCommandTest {
     void setUp() {
         // Set up the command with mocked dependencies
         initCommand = new InitCommand(
-                mockMaven,
-                mockGitignore,
-                mockEditorConfig,
                 mockDevContainer,
-                mockGithubAction,
-                mockSdkman,
+                mockMaven,
+                mockSpringCli,
+                mockQuarkusCli,
                 mockCursor,
-                mockCommandExecutor,
-                mockFileSystemChecker
+                mockGithubAction,
+                mockEditorConfig,
+                mockSdkman,
+                mockVisualvm,
+                mockJmc,
+                mockGitignore
         );
 
         // Capture console output for assertions
@@ -177,7 +182,7 @@ class InitCommandTest {
 
         // Then
         verify(mockCursor, never()).execute(any());
-        assertThat(exitCode).isEqualTo(1);
+        assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).endsWith("type 'init --help' to see available options");
     }
 
@@ -274,10 +279,10 @@ class InitCommandTest {
         CommandLine spyCmd = new CommandLine(spyCommand);
 
         // When
-        spyCmd.execute(); // No args, should trigger call method
+        spyCmd.execute(); // No args, should trigger run method
 
         // Then
-        verify(spyCommand, times(1)).call();
+        verify(spyCommand, times(1)).run();
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).endsWith("type 'init --help' to see available options");
     }
 
