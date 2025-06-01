@@ -79,10 +79,8 @@ public class SpringCli implements Behaviour0 {
         Either<String, String> result = commandExecutor.execute("spring --version");
 
         if (result.isRight()) {
-            logger.info("Spring Boot CLI is available: {}", result.get().lines().findFirst().orElse("Version info not available"));
             return true;
         } else {
-            logger.warn("Spring Boot CLI version check failed with exit code: {}", result.getLeft());
             return false;
         }
     }

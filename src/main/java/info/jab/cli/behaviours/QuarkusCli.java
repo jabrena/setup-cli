@@ -79,10 +79,8 @@ public class QuarkusCli implements Behaviour0 {
         Either<String, String> result = commandExecutor.execute("quarkus --version");
 
         if (result.isRight()) {
-            logger.info("Quarkus is available: {}", result.get().lines().findFirst().orElse("Version info not available"));
             return true;
         } else {
-            logger.warn("Quarkus version check failed with exit code: {}", result.getLeft());
             return false;
         }
     }

@@ -90,10 +90,8 @@ public class Maven implements Behaviour0 {
         Either<String, String> result = commandExecutor.execute("mvn --version");
 
         if (result.isRight()) {
-            logger.info("Maven is available: {}", result.get().lines().findFirst().orElse("Version info not available"));
             return true;
         } else {
-            logger.warn("Maven version check failed with exit code: {}", result.getLeft());
             return false;
         }
     }
