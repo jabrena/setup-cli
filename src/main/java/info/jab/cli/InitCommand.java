@@ -26,64 +26,84 @@ import java.util.stream.Stream;
     name = "init",
     description = "Initialize a new repository with some useful features for Developers.",
     mixinStandardHelpOptions = true,
+    sortOptions = false,
     usageHelpAutoWidth = true
 )
 public class InitCommand implements Runnable {
 
+    @SuppressWarnings("UnusedVariable")
+    @Option(names = "--version", versionHelp = true, order = 99)
+    private boolean version; // Always second
+
+    @SuppressWarnings("UnusedVariable")
+    @Option(names = "--help", usageHelp = true, order = 100)
+    private boolean help; // Always first
+
     @Option(
         names = {"-dc", "--devcontainer"},
-        description = "Add Devcontainer support for Java.")
+        description = "Add Devcontainer support for Java.",
+        order = 9)
     private boolean devcontainerOption = false;
 
     @Option(
         names = {"-c", "--cursor"},
         description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.",
-        completionCandidates = CursorOptions.class)
+        completionCandidates = CursorOptions.class,
+        order = 1)
     private String cursorOption = "NA";
 
     @Option(
         names = {"-m", "--maven"},
-        description = "Show how to use Maven to create a new project.")
+        description = "Show how to use Maven to create a new project.",
+        order = 2)
     private boolean mavenOption = false;
 
     @Option(
         names = {"-sc", "--spring-cli"},
-        description = "Show how to use Spring CLI to create a new project.")
+        description = "Show how to use Spring CLI to create a new project.",
+        order = 3)
     private boolean springCliOption = false;
 
     @Option(
         names = {"-qc", "--quarkus-cli"},
-        description = "Show how to use Quarkus CLI to create a new project.")
+        description = "Show how to use Quarkus CLI to create a new project.",
+        order = 4)
     private boolean quarkusCliOption = false;
 
     @Option(
         names = {"-ga", "--github-action"},
-        description = "Add an initial GitHub Actions workflow for Maven.")
+        description = "Add an initial GitHub Actions workflow for Maven.",
+        order = 8)
     private boolean githubActionOption = false;
 
     @Option(
         names = {"-ec", "--editorconfig"},
-        description = "Add an initial EditorConfig file.")
+        description = "Add an initial EditorConfig file.",
+        order = 6)
     private boolean editorConfigOption = false;
 
     @Option(
         names = {"-s", "--sdkman"},
-        description = "Add an initial SDKMAN Init file.")
+        description = "Add an initial SDKMAN Init file.",
+        order = 5)
     private boolean sdkmanOption = false;
 
     @Option(
         names = {"-vv", "--visualvm"},
-        description = "Run VisualVM to monitor the application.")
+        description = "Run VisualVM to monitor the application.",
+        order = 10)
     private boolean visualvmOption = false;
 
     @Option(
         names = {"-j", "--jmc"},
-        description = "Run JMC to monitor the application.")
+        description = "Run JMC to monitor the application.",
+        order = 11)
     private boolean jmcOption = false;
 
     @Option(
         names = {"-gi", "--gitignore"},
-        description = "Add an initial .gitignore file.")
+        description = "Add an initial .gitignore file.",
+        order = 7)
     private boolean gitignoreOption = false;
 
     private final DevContainer devContainer;

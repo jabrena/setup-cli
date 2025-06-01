@@ -19,6 +19,9 @@
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
         <jspecify.version>1.0.0</jspecify.version>
+        <zt-exec.version>1.12</zt-exec.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <logback.version>1.5.15</logback.version>
 
         <!-- Test dependencies -->
         <junit.version>5.12.0</junit.version>
@@ -68,6 +71,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -91,6 +99,21 @@
             <groupId>com.diogonunes</groupId>
             <artifactId>JColor</artifactId>
             <version>${jcolor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>zt-exec</artifactId>
+            <version>${zt-exec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -250,11 +273,18 @@
                     <excludes>
                         <exclude>**/*Test.java</exclude>
                     </excludes>
+                    <systemPropertyVariables>
+                        <ENABLE_INTEGRATION_TESTS>${ENABLE_INTEGRATION_TESTS}</ENABLE_INTEGRATION_TESTS>
+                    </systemPropertyVariables>
+                    <environmentVariables>
+                        <ENABLE_INTEGRATION_TESTS>${ENABLE_INTEGRATION_TESTS}</ENABLE_INTEGRATION_TESTS>
+                    </environmentVariables>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>integration-test</goal>
+                            <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -303,6 +333,8 @@
                                         <exclude>META-INF/MANIFEST.MF</exclude>
                                         <exclude>META-INF/LICENSE.txt</exclude>
                                         <exclude>META-INF/versions/9/module-info.class</exclude>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>**/module-info.class</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

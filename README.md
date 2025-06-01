@@ -26,6 +26,8 @@ touch .gitmodules
 ./mvnw license:third-party-report
 jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify
+./mvnw clean verify -Dmaven.build.cache.enabled=false
+./mvnw clean verify -Dmaven.build.cache.enabled=false -DENABLE_INTEGRATION_TESTS=true
 jwebserver -p 8001 -d "$(pwd)/target/timeline/"
 ./mvnw clean verify surefire-report:report
 ./mvnw clean verify jacoco:report -Pjacoco
@@ -33,9 +35,9 @@ jwebserver -p 8003 -d "$(pwd)/target/site/jacoco"
 ./mvnw clean verify -Ppitest
 ./mvnw clean verify -Psecurity
 
+./mvnw versions:display-property-updates
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
-./mvnw versions:display-property-updates
 
 ./mvnw versions:set -DnewVersion=0.10.0
 ./mvnw versions:commit
@@ -45,6 +47,7 @@ jwebserver -p 8003 -d "$(pwd)/target/site/jacoco"
 
 ```bash
 ./mvnw clean package
+./mvnw clean package -Dmaven.build.cache.enabled=false
 java -jar ./target/setup-0.10.0.jar
 java -jar ./target/setup-0.10.0.jar --help
 java -jar ./target/setup-0.10.0.jar init
@@ -97,6 +100,7 @@ git tag -l --sort=-creatordate --format='%(refname:short) - %(creatordate:format
 - https://www.eclemma.org/jacoco/trunk/doc/maven.html
 - https://www.cursor.com/
 - https://docs.cursor.com/context/rules-for-ai
+- https://github.com/zeroturnaround/zt-exec
 - ...
 - https://github.com/jabrena/cursor-rules-methodology
 - https://github.com/jabrena/cursor-rules-agile

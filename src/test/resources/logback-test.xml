@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Very quiet command executor for tests -->
+    <logger name="info.jab.cli.io.CommandExecutor" level="ERROR"/>
+
+    <!-- Quiet zt-exec library -->
+    <logger name="org.zeroturnaround.exec" level="ERROR"/>
+
+    <!-- Quiet Maven behavior class for tests -->
+    <logger name="info.jab.cli.behaviours.Maven" level="ERROR"/>
+
+    <!-- Application logging for tests -->
+    <logger name="info.jab.cli" level="WARN"/>
+
+    <!-- Root logger for tests -->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
