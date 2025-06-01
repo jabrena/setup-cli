@@ -57,6 +57,7 @@ class GitignoreTest {
             .cursor/
             .flattened-pom.xml
             *.log
+            .classpath
             """;
 
         // When
@@ -78,6 +79,7 @@ class GitignoreTest {
             .cursor/
             .flattened-pom.xml
             *.log
+            .classpath
             """;
         doThrow(new RuntimeException("Simulated copy error"))
                 .when(copyFilesMock).copyContentToFile(eq(expectedContent), eq(expectedPath));
@@ -130,6 +132,7 @@ class GitignoreTest {
                 .cursor/
                 .flattened-pom.xml
                 *.log
+                .classpath
                 """;
             assertThat(actualContent).isEqualTo(expectedContent);
 
@@ -171,6 +174,7 @@ class GitignoreTest {
                 .cursor/
                 .flattened-pom.xml
                 *.log
+                .classpath
                 """;
             assertThat(actualContent).isEqualTo(expectedContent);
             assertThat(actualContent).doesNotContain("Old gitignore content");
@@ -201,6 +205,7 @@ class GitignoreTest {
                 .cursor/
                 .flattened-pom.xml
                 *.log
+                .classpath
                 """),
             eq(expectedPath)
         );
@@ -217,6 +222,7 @@ class GitignoreTest {
             .cursor/
             .flattened-pom.xml
             *.log
+            .classpath
             """;
 
         // When
@@ -233,5 +239,6 @@ class GitignoreTest {
         assertThat(expectedContent).contains(".cursor/");       // Cursor IDE
         assertThat(expectedContent).contains(".flattened-pom.xml"); // Maven flatten plugin
         assertThat(expectedContent).contains("*.log");          // Log files
+        assertThat(expectedContent).contains(".classpath");      // Maven classpath file
     }
 }

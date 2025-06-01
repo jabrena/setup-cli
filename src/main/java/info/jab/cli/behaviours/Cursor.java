@@ -30,12 +30,10 @@ public class Cursor implements Behaviour1 {
     private final CopyFiles copyFiles;
 
     public Cursor() {
-        super();
         this.copyFiles = new CopyFiles();
     }
 
-    Cursor(@NonNull CopyFiles copyFiles) {
-        super();
+    Cursor(CopyFiles copyFiles) {
         this.copyFiles = copyFiles;
     }
 

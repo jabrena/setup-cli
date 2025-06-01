@@ -1,7 +1,5 @@
 package info.jab.cli;
 
-import org.jspecify.annotations.NonNull;
-
 import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
@@ -133,17 +131,17 @@ public class InitCommand implements Runnable {
     }
 
     public InitCommand(
-        @NonNull DevContainer devContainer,
-        @NonNull Maven maven,
-        @NonNull SpringCli springCli,
-        @NonNull QuarkusCli quarkusCli,
-        @NonNull Cursor cursor,
-        @NonNull GithubAction githubAction,
-        @NonNull EditorConfig editorConfig,
-        @NonNull Sdkman sdkman,
-        @NonNull Visualvm visualvm,
-        @NonNull JMC jmc,
-        @NonNull Gitignore gitignore) {
+        DevContainer devContainer,
+        Maven maven,
+        SpringCli springCli,
+        QuarkusCli quarkusCli,
+        Cursor cursor,
+        GithubAction githubAction,
+        EditorConfig editorConfig,
+        Sdkman sdkman,
+        Visualvm visualvm,
+        JMC jmc,
+        Gitignore gitignore) {
         this.devContainer = devContainer;
         this.maven = maven;
         this.cursor = cursor;

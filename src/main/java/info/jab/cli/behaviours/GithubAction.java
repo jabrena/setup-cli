@@ -3,8 +3,6 @@ package info.jab.cli.behaviours;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.jspecify.annotations.NonNull;
-
 import info.jab.cli.io.CopyFiles;
 import io.vavr.control.Either;
 
@@ -17,7 +15,7 @@ public class GithubAction implements Behaviour0 {
     }
 
     // Constructor for testing with a mock
-    GithubAction(@NonNull CopyFiles copyFiles) {
+    GithubAction(CopyFiles copyFiles) {
         this.copyFiles = copyFiles;
     }
 
