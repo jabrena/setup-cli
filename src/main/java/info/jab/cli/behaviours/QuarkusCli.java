@@ -41,8 +41,6 @@ public class QuarkusCli implements Behaviour0 {
 
         //Preconditions
         if (!isQuarkusCliAvailable()) {
-            logger.error("Quarkus command is not available on this system");
-            logger.error("Please install Quarkus and ensure it's in your PATH.");
             logger.error("sdk install quarkus");
             return Either.left("Quarkus command not found. Please install Quarkus and ensure it's in your PATH.");
         }

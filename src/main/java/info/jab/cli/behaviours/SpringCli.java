@@ -41,8 +41,6 @@ public class SpringCli implements Behaviour0 {
 
         //Preconditions
         if (!isSpringCliAvailable()) {
-            logger.error("Spring Boot (spring) command is not available on this system");
-            logger.error("Please install Spring Boot and ensure it's in your PATH.");
             logger.error("sdkman install springboot");
             return Either.left("Spring Boot command not found. Please install Spring Boot and ensure it's in your PATH.");
         }
