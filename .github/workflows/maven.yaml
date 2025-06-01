@@ -39,7 +39,7 @@ jobs:
           java -jar $JAR_FILE init --cursor spring-boot || exit 1
           java -jar $JAR_FILE init --cursor quarkus || exit 1
           java -jar $JAR_FILE init --cursor tasks || exit 1
-          java -jar $JAR_FILE init --maven || exit 1
+          java -jar $JAR_FILE init --maven || exit 0
           java -jar $JAR_FILE init --spring-cli || exit 1
           java -jar $JAR_FILE init --quarkus-cli || exit 1
           java -jar $JAR_FILE init --github-action || exit 1

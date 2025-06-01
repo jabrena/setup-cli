@@ -1,12 +1,13 @@
 package info.jab.cli.behaviours;
 
+import info.jab.cli.io.CommandExecutor;
+import info.jab.cli.io.FileSystemChecker;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import info.jab.cli.io.CommandExecutor;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
@@ -23,7 +24,7 @@ class MavenTest {
 
     @Mock
     @SuppressWarnings("NullAway")
-    private Maven.FileSystemChecker mockFileSystemChecker;
+    private FileSystemChecker mockFileSystemChecker;
 
     private Maven maven;
 

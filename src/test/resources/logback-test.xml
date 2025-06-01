@@ -7,7 +7,7 @@
     </appender>
 
     <!-- Very quiet command executor for tests -->
-    <logger name="info.jab.cli.io.ZtExecCommandExecutor" level="ERROR"/>
+    <logger name="info.jab.cli.io.CommandExecutor" level="ERROR"/>
 
     <!-- Quiet zt-exec library -->
     <logger name="org.zeroturnaround.exec" level="ERROR"/>

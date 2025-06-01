@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.jab.cli.io.CommandExecutor;
-import info.jab.cli.io.ZtExecCommandExecutor;
+import info.jab.cli.io.FileSystemChecker;
 
-import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 public class Maven implements Behaviour0 {
@@ -16,29 +16,18 @@ public class Maven implements Behaviour0 {
     private final CommandExecutor commandExecutor;
     private final FileSystemChecker fileSystemChecker;
 
-    /**
-     * Interface for file system operations to enable dependency injection and testing
-     */
-    public interface FileSystemChecker {
-        boolean fileExists(String filename);
-    }
-
-    /**
-     * Default implementation using java.io.File
-     */
-    public static class DefaultFileSystemChecker implements FileSystemChecker {
-        @Override
-        public boolean fileExists(String filename) {
-            return new File(filename).exists();
-        }
-    }
-
     //https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
     private final String commands = """
             mvn archetype:generate -DgroupId=info.jab.demo -DartifactId=maven-demo -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.5 -DinteractiveMode=false
             """;
 
-    // Constructor injection for dependency inversion
+    // Full constructor for dependency injection
+    /**
+     * Constructor for Maven with dependency injection.
+     * @param commandExecutor the command executor to use
+     * @param fileSystemChecker the file system checker to use
+     * @throws NullPointerException if either parameter is null
+     */
     public Maven(CommandExecutor commandExecutor, FileSystemChecker fileSystemChecker) {
         this.commandExecutor = Objects.requireNonNull(commandExecutor, "CommandExecutor cannot be null");
         this.fileSystemChecker = Objects.requireNonNull(fileSystemChecker, "FileSystemChecker cannot be null");
@@ -46,12 +35,12 @@ public class Maven implements Behaviour0 {
 
     // Constructor injection with default FileSystemChecker
     public Maven(CommandExecutor commandExecutor) {
-        this(commandExecutor, new DefaultFileSystemChecker());
+        this(commandExecutor, new FileSystemChecker());
     }
 
-    // Default constructor using the real implementations
+    // Default constructor for production use
     public Maven() {
-        this(new ZtExecCommandExecutor(), new DefaultFileSystemChecker());
+        this(new CommandExecutor(), new FileSystemChecker());
     }
 
     @Override

@@ -36,8 +36,16 @@ public class Setup implements Runnable {
 
     @Override
     public void run() {
-        // Execute the feature, ignore return value as Runnable.run is void
-        initCommand.runInitFeature();
+        try {
+            // Execute the InitCommand and handle the result
+            Integer result = initCommand.call();
+            if (result != 0) {
+                System.exit(result);
+            }
+        } catch (Exception e) {
+            System.err.println("Error executing init command: " + e.getMessage());
+            System.exit(1);
+        }
     }
 
     private static void printBanner() {
