@@ -184,54 +184,61 @@ public class InitCommand implements Runnable {
     @SuppressWarnings("NullAway") // CursorOptions.isValidOption handles null internally
     protected Integer runInitFeature() {
         if (Objects.isNull(exclusiveOptions)) {
-            return handleError(Either.left("No feature selected. Use --help to see available options."));
+            return processResult(Either.left("No feature selected. Use --help to see available options."));
         }
 
         if (exclusiveOptions.devcontainerOption) {
-            return handleSuccess(devContainer.execute());
+            return processResult(devContainer.execute());
         }
 
         if (exclusiveOptions.mavenOption) {
-            return handleSuccess(maven.execute());
+            return processResult(maven.execute());
         }
 
         if (exclusiveOptions.springCliOption) {
-            return handleSuccess(springCli.execute());
+            return processResult(springCli.execute());
         }
 
         if (exclusiveOptions.quarkusCliOption) {
-            return handleSuccess(quarkusCli.execute());
+            return processResult(quarkusCli.execute());
         }
 
         if (CursorOptions.isValidOption(exclusiveOptions.cursorOption)) {
-            return handleSuccess(cursor.execute(exclusiveOptions.cursorOption));
+            return processResult(cursor.execute(exclusiveOptions.cursorOption));
         }
 
         if (exclusiveOptions.githubActionOption) {
-            return handleSuccess(githubAction.execute());
+            return processResult(githubAction.execute());
         }
 
         if (exclusiveOptions.editorConfigOption) {
-            return handleSuccess(editorConfig.execute());
+            return processResult(editorConfig.execute());
         }
 
         if (exclusiveOptions.sdkmanOption) {
-            return handleSuccess(sdkman.execute());
+            return processResult(sdkman.execute());
         }
 
         if (exclusiveOptions.visualvmOption) {
-            return handleSuccess(visualvm.execute());
+            return processResult(visualvm.execute());
         }
 
         if (exclusiveOptions.jmcOption) {
-            return handleSuccess(jmc.execute());
+            return processResult(jmc.execute());
         }
 
         if (exclusiveOptions.gitignoreOption) {
-            return handleSuccess(gitignore.execute());
+            return processResult(gitignore.execute());
         }
 
-        return handleError(Either.left("No valid feature option provided."));
+        return processResult(Either.left("No valid feature option provided."));
+    }
+
+    private Integer processResult(Either<String, String> result) {
+        if (result.isLeft()) {
+            return handleError(result);
+        }
+        return handleSuccess(result);
     }
 
     private Integer handleError(Either<String, String> error) {
