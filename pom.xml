@@ -15,13 +15,14 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Dependencies -->
-        <picocli.version>4.7.7</picocli.version>
-        <jcolor.version>5.5.1</jcolor.version>
-        <jfiglet.version>0.0.9</jfiglet.version>
         <jspecify.version>1.0.0</jspecify.version>
-        <zt-exec.version>1.12</zt-exec.version>
         <slf4j.version>2.0.16</slf4j.version>
         <logback.version>1.5.15</logback.version>
+        <vavr.version>0.10.6</vavr.version>
+        <picocli.version>4.7.7</picocli.version>
+        <zt-exec.version>1.12</zt-exec.version>
+        <jcolor.version>5.5.1</jcolor.version>
+        <jfiglet.version>0.0.9</jfiglet.version>
 
         <!-- Test dependencies -->
         <junit.version>5.12.0</junit.version>
@@ -86,9 +87,29 @@
             <version>${jspecify.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>${vavr.version}</version>
+        </dependency>
+        <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
             <version>${picocli.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>zt-exec</artifactId>
+            <version>${zt-exec.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.lalyos</groupId>
@@ -99,21 +120,6 @@
             <groupId>com.diogonunes</groupId>
             <artifactId>JColor</artifactId>
             <version>${jcolor.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.zeroturnaround</groupId>
-            <artifactId>zt-exec</artifactId>
-            <version>${zt-exec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
         </dependency>
 
         <!-- Test dependencies -->

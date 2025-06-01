@@ -5,11 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.ProcessResult;
 
+import io.vavr.control.Either;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -19,16 +20,15 @@ import java.util.concurrent.TimeoutException;
 public class CommandExecutor {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandExecutor.class);
-    private static final int DEFAULT_TIMEOUT_MINUTES = 10;
+    private static final int DEFAULT_TIMEOUT_MINUTES = 20;
 
     /**
      * Executes a command synchronously.
      *
      * @param command the command to execute
-     * @return the result of command execution
-     * @throws CommandExecutionException if command execution fails
+     * @return Either<String, String> the result of command execution
      */
-    public CommandResult execute(String command) {
+    public Either<String, String> execute(String command) {
         File workingDirectory = new File(System.getProperty("user.dir"));
         return execute(command, workingDirectory, DEFAULT_TIMEOUT_MINUTES);
     }
@@ -42,7 +42,7 @@ public class CommandExecutor {
      * @return the result of command execution
      * @throws CommandExecutionException if command execution fails
      */
-    public CommandResult execute(String command, File workingDirectory, int timeoutMinutes) {
+    public Either<String, String> execute(String command, File workingDirectory, int timeoutMinutes) {
         try {
             logger.info("Executing command: {} in directory: {}", command, workingDirectory.getAbsolutePath());
 
@@ -58,86 +58,33 @@ public class CommandExecutor {
             boolean success = result.getExitValue() == 0;
             String output = result.outputUTF8();
 
+            //TODO Refactor in the future.
             if (success) {
                 logger.info("Command executed successfully");
                 if (logger.isDebugEnabled()) {
                     logger.debug("Command output: {}", output);
                 }
-                return CommandResult.success(output);
+                return Either.right(output);
             } else {
                 logger.error("Command failed with exit code: {}", result.getExitValue());
                 logger.error("Command output: {}", output);
-                return CommandResult.failure(result.getExitValue(), output, "");
+                return Either.left(output);
             }
 
         } catch (IOException e) {
             logger.error("IO error executing command '{}': {}", command, e.getMessage(), e);
-            throw new CommandExecutionException(command, "IO error: " + e.getMessage(), e);
+            return Either.left(e.getMessage());
         } catch (InterruptedException e) {
             logger.error("Command execution interrupted '{}': {}", command, e.getMessage(), e);
             Thread.currentThread().interrupt(); // Restore interrupt status
-            throw new CommandExecutionException(command, "Execution interrupted: " + e.getMessage(), e);
+            return Either.left(e.getMessage());
         } catch (TimeoutException e) {
             logger.error("Command execution timed out after {} minutes for '{}': {}",
                         timeoutMinutes, command, e.getMessage(), e);
-            throw new CommandExecutionException(command,
-                    String.format("Execution timed out after %d minutes", timeoutMinutes), e);
+            return Either.left(e.getMessage());
         } catch (Exception e) {
             logger.error("Unexpected error executing command '{}': {}", command, e.getMessage(), e);
-            throw new CommandExecutionException(command, "Unexpected error: " + e.getMessage(), e);
+            return Either.left(e.getMessage());
         }
-    }
-
-    /**
-     * Executes a command asynchronously.
-     *
-     * @param command the command to execute
-     * @return a future containing the result of command execution
-     */
-    public CompletableFuture<CommandResult> executeAsync(String command) {
-        return CompletableFuture.supplyAsync(() -> execute(command));
-    }
-
-    /**
-     * Represents the result of a command execution.
-     */
-    public record CommandResult(
-        int exitCode,
-        String output,
-        String errorOutput,
-        boolean success
-    ) {
-        public static CommandResult success(String output) {
-            return new CommandResult(0, output, "", true);
-        }
-
-        public static CommandResult failure(int exitCode, String output, String errorOutput) {
-            return new CommandResult(exitCode, output, errorOutput, false);
-        }
-    }
-
-    /**
-     * Exception thrown when command execution fails.
-     */
-    public static class CommandExecutionException extends RuntimeException {
-        private static final long serialVersionUID = 1L;
-
-        private final String command;
-        private final int exitCode;
-
-        public CommandExecutionException(String command, int exitCode, String message) {
-            super(message);
-            this.command = command;
-            this.exitCode = exitCode;
-        }
-
-        public CommandExecutionException(String command, String message, Throwable cause) {
-            super(message, cause);
-            this.command = command;
-            this.exitCode = -1;
-        }
-
-        public String getCommand() { return command; }
-        public int getExitCode() { return exitCode; }
     }
 }

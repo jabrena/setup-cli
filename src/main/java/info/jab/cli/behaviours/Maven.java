@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import info.jab.cli.io.CommandExecutor;
 import info.jab.cli.io.FileSystemChecker;
+import io.vavr.control.Either;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Maven implements Behaviour0 {
@@ -26,11 +26,17 @@ public class Maven implements Behaviour0 {
      * Constructor for Maven with dependency injection.
      * @param commandExecutor the command executor to use
      * @param fileSystemChecker the file system checker to use
-     * @throws NullPointerException if either parameter is null
+     * @throws IllegalArgumentException if either parameter is null
      */
     public Maven(CommandExecutor commandExecutor, FileSystemChecker fileSystemChecker) {
-        this.commandExecutor = Objects.requireNonNull(commandExecutor, "CommandExecutor cannot be null");
-        this.fileSystemChecker = Objects.requireNonNull(fileSystemChecker, "FileSystemChecker cannot be null");
+        if (Objects.isNull(commandExecutor)) {
+            throw new IllegalArgumentException("CommandExecutor cannot be null");
+        }
+        if (Objects.isNull(fileSystemChecker)) {
+            throw new IllegalArgumentException("FileSystemChecker cannot be null");
+        }
+        this.commandExecutor = commandExecutor;
+        this.fileSystemChecker = fileSystemChecker;
     }
 
     // Constructor injection with default FileSystemChecker
@@ -47,6 +53,8 @@ public class Maven implements Behaviour0 {
     public void execute() {
         if (!isMavenAvailable()) {
             logger.error("Maven (mvn) command is not available on this system");
+            logger.error("Please install Maven and ensure it's in your PATH.");
+            logger.error("sdkman install maven");
             throw new IllegalStateException("Maven command not found. Please install Maven and ensure it's in your PATH.");
         }
 
@@ -61,19 +69,13 @@ public class Maven implements Behaviour0 {
     }
 
     private void executeCommand(String command) {
-        try {
-            logger.info("Executing Maven command: {}", command);
-            CommandExecutor.CommandResult result = commandExecutor.execute(command);
+        logger.info("Executing Maven command: {}", command);
+        Either<String, String> result = commandExecutor.execute(command);
 
-            if (result.success()) {
-                logger.info("Maven command completed successfully");
-            } else {
-                logger.error("Maven command failed with exit code: {}", result.exitCode());
-                logger.error("Command output: {}", result.output());
-            }
-
-        } catch (CommandExecutor.CommandExecutionException e) {
-            logger.error("Failed to execute Maven command '{}': {}", command, e.getMessage(), e);
+        if (result.isRight()) {
+            logger.info("Maven command completed successfully");
+        } else {
+            logger.error("Command output: {}", result.getLeft());
         }
     }
 
@@ -99,20 +101,14 @@ public class Maven implements Behaviour0 {
      * @return true if Maven is available, false otherwise
      */
     public boolean isMavenAvailable() {
-        try {
-            logger.debug("Checking if Maven is available...");
-            CommandExecutor.CommandResult result = commandExecutor.execute("mvn --version");
+        logger.debug("Checking if Maven is available...");
+        Either<String, String> result = commandExecutor.execute("mvn --version");
 
-            if (result.success()) {
-                logger.info("Maven is available: {}", result.output().lines().findFirst().orElse("Version info not available"));
-                return true;
-            } else {
-                logger.warn("Maven version check failed with exit code: {}", result.exitCode());
-                return false;
-            }
-
-        } catch (CommandExecutor.CommandExecutionException e) {
-            logger.warn("Maven availability check failed: {}", e.getMessage());
+        if (result.isRight()) {
+            logger.info("Maven is available: {}", result.get().lines().findFirst().orElse("Version info not available"));
+            return true;
+        } else {
+            logger.warn("Maven version check failed with exit code: {}", result.getLeft());
             return false;
         }
     }
