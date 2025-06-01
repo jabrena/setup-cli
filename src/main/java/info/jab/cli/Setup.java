@@ -2,7 +2,8 @@ package info.jab.cli;
 
 import java.io.IOException;
 
-import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -20,6 +21,8 @@ import com.github.lalyos.jfiglet.FigletFont;
     usageHelpAutoWidth = true
 )
 public class Setup implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(Setup.class);
 
     // Field for dependency injection in tests
     private final InitCommand initCommand;
@@ -40,6 +43,7 @@ public class Setup implements Runnable {
         initCommand.runInitFeature();
     }
 
+    //Maintain System.out.println
     private static void printBanner() {
         try {
             System.out.println();
@@ -54,7 +58,7 @@ public class Setup implements Runnable {
     // Refactored method to contain the core CLI logic for easier testing
     protected static int runCLI(String[] args) {
         if(args.length == 0) {
-            System.out.println("Please specify a command. Use --help to see available options.");
+            logger.warn("Please specify a command. Use --help to see available options.");
             return 0; // Return 0 as per original logic
         }
         printBanner();

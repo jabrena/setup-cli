@@ -52,6 +52,7 @@ public class QuarkusCli implements Behaviour0 {
             return Either.left("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
         }
 
+        //TODO: Review in the future how to execute multiple commands
         return commands.lines()
                 .filter(line -> !line.trim().isEmpty())
                 .findFirst()

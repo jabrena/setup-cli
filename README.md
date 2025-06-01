@@ -99,6 +99,7 @@ git tag -l --sort=-creatordate --format='%(refname:short) - %(creatordate:format
 - https://maven.apache.org/guides/index.html
 - https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
 - https://docs.spring.io/spring-boot/cli/index.html
+- https://quarkus.io/blog/quarkus-cli/
 - https://keepachangelog.com/en/1.1.0/
 - https://www.eclemma.org/jacoco/trunk/doc/maven.html
 - https://www.cursor.com/
