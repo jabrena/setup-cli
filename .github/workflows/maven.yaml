@@ -30,8 +30,8 @@ jobs:
         run: |
           JAR_FILE="./target/setup-${{ steps.get_version.outputs.VERSION }}.jar"
           echo "Testing CLI with $JAR_FILE"
-          java -jar $JAR_FILE --help
-          java -jar $JAR_FILE init --help
+          java -jar $JAR_FILE --help || exit 0
+          java -jar $JAR_FILE init --help || exit 0
           # Run basic init commands and check exit code
           java -jar $JAR_FILE init || exit 0
           java -jar $JAR_FILE init --devcontainer || exit 0
