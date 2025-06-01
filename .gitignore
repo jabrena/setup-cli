@@ -2,6 +2,8 @@
 target/
 .idea/
 .vscode/
+!.vscode/launch.json
+!.vscode/settings.json
 .cursor/
 .flattened-pom.xml
 *.log
