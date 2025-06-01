@@ -72,10 +72,10 @@ public class CommandExecutor {
             }
 
         } catch (IOException e) {
-            logger.error("IO error executing command '{}': {}", command, e.getMessage(), e);
+            logger.error("IO error executing command '{}': {}", command, e.getMessage());
             return Either.left(e.getMessage());
         } catch (InterruptedException e) {
-            logger.error("Command execution interrupted '{}': {}", command, e.getMessage(), e);
+            logger.error("Command execution interrupted '{}': {}", command, e.getMessage());
             Thread.currentThread().interrupt(); // Restore interrupt status
             return Either.left(e.getMessage());
         } catch (TimeoutException e) {
