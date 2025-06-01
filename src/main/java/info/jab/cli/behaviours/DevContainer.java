@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import org.jspecify.annotations.NonNull;
 
 import info.jab.cli.io.CopyFiles;
+import io.vavr.control.Either;
 
 public class DevContainer implements Behaviour0 {
 
@@ -21,12 +22,12 @@ public class DevContainer implements Behaviour0 {
     }
 
     @Override
-    public void execute() {
+    public Either<String, String> execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path devcontainerPath = currentPath.resolve(".devcontainer");
 
         copyFiles.copyClasspathFolder( "devcontainer/", devcontainerPath);
 
-        System.out.println("Devcontainer support added successfully");
+        return Either.right("Devcontainer support added successfully");
     }
 }

@@ -21,6 +21,7 @@ touch .gitmodules
 ./manage_submodules.sh c agile
 
 # Setup cli
+mvn dependency:resolve
 ./mvnw clean validate -U
 ./mvnw buildplan:list-phase
 ./mvnw license:third-party-report

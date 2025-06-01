@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import org.jspecify.annotations.NonNull;
 
 import info.jab.cli.io.CopyFiles;
+import io.vavr.control.Either;
 
 public class Gitignore implements Behaviour0 {
 
@@ -33,11 +34,11 @@ public class Gitignore implements Behaviour0 {
     }
 
     @Override
-    public void execute() {
+    public Either<String, String> execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path gitignorePath = currentPath.resolve(GITIGNORE_FILE);
 
         copyFiles.copyContentToFile(GITIGNORE_CONTENT, gitignorePath);
-        System.out.println("Gitignore support added successfully");
+        return Either.right("Gitignore support added successfully");
     }
 }

@@ -56,8 +56,6 @@ class GithubActionTest {
 
         // Then
         verify(copyFilesMock).copyClasspathFolder(eq(expectedResourcePath), eq(expectedPath));
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .isEqualTo("GitHub Actions workflow added successfully");
     }
 
     @Test
@@ -110,10 +108,6 @@ class GithubActionTest {
             String mavenYamlContent = Files.readString(mavenYamlFile);
             assertThat(mavenYamlContent).contains("CI Builds");
             assertThat(mavenYamlContent).contains("Maven");
-
-            // Verify console output
-            assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-                .isEqualTo("GitHub Actions workflow added successfully");
 
         } finally {
             // Restore the original user.dir

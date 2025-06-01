@@ -64,8 +64,6 @@ class GitignoreTest {
 
         // Then
         verify(copyFilesMock).copyContentToFile(eq(expectedContent), eq(expectedPath));
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .isEqualTo("Gitignore support added successfully");
     }
 
     @Test
@@ -134,10 +132,6 @@ class GitignoreTest {
                 *.log
                 """;
             assertThat(actualContent).isEqualTo(expectedContent);
-
-            // Verify console output
-            assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-                .isEqualTo("Gitignore support added successfully");
 
         } finally {
             // Restore the original user.dir

@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import org.jspecify.annotations.NonNull;
 
 import info.jab.cli.io.CopyFiles;
+import io.vavr.control.Either;
 
 public class GithubAction implements Behaviour0 {
 
@@ -21,11 +22,11 @@ public class GithubAction implements Behaviour0 {
     }
 
     @Override
-    public void execute() {
+    public Either<String, String> execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path workflowsPath = currentPath.resolve(".github").resolve("workflows");
 
         copyFiles.copyClasspathFolder( "github-action/", workflowsPath);
-        System.out.println("GitHub Actions workflow added successfully");
+        return Either.right("GitHub Actions workflow added successfully");
     }
 }

@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import org.jspecify.annotations.NonNull;
 
 import info.jab.cli.io.CopyFiles;
+import io.vavr.control.Either;
 
 public class Sdkman implements Behaviour0 {
 
@@ -21,11 +22,11 @@ public class Sdkman implements Behaviour0 {
     }
 
     @Override
-    public void execute() {
+    public Either<String, String> execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         String resourcePath = "sdkman/";
         copyFiles.copyClasspathFolder(resourcePath, currentPath);
 
-        System.out.println("SDKMAN support added successfully");
+        return Either.right("SDKMAN support added successfully");
     }
 }

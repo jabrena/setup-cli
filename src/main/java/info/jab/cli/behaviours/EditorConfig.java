@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import org.jspecify.annotations.NonNull;
 
 import info.jab.cli.io.CopyFiles;
+import io.vavr.control.Either;
 
 public class EditorConfig implements Behaviour0 {
 
@@ -21,10 +22,10 @@ public class EditorConfig implements Behaviour0 {
     }
 
     @Override
-    public void execute() {
+    public Either<String, String> execute() {
         Path currentPath = Paths.get(System.getProperty("user.dir"));
 
         copyFiles.copyClasspathFolder( "editorconfig/", currentPath);
-        System.out.println("EditorConfig support added successfully");
+        return Either.right("EditorConfig support added successfully");
     }
 }

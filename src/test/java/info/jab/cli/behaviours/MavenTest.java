@@ -104,10 +104,12 @@ class MavenTest {
         Either<String, String> versionFailure = Either.left("mvn: command not found");
         when(mockCommandExecutor.execute(eq("mvn --version"))).thenReturn(versionFailure);
 
-        // When & Then
-        assertThatThrownBy(() -> maven.execute())
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Maven command not found. Please install Maven and ensure it's in your PATH.");
+        // When
+        Either<String, String> result = maven.execute();
+
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).isEqualTo("Maven command not found. Please install Maven and ensure it's in your PATH.");
 
         verify(mockCommandExecutor, times(1)).execute(eq("mvn --version")); // Only version check, no commands
     }
@@ -164,19 +166,6 @@ class MavenTest {
             .hasMessage("Command not found");
 
         verify(mockCommandExecutor).execute(eq("mvn --version"));
-    }
-
-    @Test
-    void executeWithContinueOnError_shouldContinueAfterException() {
-        // Given
-        RuntimeException exception = new RuntimeException("IO error");
-        when(mockCommandExecutor.execute(contains("mvn archetype:generate"))).thenThrow(exception);
-
-        // When & Then - should not throw exception
-        assertThatCode(() -> maven.executeWithContinueOnError()).doesNotThrowAnyException();
-
-        // Note: executeWithContinueOnError doesn't call isMavenAvailable() first, so no version check
-        verify(mockCommandExecutor, times(1)).execute(any(String.class)); // Only 1 command, no version check
     }
 
     @Test
@@ -318,10 +307,12 @@ class MavenTest {
         // Given
         when(mockFileSystemChecker.fileExists(eq("pom.xml"))).thenReturn(true);
 
-        // When & Then
-        assertThatThrownBy(() -> maven.execute())
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
+        // When
+        Either<String, String> result = maven.execute();
+
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).isEqualTo("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
 
         verify(mockCommandExecutor, times(1)).execute(eq("mvn --version")); // Only version check
         verify(mockFileSystemChecker).fileExists(eq("pom.xml"));

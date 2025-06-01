@@ -5,3 +5,4 @@ target/
 .cursor/
 .flattened-pom.xml
 *.log
+.classpath

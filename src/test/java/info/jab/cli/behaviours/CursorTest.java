@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import info.jab.cli.io.CopyFiles;
+import io.vavr.control.Either;
 
 @ExtendWith(MockitoExtension.class)
 class CursorTest {
@@ -51,10 +53,12 @@ class CursorTest {
         // Given
         String invalidOption = "invalid-option";
 
-        // When & Then
-        assertThatThrownBy(() -> cursor.execute(invalidOption))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Invalid parameter: " + invalidOption);
+        // When
+        var result = cursor.execute(invalidOption);
+
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).isEqualTo("Invalid parameter: " + invalidOption);
         verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
         verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
@@ -65,12 +69,14 @@ class CursorTest {
         // Given
         String nullParameter = null;
 
-        // When & Then
-        assertThatThrownBy(() -> cursor.execute(nullParameter))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Invalid parameter: null");
+        // When
+        var result = cursor.execute(nullParameter);
 
-        // Should not call any copy methods when exception is thrown
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).isEqualTo("Invalid parameter: null");
+
+        // Should not call any copy methods when error occurs
         verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
         verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
@@ -81,11 +87,11 @@ class CursorTest {
         Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
-        cursor.execute("java");
+        var result = cursor.execute("java");
 
         // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .contains("Cursor rules added successfully");
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
         verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
@@ -95,11 +101,11 @@ class CursorTest {
         Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
-        cursor.execute("spring-boot");
+        var result = cursor.execute("spring-boot");
 
         // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .contains("Cursor rules added successfully");
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
         verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
@@ -109,11 +115,11 @@ class CursorTest {
         Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
-        cursor.execute("quarkus");
+        var result = cursor.execute("quarkus");
 
         // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .contains("Cursor rules added successfully");
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
         verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
@@ -123,11 +129,11 @@ class CursorTest {
         Mockito.doNothing().when(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
 
         // When
-        cursor.execute("tasks");
+        var result = cursor.execute("tasks");
 
         // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .contains("Cursor rules added successfully");
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
         verify(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
     }
 
@@ -137,11 +143,11 @@ class CursorTest {
         Mockito.doNothing().when(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
 
         // When
-        cursor.execute("agile");
+        var result = cursor.execute("agile");
 
         // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .contains("Cursor rules added successfully");
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
         verify(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
     }
 
@@ -199,11 +205,11 @@ class CursorTest {
         Mockito.doNothing().when(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
 
         // When
-        cursor.execute("AGILE"); // Test uppercase
+        var result = cursor.execute("AGILE"); // Test uppercase
 
         // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .contains("Cursor rules added successfully");
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
         verify(mockCopyFiles).copyClasspathFolder(anyString(), any(Path.class));
     }
 
@@ -213,11 +219,11 @@ class CursorTest {
         Mockito.doNothing().when(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
 
         // When
-        cursor.execute("Spring-Boot"); // Test mixed case
+        var result = cursor.execute("Spring-Boot"); // Test mixed case
 
         // Then
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
-            .contains("Cursor rules added successfully");
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
         verify(mockCopyFiles).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
     }
 
@@ -226,10 +232,12 @@ class CursorTest {
         // Given
         String emptyParameter = "";
 
-        // When & Then
-        assertThatThrownBy(() -> cursor.execute(emptyParameter))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Invalid parameter: " + emptyParameter);
+        // When
+        var result = cursor.execute(emptyParameter);
+
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).isEqualTo("Invalid parameter: " + emptyParameter);
 
         verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
         verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
@@ -240,10 +248,12 @@ class CursorTest {
         // Given
         String whitespaceParameter = "   ";
 
-        // When & Then
-        assertThatThrownBy(() -> cursor.execute(whitespaceParameter))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Invalid parameter: " + whitespaceParameter);
+        // When
+        var result = cursor.execute(whitespaceParameter);
+
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).isEqualTo("Invalid parameter: " + whitespaceParameter);
 
         verify(mockCopyFiles, never()).copyClasspathFolder(anyString(), any(Path.class));
         verify(mockCopyFiles, never()).copyClasspathFolderExcludingFiles(anyString(), any(Path.class), anyList());
