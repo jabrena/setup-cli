@@ -37,7 +37,7 @@ jbang cache clear
 jbang catalog list jabrena
 ````
 
-After this quick process, please use the tool:
+After this quick operation, it is your turn!
 
 ```bash
 jbang setup@jabrena init --help
