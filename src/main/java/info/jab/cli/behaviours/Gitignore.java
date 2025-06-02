@@ -3,10 +3,15 @@ package info.jab.cli.behaviours;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.jab.cli.io.CopyFiles;
 import io.vavr.control.Either;
 
 public class Gitignore implements Behaviour0 {
+
+    private static final Logger logger = LoggerFactory.getLogger(Gitignore.class);
 
     private final CopyFiles copyFiles;
 
@@ -34,10 +39,12 @@ public class Gitignore implements Behaviour0 {
 
     @Override
     public Either<String, String> execute() {
+        logger.info("Executing command to add .gitignore file");
+
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path gitignorePath = currentPath.resolve(GITIGNORE_FILE);
-
         copyFiles.copyContentToFile(GITIGNORE_CONTENT, gitignorePath);
-        return Either.right("Gitignore support added successfully");
+
+        return Either.right("Command execution completed successfully");
     }
 }

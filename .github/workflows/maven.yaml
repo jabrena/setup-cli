@@ -73,14 +73,14 @@ jobs:
           echo "Running: java -jar $JAR_FILE init --github-action"
           java -jar $JAR_FILE init --github-action
           echo "--------------------------------"
+          echo "Running: java -jar $JAR_FILE init --devcontainer"
+          java -jar $JAR_FILE init --devcontainer
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --visualvm"
           java -jar $JAR_FILE init --visualvm
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --jmc"
           java -jar $JAR_FILE init --jmc
-          echo "--------------------------------"
-          echo "Running: java -jar $JAR_FILE init --devcontainer"
-          java -jar $JAR_FILE init --devcontainer
           echo "✅ CLI commands executed successfully"
 
       - name: Upload jar
