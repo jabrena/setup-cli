@@ -46,14 +46,14 @@ jobs:
           echo "Running: java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks ."
           java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks .
           echo "--------------------------------"
-          echo "Running: java -jar $JAR_FILE init --maven"
-          java -jar $JAR_FILE init --maven
+          echo "Running: mkdir demo && cd demo && java -jar ../$JAR_FILE init --maven"
+          mkdir demo && cd demo && java -jar ../$JAR_FILE init --maven
           echo "--------------------------------"
-          echo "Running: java -jar $JAR_FILE init --spring-boot"
-          java -jar $JAR_FILE init --spring-boot
+          echo "Running: mkdir spring-boot-demo && cd spring-boot-demo && java -jar ../$JAR_FILE init --spring-boot"
+          mkdir spring-boot-demo && cd spring-boot-demo && java -jar ../$JAR_FILE init --spring-boot
           echo "--------------------------------"
-          echo "Running: java -jar $JAR_FILE init --quarkus"
-          java -jar $JAR_FILE init --quarkus
+          echo "Running: mkdir quarkus-demo && cd quarkus-demo && java -jar ../$JAR_FILE init --quarkus"
+          mkdir quarkus-demo && cd quarkus-demo && java -jar ../$JAR_FILE init --quarkus
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --editorconfig"
           java -jar $JAR_FILE init --editorconfig
