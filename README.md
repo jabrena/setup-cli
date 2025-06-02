@@ -20,7 +20,7 @@ This tool streamlines the process by providing battle-tested defaults for Devcon
 
 ---
 
-**WIP:** Currently, I am working in some features that every Software engineer doesn´t need to do in the beginning but they are good practice to avoid other issues later like Memory leaks. For that purpose, the tool is working to add value around tools like [Java Mission Control, JMC](https://www.oracle.com/java/technologies/jdk-mission-control.html) & [VisualVM](https://visualvm.github.io/).
+**Work in Progress:** I'm currently developing advanced features that, while not essential for initial project setup, represent best practices for preventing issues like memory leaks in production environments. These upcoming features will integrate powerful diagnostic tools such as [Java Mission Control (JMC)](https://www.oracle.com/java/technologies/jdk-mission-control.html) and [VisualVM](https://visualvm.github.io/), helping developers proactively monitor and optimize their applications.
 
 ## Getting started
 
