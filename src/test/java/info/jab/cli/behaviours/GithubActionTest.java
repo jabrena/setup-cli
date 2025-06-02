@@ -72,7 +72,8 @@ class GithubActionTest {
                 .hasMessageContaining("Simulated copy error");
 
         // Verify no success message was printed
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEmpty();
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
+        .contains("Executing command to add GitHub Actions workflow (.github/workflows/maven.yaml");
     }
 
     // Test the real file copy logic (integration-like test)

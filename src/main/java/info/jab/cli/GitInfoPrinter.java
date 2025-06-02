@@ -6,6 +6,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Supplier;
 
+import org.slf4j.Logger;
+
 import com.diogonunes.jcolor.Attribute;
 import static com.diogonunes.jcolor.Ansi.colorize;
 

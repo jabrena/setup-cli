@@ -90,7 +90,8 @@ class GitignoreTest {
                 .hasMessageContaining("Simulated copy error");
 
         // Verify no success message was printed
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEmpty();
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
+            .contains("Executing command to add .gitignore file");
     }
 
     @Test

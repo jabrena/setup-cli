@@ -17,6 +17,10 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.ArgGroup;
 import io.vavr.control.Either;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.LoggerFactory;
+
+import org.slf4j.Logger;
+
 import java.util.Objects;
 
 /**
@@ -32,6 +36,8 @@ import java.util.Objects;
     usageHelpAutoWidth = true
 )
 public class InitCommand implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(InitCommand.class);
 
     // Mutually exclusive options - only one can be selected at a time
     @ArgGroup(exclusive = true, multiplicity = "1")
@@ -250,8 +256,8 @@ public class InitCommand implements Runnable {
 
     private Integer processResult(Either<String, String> result) {
         return result.fold(
-            error -> { System.out.println(error); return 1; },
-            success -> { System.out.println(success); return 0; }
+            error -> { logger.error(error); return 1; },
+            success -> { logger.info(success); return 0; }
         );
     }
 }
