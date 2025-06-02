@@ -39,4 +39,75 @@ jbang catalog list jabrena
 
 After this quick operation, it is your turn!
 
+```bash
+# Show all options
+jbang setup@jabrena init --help
+
+# Create a Maven from Scratch using a maven archetype
+jbang setup@jabrena init --maven
+
+# Create an initial Servlet Spring boot REST API maven project example
+jbang setup@jabrena init --spring-boot
+
+# Create an initial Quarkus maven project
+jbang setup@jabrena init --quarkus
+
+# Add cursor rules for Agile/Scrum in ./cursor/rules
+jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-agile
+
+# Add cursor rules for Java in ./cursor/rules
+jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-java
+
+# Add the popular Cursor rules for Tasks from Ryan Carson
+jbang setup@jabrena init --cursor https://github.com/snarktank/ai-dev-tasks .
+
+# Another cursor rules example
+jbang setup@jabrena init --cursor https://your-awesome-cursor-rules-repository ./cursor/rules
+
+# Add a .sdkmanrc file to indicate with Java//Maven version you are going to use
+jbang setup@jabrena init --sdkman
+
+# Add a .editorconfig file
+jbang setup@jabrena init --editorconfig
+
+# Add an initial Github Action pipeline for Maven
+jbang setup@jabrena init --github-action
+
+# Add an initial Devcontainer configuration
+jbang setup@jabrena init --devcontainer
 ```
+
+If you have any doubt, you can create an issue here: https://github.com/jabrena/setup-cli/issues
+
+## How to contribute
+
+Review this [document](./README-DEV.md)
+
+## References
+
+- https://maven.apache.org/guides/index.html
+- https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
+- https://docs.spring.io/spring-boot/cli/index.html
+- https://quarkus.io/blog/quarkus-cli/
+- https://editorconfig.org/
+- https://sdkman.io/
+- https://sdkman.io/usage/#env-command
+- https://sdkman.io/sdks/jmc
+- https://sdkman.io/sdks/visualvm
+- https://github.com/features/actions
+- https://visualvm.github.io/
+- https://www.oracle.com/java/technologies/jdk-mission-control.html
+- https://containers.dev/
+- https://www.cursor.com/
+- https://docs.cursor.com/context/rules-for-ai
+- ...
+- https://github.com/jabrena/cursor-rules-methodology
+- https://github.com/jabrena/cursor-rules-agile
+- https://github.com/jabrena/cursor-rules-java
+- https://github.com/jabrena/cursor-rules-examples
+- https://github.com/jabrena/101-cursor
+- https://github.com/jabrena/setup-cli
+- https://github.com/jabrena/jbang-catalog
+
+Powered by [Cursor](https://www.cursor.com/)
+
