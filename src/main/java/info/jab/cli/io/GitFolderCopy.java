@@ -13,6 +13,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Locale;
+import java.util.Objects;
 
 public class GitFolderCopy {
 
@@ -67,7 +68,7 @@ public class GitFolderCopy {
 
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                if (exc != null) {
+                if (Objects.nonNull(exc)) {
                     throw exc;
                 }
                 Files.delete(dir);

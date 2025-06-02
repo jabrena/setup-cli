@@ -8,15 +8,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+
 import org.mockito.Mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -119,7 +114,6 @@ class InitCommandTest {
     }
 
     @Test
-    @org.junit.jupiter.api.Disabled("Temporarily disabled to isolate JVM crash issue")
     void shouldExecuteDevContainerFeature() throws Exception {
         // Given
         when(mockDevContainer.execute()).thenReturn(Either.right("DevContainer executed successfully"));
@@ -130,7 +124,7 @@ class InitCommandTest {
 
         // Then
         verify(mockDevContainer, times(1)).execute();
-        assertThat(exitCode).isEqualTo(1);
+        assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("DevContainer executed successfully");
     }
 

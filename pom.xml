@@ -33,7 +33,6 @@
 
         <!-- Maven Extensions -->
         <maven-extensions-timeline.version>2.0.1</maven-extensions-timeline.version>
-        <maven-extensions-build-cache.version>1.2.0</maven-extensions-build-cache.version>
 
         <!-- Maven Plugins -->
         <maven-plugins-flatten.version>1.7.0</maven-plugins-flatten.version>
