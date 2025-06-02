@@ -30,34 +30,49 @@ jobs:
         run: |
           JAR_FILE="./target/setup-${{ steps.get_version.outputs.VERSION }}.jar"
           echo "Testing CLI with $JAR_FILE"
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE --help"
           java -jar $JAR_FILE --help
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --help"
           java -jar $JAR_FILE init --help
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-java"
           java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-java
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-agile ./cursor/rules"
           java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-agile ./cursor/rules
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks ."
           java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks .
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --maven"
           java -jar $JAR_FILE init --maven
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --spring-boot"
           java -jar $JAR_FILE init --spring-boot
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --quarkus"
           java -jar $JAR_FILE init --quarkus
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --editorconfig"
           java -jar $JAR_FILE init --editorconfig
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --sdkman"
           java -jar $JAR_FILE init --sdkman
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --gitignore"
           java -jar $JAR_FILE init --gitignore
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --github-action"
           java -jar $JAR_FILE init --github-action
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --visualvm"
           java -jar $JAR_FILE init --visualvm
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --jmc"
           java -jar $JAR_FILE init --jmc
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --devcontainer"
           java -jar $JAR_FILE init --devcontainer
           echo "✅ CLI commands executed successfully"
