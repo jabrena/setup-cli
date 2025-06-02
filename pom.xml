@@ -445,6 +445,22 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>copy-dependabot</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/dependabot</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>templates/dependabot-template</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-gitignore</id>
                         <phase>compile</phase>
                         <goals>

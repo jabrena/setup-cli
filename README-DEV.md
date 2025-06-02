@@ -34,6 +34,7 @@ jwebserver -p 8004 -d "$(pwd)/target/site/jacoco"
 
 ```bash
 ./mvnw clean package
+./mvnw clean package -DskipTests
 java -jar ./target/setup-0.11.0.jar
 java -jar ./target/setup-0.11.0.jar --help
 java -jar ./target/setup-0.11.0.jar init

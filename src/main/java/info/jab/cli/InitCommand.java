@@ -1,6 +1,7 @@
 package info.jab.cli;
 
 import info.jab.cli.behaviours.Cursor;
+import info.jab.cli.behaviours.Dependabot;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
@@ -40,18 +41,6 @@ public class InitCommand implements Runnable {
     static class ExclusiveOptions {
 
         @Option(
-            names = {"-c", "--cursor"},
-            description = "Download cursor rules from a Git repository. " +
-                         "The option accepts 2 parameters, the first parameter requires a Https Git repository URL, " +
-                         "the second parameter is optional and indicates the path where is located in the repository " +
-                         "the cursor rules, by default ./cursor/rules.",
-            arity = "1..2",
-            order = 1)
-        @Nullable
-        @SuppressWarnings("NullAway") // Optional CLI parameter can be null
-        String[] cursorParameters;
-
-        @Option(
             names = {"-m", "--maven"},
             description = "Create a new Maven project.",
             order = 2)
@@ -68,6 +57,18 @@ public class InitCommand implements Runnable {
             description = "Create a new Quarkus project.",
             order = 4)
         boolean quarkusCliOption;
+
+        @Option(
+            names = {"-c", "--cursor"},
+            description = "Download cursor rules from a Git repository. " +
+                         "The option accepts 2 parameters, the first parameter requires a Https Git repository URL, " +
+                         "the second parameter is optional and indicates the path where is located in the repository " +
+                         "the cursor rules, by default ./cursor/rules.",
+            arity = "1..2",
+            order = 1)
+        @Nullable
+        @SuppressWarnings("NullAway") // Optional CLI parameter can be null
+        String[] cursorParameters;
 
         @Option(
             names = {"-s", "--sdkman"},
@@ -94,77 +95,87 @@ public class InitCommand implements Runnable {
         boolean githubActionOption;
 
         @Option(
+            names = {"-db", "--dependabot"},
+            description = "Add an initial Dependabot configuration.",
+            order = 9)
+        boolean dependabotOption;
+
+        @Option(
             names = {"-dc", "--devcontainer"},
             description = "Add an initial Devcontainer support for Java.",
-            order = 9)
+            order = 10)
         boolean devcontainerOption;
 
         @Option(
             names = {"-vv", "--visualvm"},
             description = "Run VisualVM to monitor the application.",
-            order = 10,
+            order = 11,
             hidden = true)
         boolean visualvmOption;
 
         @Option(
             names = {"-j", "--jmc"},
             description = "Run JMC to monitor the application.",
-            order = 11,
+            order = 12,
             hidden = true)
         boolean jmcOption;
     }
 
     // Behavior instances
-    private final Cursor cursor;
     private final Maven maven;
     private final SpringCli springCli;
     private final QuarkusCli quarkusCli;
-    private final GithubAction githubAction;
+    private final Cursor cursor;
     private final Sdkman sdkman;
     private final EditorConfig editorConfig;
     private final Gitignore gitignore;
+    private final GithubAction githubAction;
+    private final Dependabot dependabot;
     private final DevContainer devContainer;
     private final Visualvm visualvm;
     private final JMC jmc;
 
     public InitCommand() {
-        this.devContainer = new DevContainer();
         this.maven = new Maven();
-        this.cursor = new Cursor();
         this.springCli = new SpringCli();
         this.quarkusCli = new QuarkusCli();
-        this.githubAction = new GithubAction();
-        this.editorConfig = new EditorConfig();
+        this.cursor = new Cursor();
         this.sdkman = new Sdkman();
+        this.editorConfig = new EditorConfig();
+        this.gitignore = new Gitignore();
+        this.githubAction = new GithubAction();
+        this.dependabot = new Dependabot();
+        this.devContainer = new DevContainer();
         this.visualvm = new Visualvm();
         this.jmc = new JMC();
-        this.gitignore = new Gitignore();
     }
 
     public InitCommand(
-        DevContainer devContainer,
         Maven maven,
         SpringCli springCli,
         QuarkusCli quarkusCli,
         Cursor cursor,
-        GithubAction githubAction,
         EditorConfig editorConfig,
         Sdkman sdkman,
+        GithubAction githubAction,
+        Gitignore gitignore,
+        Dependabot dependabot,
+        DevContainer devContainer,
         Visualvm visualvm,
-        JMC jmc,
-        Gitignore gitignore
+        JMC jmc
     ) {
-        this.devContainer = devContainer;
         this.maven = maven;
         this.springCli = springCli;
         this.quarkusCli = quarkusCli;
         this.cursor = cursor;
-        this.githubAction = githubAction;
         this.editorConfig = editorConfig;
         this.sdkman = sdkman;
+        this.gitignore = gitignore;
+        this.githubAction = githubAction;
+        this.dependabot = dependabot;
+        this.devContainer = devContainer;
         this.visualvm = visualvm;
         this.jmc = jmc;
-        this.gitignore = gitignore;
     }
 
     @Override
@@ -176,10 +187,6 @@ public class InitCommand implements Runnable {
     protected Integer runInitFeature() {
         if (Objects.isNull(exclusiveOptions)) {
             return processResult(Either.left("No feature selected. Use --help to see available options."));
-        }
-
-        if (exclusiveOptions.devcontainerOption) {
-            return processResult(devContainer.execute());
         }
 
         if (exclusiveOptions.mavenOption) {
@@ -206,10 +213,6 @@ public class InitCommand implements Runnable {
             }
         }
 
-        if (exclusiveOptions.githubActionOption) {
-            return processResult(githubAction.execute());
-        }
-
         if (exclusiveOptions.editorConfigOption) {
             return processResult(editorConfig.execute());
         }
@@ -218,16 +221,28 @@ public class InitCommand implements Runnable {
             return processResult(sdkman.execute());
         }
 
+        if (exclusiveOptions.githubActionOption) {
+            return processResult(githubAction.execute());
+        }
+
+        if (exclusiveOptions.gitignoreOption) {
+            return processResult(gitignore.execute());
+        }
+
+        if (exclusiveOptions.devcontainerOption) {
+            return processResult(devContainer.execute());
+        }
+
+        if (exclusiveOptions.dependabotOption) {
+            return processResult(dependabot.execute());
+        }
+
         if (exclusiveOptions.visualvmOption) {
             return processResult(visualvm.execute());
         }
 
         if (exclusiveOptions.jmcOption) {
             return processResult(jmc.execute());
-        }
-
-        if (exclusiveOptions.gitignoreOption) {
-            return processResult(gitignore.execute());
         }
 
         return processResult(Either.left("No valid feature option provided."));
