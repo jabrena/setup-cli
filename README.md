@@ -14,7 +14,7 @@ When you begin with a new repository, what do you need? Create a Maven project, 
 
 For this kind of stuff that they are not complex, but they are tedious honestly, you could do from scratch or you could copy from a previous project but at the end, in that repository onboarding, you are losing in the best case, one hour.
 
-Using the tool, you could add some interesting defaults like Devcontainers, Github Actions (If you use), .editorconfig, .sdkmanrc that the are ready to use with a simple `jbang setup@jabrena init` execution and maybe you know or maybe not, but the tool provides.
+Using the tool, you could add other interesting defaults like Devcontainers, Github Actions (If you use), .editorconfig, .sdkmanrc that the are ready to use with a simple `jbang setup@jabrena init` execution and maybe you know or maybe not, but the tool provides.
 
 **So why not save some time in the onboarding?** This is the reason that I created Setup.
 
