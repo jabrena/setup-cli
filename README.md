@@ -8,13 +8,27 @@ Setup is a command line utility designed to help developers when initializing ne
 
 ## Motivation
 
-PENDING
+**I hate waste time in general**, but when you start working in a new repository you always need to do some stuff manually to setup your developer environment like Build Systems, Pipelines, Remote environments, Cursor rules, What Java version I will use and others...
+
+With this idea in mind, I developed Setup. When you begin with a new repository, what do you need? Create a Maven project, but you don´t remember the the whole maven archetype command or why I need to visit that I start with Non JVM framework developer and I have to read the classical article about [5 minute maven](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html) or when you develop something with a JVM Framework like Spring Boot or Quarkus, why I need to memorize how to use the Cli?
+
+For this kind of stuff that they are not complex, but they are tedious honestly, you could do from scratch or you could copy from a previous project but at the end, in that repository onboarding, you are losing in the best case, one hour.
+
+Using the tool, you could add some interesting defaults like Devcontainers, Github Actions (If you use), .editorconfig, .sdkmanrc that the are ready to use with a simple `jbang setup@jabrena init` execution and maybe you know or maybe not, but the tool provides.
+
+**So why not save some time in the onboarding?** This is the reason that I created Setup.
+
+The tool is working in some features that every Software engineer doesn´t need to do in the beginning but they are good practice to avoid other issues like Memory leaks, for that purpose, the tool is working to offer some value around Java Mission Control, JMC & VisualVM. Verify your app before production.
 
 ## Getting started
 
-PENDING
+Setup is Command line tool packaged using Jbang a nice way to develop small programs like this. To use Setup, you will need to have installed JBang first, so how to install JBang?
 
-## How to use from Jbang
+```bash
+sdk install jbang
+```
+
+Once you have instaled **JBang**, you can start using this tool.
 
 ```bash
 jbang cache clear
