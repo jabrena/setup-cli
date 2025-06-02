@@ -119,13 +119,13 @@ class SpringCliTest {
     void shouldFailWhenPomXmlExists() {
         // Given
         when(mockFileSystemChecker.fileExists("pom.xml")).thenReturn(true);
-        when(mockCommandExecutor.execute("spring --version")).thenReturn(Either.right("Spring CLI v3.2.0"));
+        when(mockCommandExecutor.execute("spring --version")).thenReturn(Either.right("Spring CLI v3.5.0"));
 
         // When
         Either<String, String> result = springCli.execute();
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).contains("Cannot create Maven project: pom.xml already exists in current directory");
+        assertThat(result.getLeft()).contains("A pom.xml file already exists in the current directory");
     }
 }

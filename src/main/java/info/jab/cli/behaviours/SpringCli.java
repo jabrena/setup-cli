@@ -41,13 +41,15 @@ public class SpringCli implements Behaviour0 {
 
         //Preconditions
         if (!isSpringCliAvailable()) {
-            logger.error("sdkman install springboot");
-            return Either.left("Spring Boot command not found. Please install Spring Boot and ensure it's in your PATH.");
+            String message = "Spring Boot command not found. Please install Spring Boot and ensure it's in your PATH.";
+            logger.error(message);
+            return Either.left(message);
         }
 
         if (pomXmlExists()) {
-            logger.error("A pom.xml file already exists in the current directory");
-            return Either.left("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
+            String message = "A pom.xml file already exists in the current directory";
+            logger.error(message);
+            return Either.left(message);
         }
 
         //TODO: Review in the future how to execute multiple commands
