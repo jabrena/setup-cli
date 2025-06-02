@@ -30,7 +30,7 @@ public class DevContainer implements Behaviour0 {
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path devcontainerPath = currentPath.resolve(".devcontainer");
-        copyFiles.copyClasspathFolder( "devcontainer-template/", devcontainerPath);
+        copyFiles.copyClasspathFolder( "templates/devcontainer-template/", devcontainerPath);
 
         return Either.right("Command execution completed successfully");
     }

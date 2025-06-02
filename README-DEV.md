@@ -13,7 +13,6 @@ sdk env install
 ./mvnw license:third-party-report
 jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify
-./mvnw clean verify -DENABLE_INTEGRATION_TESTS=true
 jwebserver -p 8001 -d "$(pwd)/target/timeline/"
 ./mvnw clean test surefire-report:report -Dmaven.test.failure.ignore=true
 jwebserver -p 8004 -d "$(pwd)/target/reports"

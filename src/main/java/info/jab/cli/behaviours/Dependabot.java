@@ -30,7 +30,7 @@ public class Dependabot implements Behaviour0 {
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path githubPath = currentPath.resolve(".github");
-        copyFiles.copyClasspathFolder( "dependabot-template/", githubPath);
+        copyFiles.copyClasspathFolder( "templates/dependabot-template/", githubPath);
         return Either.right("Command execution completed successfully");
     }
 }

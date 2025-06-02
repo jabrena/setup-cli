@@ -45,7 +45,7 @@ class DevContainerTest {
         // Setup expected paths
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path expectedDevcontainerPath = currentPath.resolve(".devcontainer");
-        String expectedSourceDir = "devcontainer-template/";
+        String expectedSourceDir = "templates/devcontainer-template/";
 
         // When
         devContainer.execute();

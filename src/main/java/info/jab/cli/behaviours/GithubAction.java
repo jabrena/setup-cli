@@ -30,7 +30,7 @@ public class GithubAction implements Behaviour0 {
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path workflowsPath = currentPath.resolve(".github").resolve("workflows");
-        copyFiles.copyClasspathFolder( "github-action-template/", workflowsPath);
+        copyFiles.copyClasspathFolder( "templates/github-action-template/", workflowsPath);
 
         return Either.right("Command execution completed successfully");
     }
