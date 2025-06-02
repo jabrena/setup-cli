@@ -293,12 +293,6 @@
                     <excludes>
                         <exclude>**/*Test.java</exclude>
                     </excludes>
-                    <systemPropertyVariables>
-                        <ENABLE_INTEGRATION_TESTS>${ENABLE_INTEGRATION_TESTS}</ENABLE_INTEGRATION_TESTS>
-                    </systemPropertyVariables>
-                    <environmentVariables>
-                        <ENABLE_INTEGRATION_TESTS>${ENABLE_INTEGRATION_TESTS}</ENABLE_INTEGRATION_TESTS>
-                    </environmentVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -371,93 +365,6 @@
 
                             <minimizeJar>false</minimizeJar>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-plugins-resources.version}</version>
-                <executions>
-                    <execution>
-                        <id>copy-devcontainer</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/devcontainer</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/devcontainer-template</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-github-action</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/github-action</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/github-action-template</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-editorconfig</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/editorconfig</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/editorconfig-template</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-sdkman</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/sdkman</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/sdkman-template</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-gitignore</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/gitignore</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/gitignore-template</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
                         </configuration>
                     </execution>
                 </executions>

@@ -29,7 +29,7 @@ public class EditorConfig implements Behaviour0 {
         logger.info("Executing command to add .editorconfig file");
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        copyFiles.copyClasspathFolder( "editorconfig/", currentPath);
+        copyFiles.copyClasspathFolder( "templates/editorconfig/", currentPath);
         return Either.right("Command execution completed successfully");
     }
 }

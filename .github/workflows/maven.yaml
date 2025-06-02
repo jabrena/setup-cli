@@ -37,15 +37,6 @@ jobs:
           echo "Running: java -jar $JAR_FILE init --help"
           java -jar $JAR_FILE init --help
           echo "--------------------------------"
-          echo "Running: java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-java"
-          java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-java
-          echo "--------------------------------"
-          echo "Running: java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-agile ./cursor/rules"
-          java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-agile ./cursor/rules
-          echo "--------------------------------"
-          echo "Running: java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks ."
-          java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks .
-          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --maven"
           java -jar $JAR_FILE init --maven
           echo "--------------------------------"
@@ -59,8 +50,17 @@ jobs:
           echo "Running: java -jar $JAR_FILE init --quarkus"
           cd ..
           mkdir quarkus-demo && cd quarkus-demo && java -jar ../$JAR_FILE init --quarkus
-          echo "--------------------------------"
           cd ..
+          echo "--------------------------------"
+          echo "Running: java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-java"
+          java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-java
+          echo "--------------------------------"
+          echo "Running: java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-agile ./cursor/rules"
+          java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-agile ./cursor/rules
+          echo "--------------------------------"
+          echo "Running: java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks ."
+          java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks .
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --editorconfig"
           java -jar $JAR_FILE init --editorconfig
           echo "--------------------------------"
@@ -72,6 +72,9 @@ jobs:
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --github-action"
           java -jar $JAR_FILE init --github-action
+          echo "--------------------------------"
+          echo "Running: java -jar $JAR_FILE init --dependabot"
+          java -jar $JAR_FILE init --dependabot
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --devcontainer"
           java -jar $JAR_FILE init --devcontainer

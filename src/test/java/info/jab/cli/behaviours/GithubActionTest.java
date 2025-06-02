@@ -49,7 +49,7 @@ class GithubActionTest {
     void testExecute() {
         // Given
         Path expectedPath = Paths.get(System.getProperty("user.dir")).resolve(".github").resolve("workflows");
-        String expectedResourcePath = "github-action/";
+        String expectedResourcePath = "templates/github-action/";
 
         // When
         githubAction.execute();
@@ -62,7 +62,7 @@ class GithubActionTest {
     void testExecuteWithCopyFailure() {
         // Given
         Path expectedPath = Paths.get(System.getProperty("user.dir")).resolve(".github").resolve("workflows");
-        String expectedResourcePath = "github-action/";
+        String expectedResourcePath = "templates/github-action/";
         doThrow(new RuntimeException("Simulated copy error"))
                 .when(copyFilesMock).copyClasspathFolder(eq(expectedResourcePath), eq(expectedPath));
 
@@ -72,7 +72,8 @@ class GithubActionTest {
                 .hasMessageContaining("Simulated copy error");
 
         // Verify no success message was printed
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEmpty();
+        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim())
+        .contains("Executing command to add GitHub Actions workflow (.github/workflows/maven.yaml");
     }
 
     // Test the real file copy logic (integration-like test)

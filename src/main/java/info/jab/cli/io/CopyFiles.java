@@ -115,4 +115,27 @@ public class CopyFiles {
             throw new RuntimeException("Error copying content to file", e);
         }
     }
+
+    public void copyClasspathFileWithRename(String classpathFile, Path destinationFile) {
+        try {
+            URL resource = getClass().getClassLoader().getResource(classpathFile);
+            if (Objects.isNull(resource)) {
+                throw new IllegalArgumentException("Classpath file not found: " + classpathFile);
+            }
+            URI uri = resource.toURI();
+
+            if (uri.getScheme().equals("jar")) {
+                // Handle JAR file case
+                FileSystem jarFileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+                Path source = jarFileSystem.getPath(classpathFile);
+                Files.copy(source, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                // Handle regular file system case
+                Path source = Paths.get(uri);
+                Files.copy(source, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException("Error copying file from " + classpathFile + " to " + destinationFile, e);
+        }
+    }
 }

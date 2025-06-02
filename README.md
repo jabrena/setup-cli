@@ -8,13 +8,13 @@ Setup is a command line utility designed to help developers when initializing ne
 
 ## Motivation
 
-**Time is precious in software development**, and setting up a new repository shouldn't consume hours of your productive time. Every new project requires the same tedious setup tasks: configuring build systems, setting up CI/CD pipelines, adding development environment configurations, choosing Java versions, and more.
+**Time is precious in software development**, and setting up a new repository shouldn't consume hours of your productive time. Every new project requires the same tedious setup tasks: configuring build systems, setting up CI pipelines, adding development environment configurations, choosing Java versions, and more.
 
 When starting a new repository, you face familiar challenges: creating a Maven project (but who remembers the complete archetype command?), revisiting the classic [Maven in 5 minutes](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html) guide, or memorizing framework-specific options for [Spring Boot](https://docs.spring.io/spring-boot/cli/index.html) or [Quarkus](https://quarkus.io/blog/quarkus-cli/). Why not start with sensible defaults and customize the **pom.xml** later?
 
 These setup tasks aren't complex, but they are genuinely tedious. Whether you build from scratch or copy from previous projects, you typically lose at least an hour during repository onboarding.
 
-This tool streamlines the process by providing battle-tested defaults for Devcontainers, GitHub Actions, `.editorconfig`, `.sdkmanrc`, and more—all ready to use with a simple `jbang setup@jabrena init` command. You might discover configurations you didn't even know you needed.
+This tool streamlines the process by providing battle-tested defaults for `.editorconfig`, `.sdkmanrc`, GitHub Action CI pipeline, Dependabot, Devcontainers  and more—all ready to use with a simple `jbang setup@jabrena init` command. You might discover configurations you didn't even know you needed.
 
 **If you value efficient project onboarding**, Setup CLI is designed for developers like you.
 
@@ -72,6 +72,12 @@ jbang setup@jabrena init --editorconfig
 
 # Add an initial Github Action pipeline for Maven
 jbang setup@jabrena init --github-action
+
+# Add an initial .gitignore file
+jbang setup@jabrena init --gitignore
+
+# Add an initial Dependabot.yaml file
+jbang setup@jabrena init --dependabot
 
 # Add an initial Devcontainer configuration
 jbang setup@jabrena init --devcontainer

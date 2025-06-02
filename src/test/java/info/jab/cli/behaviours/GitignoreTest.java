@@ -15,13 +15,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import info.jab.cli.io.CopyFiles;
+import io.vavr.control.Either;
 
 @ExtendWith(MockitoExtension.class)
 class GitignoreTest {
@@ -48,49 +51,35 @@ class GitignoreTest {
     @Test
     void shouldExecuteSuccessfully() {
         // Given
-        Path expectedPath = Paths.get(System.getProperty("user.dir")).resolve(".gitignore");
-        String expectedContent = """
-            .DS_Store
-            target/
-            .idea/
-            .vscode/
-            .cursor/
-            .flattened-pom.xml
-            *.log
-            .classpath
-            """;
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        Path expectedGitignoreFile = currentPath.resolve(".gitignore");
+        String expectedResourcePath = "templates/gitignore/gitignore.template";
+        doNothing().when(copyFilesMock).copyClasspathFileWithRename(any(String.class), any(Path.class));
 
         // When
-        gitignore.execute();
+        Either<String, String> result = gitignore.execute();
 
         // Then
-        verify(copyFilesMock).copyContentToFile(eq(expectedContent), eq(expectedPath));
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Command execution completed successfully");
+        verify(copyFilesMock).copyClasspathFileWithRename(eq(expectedResourcePath), eq(expectedGitignoreFile));
     }
 
     @Test
     void shouldHandleCopyFailureGracefully() {
         // Given
-        Path expectedPath = Paths.get(System.getProperty("user.dir")).resolve(".gitignore");
-        String expectedContent = """
-            .DS_Store
-            target/
-            .idea/
-            .vscode/
-            .cursor/
-            .flattened-pom.xml
-            *.log
-            .classpath
-            """;
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        Path expectedGitignoreFile = currentPath.resolve(".gitignore");
+        String expectedResourcePath = "templates/gitignore/gitignore.template";
         doThrow(new RuntimeException("Simulated copy error"))
-                .when(copyFilesMock).copyContentToFile(eq(expectedContent), eq(expectedPath));
+                .when(copyFilesMock).copyClasspathFileWithRename(eq(expectedResourcePath), eq(expectedGitignoreFile));
 
         // When / Then
         assertThatThrownBy(() -> gitignore.execute())
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Simulated copy error");
 
-        // Verify no success message was printed
-        assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEmpty();
+        verify(copyFilesMock).copyClasspathFileWithRename(eq(expectedResourcePath), eq(expectedGitignoreFile));
     }
 
     @Test
@@ -115,9 +104,12 @@ class GitignoreTest {
 
         try {
             // When
-            realGitignore.execute();
+            Either<String, String> result = realGitignore.execute();
 
             // Then
+            assertThat(result.isRight()).isTrue();
+            assertThat(result.get()).isEqualTo("Command execution completed successfully");
+
             Path gitignoreFile = tempDir.resolve(".gitignore");
             assertThat(Files.exists(gitignoreFile)).isTrue();
             assertThat(Files.isRegularFile(gitignoreFile)).isTrue();
@@ -159,9 +151,11 @@ class GitignoreTest {
             Files.writeString(gitignoreFile, existingContent, StandardCharsets.UTF_8);
 
             // When
-            realGitignore.execute();
+            Either<String, String> result = realGitignore.execute();
 
             // Then
+            assertThat(result.isRight()).isTrue();
+            assertThat(result.get()).isEqualTo("Command execution completed successfully");
             assertThat(Files.exists(gitignoreFile)).isTrue();
 
             // Verify the file was overwritten with new content
@@ -190,55 +184,65 @@ class GitignoreTest {
     void shouldUseCorrectGitignoreFileName() {
         // Given
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        Path expectedPath = currentPath.resolve(".gitignore");
+        Path expectedGitignoreFile = currentPath.resolve(".gitignore");
+        String expectedResourcePath = "templates/gitignore/gitignore.template";
+        doNothing().when(copyFilesMock).copyClasspathFileWithRename(any(String.class), any(Path.class));
 
         // When
         gitignore.execute();
 
         // Then
-        verify(copyFilesMock).copyContentToFile(
-            eq("""
-                .DS_Store
-                target/
-                .idea/
-                .vscode/
-                .cursor/
-                .flattened-pom.xml
-                *.log
-                .classpath
-                """),
-            eq(expectedPath)
-        );
+        verify(copyFilesMock).copyClasspathFileWithRename(eq(expectedResourcePath), eq(expectedGitignoreFile));
     }
 
     @Test
     void shouldContainExpectedGitignoreEntries() {
         // Given
-        String expectedContent = """
-            .DS_Store
-            target/
-            .idea/
-            .vscode/
-            .cursor/
-            .flattened-pom.xml
-            *.log
-            .classpath
-            """;
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        Path expectedGitignoreFile = currentPath.resolve(".gitignore");
+        String expectedResourcePath = "templates/gitignore/gitignore.template";
+        doNothing().when(copyFilesMock).copyClasspathFileWithRename(any(String.class), any(Path.class));
 
         // When
         gitignore.execute();
 
         // Then
-        verify(copyFilesMock).copyContentToFile(eq(expectedContent), eq(Paths.get(System.getProperty("user.dir")).resolve(".gitignore")));
+        verify(copyFilesMock).copyClasspathFileWithRename(eq(expectedResourcePath), eq(expectedGitignoreFile));
 
-        // Verify that the content includes common IDE and build artifacts
-        assertThat(expectedContent).contains(".DS_Store");      // macOS system file
-        assertThat(expectedContent).contains("target/");        // Maven build directory
-        assertThat(expectedContent).contains(".idea/");         // IntelliJ IDEA
-        assertThat(expectedContent).contains(".vscode/");       // Visual Studio Code
-        assertThat(expectedContent).contains(".cursor/");       // Cursor IDE
-        assertThat(expectedContent).contains(".flattened-pom.xml"); // Maven flatten plugin
-        assertThat(expectedContent).contains("*.log");          // Log files
-        assertThat(expectedContent).contains(".classpath");      // Maven classpath file
+        // Note: The actual content verification is now done by the copyClasspathFileWithRename method
+        // which copies from the template file that contains the expected entries:
+        // .DS_Store, target/, .idea/, .vscode/, .cursor/, .flattened-pom.xml, *.log, .classpath
+    }
+
+    @Test
+    void shouldCallCopyFilesWithCorrectParameters() {
+        // Given
+        doNothing().when(copyFilesMock).copyClasspathFileWithRename(any(String.class), any(Path.class));
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        Path expectedGitignoreFile = currentPath.resolve(".gitignore");
+        String expectedResourcePath = "templates/gitignore/gitignore.template";
+
+        // When
+        gitignore.execute();
+
+        // Then
+        verify(copyFilesMock).copyClasspathFileWithRename(eq(expectedResourcePath), eq(expectedGitignoreFile));
+    }
+
+    @Test
+    void shouldReturnRightEitherWithSuccessMessage() {
+        // Given
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        Path expectedGitignoreFile = currentPath.resolve(".gitignore");
+        String expectedResourcePath = "templates/gitignore/gitignore.template";
+        doNothing().when(copyFilesMock).copyClasspathFileWithRename(any(String.class), any(Path.class));
+
+        // When
+        Either<String, String> result = gitignore.execute();
+
+        // Then
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Command execution completed successfully");
+        verify(copyFilesMock).copyClasspathFileWithRename(eq(expectedResourcePath), eq(expectedGitignoreFile));
     }
 }

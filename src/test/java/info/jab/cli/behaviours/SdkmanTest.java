@@ -33,7 +33,7 @@ class SdkmanTest {
     void should_execute_copy_and_print_message() {
         // Given
         Path expectedPath = Paths.get(System.getProperty("user.dir"));
-        String expectedResourcePath = "sdkman/";
+        String expectedResourcePath = "templates/sdkman/";
 
         // When
         sdkman.execute();

@@ -9,19 +9,19 @@ import java.util.function.Supplier;
 import com.diogonunes.jcolor.Attribute;
 import static com.diogonunes.jcolor.Ansi.colorize;
 
-public class GitInfoPrinter {
+public class GitInfo {
 
     private final Supplier<InputStream> gitPropertiesStreamSupplier;
 
-    public GitInfoPrinter() {
-        this(() -> GitInfoPrinter.class.getClassLoader().getResourceAsStream("git.properties"));
+    public GitInfo() {
+        this(() -> GitInfo.class.getClassLoader().getResourceAsStream("git.properties"));
     }
 
-    GitInfoPrinter(Supplier<InputStream> gitPropertiesStreamSupplier) {
+    GitInfo(Supplier<InputStream> gitPropertiesStreamSupplier) {
         this.gitPropertiesStreamSupplier = gitPropertiesStreamSupplier;
     }
 
-    public void printGitInfo() {
+    public void print() {
         try (InputStream input = gitPropertiesStreamSupplier.get()) {
             //Preconditions
             if (Objects.isNull(input)) {

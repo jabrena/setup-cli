@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import info.jab.cli.behaviours.Cursor;
+import info.jab.cli.behaviours.Dependabot;
 import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
@@ -40,9 +41,6 @@ class InitCommandTest {
     }
 
     @Mock
-    private DevContainer mockDevContainer;
-
-    @Mock
     private Maven mockMaven;
 
     @Mock
@@ -55,22 +53,28 @@ class InitCommandTest {
     private Cursor mockCursor;
 
     @Mock
-    private GithubAction mockGithubAction;
-
-    @Mock
     private EditorConfig mockEditorConfig;
 
     @Mock
     private Sdkman mockSdkman;
 
     @Mock
+    private Gitignore mockGitignore;
+
+    @Mock
+    private GithubAction mockGithubAction;
+
+    @Mock
+    private Dependabot mockDependabot;
+
+    @Mock
+    private DevContainer mockDevContainer;
+
+    @Mock
     private Visualvm mockVisualvm;
 
     @Mock
     private JMC mockJmc;
-
-    @Mock
-    private Gitignore mockGitignore;
 
     private InitCommand initCommand;
     private ByteArrayOutputStream outputStreamCaptor;
@@ -84,17 +88,18 @@ class InitCommandTest {
 
         // Set up the command with mocked dependencies
         initCommand = new InitCommand(
-                mockDevContainer,
                 mockMaven,
                 mockSpringCli,
                 mockQuarkusCli,
                 mockCursor,
-                mockGithubAction,
                 mockEditorConfig,
                 mockSdkman,
+                mockGithubAction,
+                mockGitignore,
+                mockDependabot,
+                mockDevContainer,
                 mockVisualvm,
-                mockJmc,
-                mockGitignore
+                mockJmc
         );
 
         // Capture console output for assertions

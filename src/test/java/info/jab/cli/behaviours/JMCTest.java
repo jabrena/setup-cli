@@ -50,7 +50,7 @@ class JMCTest {
         // Then
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8);
         long lineCount = output.lines().count();
-        assertThat(lineCount).isEqualTo(4);
+        assertThat(lineCount).isEqualTo(6);
     }
 
     @Test

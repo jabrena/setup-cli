@@ -21,7 +21,6 @@ public class Maven implements Behaviour0 {
             mvn archetype:generate -DgroupId=info.jab.demo -DartifactId=maven-demo -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.5 -DinteractiveMode=false
             """;
 
-    // Full constructor for dependency injection
     /**
      * Constructor for Maven with dependency injection.
      * @param commandExecutor the command executor to use
