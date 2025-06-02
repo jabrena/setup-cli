@@ -68,7 +68,7 @@ class QuarkusCliTest {
 
         // Then
         assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).isEqualTo("Quarkus command completed successfully");
+        assertThat(result.get()).isEqualTo("Command execution completed successfully");
         verify(mockCommandExecutor).execute("quarkus --version");
         verify(mockFileSystemChecker).fileExists("pom.xml");
         verify(mockCommandExecutor).execute("quarkus create app quarkus-demo");
@@ -85,7 +85,7 @@ class QuarkusCliTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).isEqualTo("Quarkus command not found. Please install Quarkus and ensure it's in your PATH.");
+        assertThat(result.getLeft()).isEqualTo("Command execution failed");
         verify(mockCommandExecutor).execute("quarkus --version");
     }
 
@@ -102,7 +102,7 @@ class QuarkusCliTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).isEqualTo("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
+        assertThat(result.getLeft()).isEqualTo("Command execution failed");
         verify(mockCommandExecutor).execute("quarkus --version");
         verify(mockFileSystemChecker).fileExists("pom.xml");
     }
@@ -122,7 +122,7 @@ class QuarkusCliTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).isEqualTo("Quarkus command failed");
+        assertThat(result.getLeft()).isEqualTo("Command execution failed");
         verify(mockCommandExecutor).execute("quarkus --version");
         verify(mockFileSystemChecker).fileExists("pom.xml");
         verify(mockCommandExecutor).execute("quarkus create app quarkus-demo");

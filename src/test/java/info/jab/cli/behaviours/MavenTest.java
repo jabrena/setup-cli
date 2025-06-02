@@ -10,11 +10,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class MavenTest {
@@ -109,7 +111,7 @@ class MavenTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).isEqualTo("Maven command not found. Please install Maven and ensure it's in your PATH.");
+        assertThat(result.getLeft()).isEqualTo("Command execution failed");
 
         verify(mockCommandExecutor, times(1)).execute(eq("mvn --version")); // Only version check, no commands
     }
@@ -312,7 +314,7 @@ class MavenTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).isEqualTo("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
+        assertThat(result.getLeft()).isEqualTo("Command execution failed");
 
         verify(mockCommandExecutor, times(1)).execute(eq("mvn --version")); // Only version check
         verify(mockFileSystemChecker).fileExists(eq("pom.xml"));

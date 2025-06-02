@@ -35,11 +35,9 @@ class VisualvmTest {
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8);
         var lines = output.lines().toList();
 
-        assertThat(lines).hasSize(4);
+        assertThat(lines).hasSize(2);
         assertThat(lines.get(0)).isEqualTo("sdk install visualvm");
-        assertThat(lines.get(1)).isEqualTo("sdk install java 21.0.2-graalce");
-        assertThat(lines.get(2)).isEqualTo("sdk default java 21.0.2-graalce");
-        assertThat(lines.get(3)).isEqualTo("visualvm");
+        assertThat(lines.get(1)).isEqualTo("visualvm");
     }
 
     @Test
@@ -66,7 +64,7 @@ class VisualvmTest {
         // Then
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8);
         long lineCount = output.lines().count();
-        assertThat(lineCount).isEqualTo(4);
+        assertThat(lineCount).isEqualTo(2);
     }
 
     @Test
@@ -77,8 +75,6 @@ class VisualvmTest {
         // Then
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8);
         assertThat(output).contains("sdk install visualvm");
-        assertThat(output).contains("sdk install java 21.0.2-graalce");
-        assertThat(output).contains("sdk default java 21.0.2-graalce");
         assertThat(output).contains("visualvm");
     }
 
@@ -107,9 +103,7 @@ class VisualvmTest {
 
         // Verify the order of commands
         assertThat(lines.get(0)).isEqualTo("sdk install visualvm");
-        assertThat(lines.get(1)).isEqualTo("sdk install java 21.0.2-graalce");
-        assertThat(lines.get(2)).isEqualTo("sdk default java 21.0.2-graalce");
-        assertThat(lines.get(3)).isEqualTo("visualvm");
+        assertThat(lines.get(1)).isEqualTo("visualvm");
     }
 
     @Test
@@ -120,7 +114,7 @@ class VisualvmTest {
         // Then
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8);
         // Verify that all expected commands are present (text block functionality)
-        assertThat(output.lines()).hasSize(4);
+        assertThat(output.lines()).hasSize(2);
         assertThat(output).doesNotContain("null");
         assertThat(output.trim()).isNotEmpty();
     }

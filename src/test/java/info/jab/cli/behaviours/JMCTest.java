@@ -27,22 +27,6 @@ class JMCTest {
     }
 
     @Test
-    void shouldExecuteAndPrintJMCCommands() {
-        // When
-        jmc.execute();
-
-                // Then
-        String output = outputStreamCaptor.toString(StandardCharsets.UTF_8);
-        var lines = output.lines().toList();
-
-        assertThat(lines).hasSize(4);
-        assertThat(lines.get(0)).isEqualTo("sdk install jmc");
-        assertThat(lines.get(1)).isEqualTo("sdk install java 21.0.2-graalce");
-        assertThat(lines.get(2)).isEqualTo("sdk default java 21.0.2-graalce");
-        assertThat(lines.get(3)).isEqualTo("jmc");
-    }
-
-    @Test
     void shouldImplementBehaviour0Interface() {
         // Then
         assertThat(jmc).isInstanceOf(Behaviour0.class);
@@ -77,8 +61,6 @@ class JMCTest {
         // Then
         String output = outputStreamCaptor.toString(StandardCharsets.UTF_8);
         assertThat(output).contains("sdk install jmc");
-        assertThat(output).contains("sdk install java 21.0.2-graalce");
-        assertThat(output).contains("sdk default java 21.0.2-graalce");
         assertThat(output).contains("jmc");
     }
 

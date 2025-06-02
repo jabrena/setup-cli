@@ -55,7 +55,7 @@ class SpringCliTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).contains("Spring Boot command not found");
+        assertThat(result.getLeft()).contains("Command execution failed");
     }
 
     @Test
@@ -71,7 +71,7 @@ class SpringCliTest {
 
         // Then
         assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).contains("Spring Boot command completed successfully");
+        assertThat(result.get()).contains("Command execution completed successfully");
     }
 
     @Test
@@ -87,7 +87,7 @@ class SpringCliTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).contains("Spring Boot command failed");
+        assertThat(result.getLeft()).contains("Command execution failed");
     }
 
     @Test
@@ -112,20 +112,20 @@ class SpringCliTest {
 
         // Then
         assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).contains("Spring Boot command completed successfully");
+        assertThat(result.get()).contains("Command execution completed successfully");
     }
 
     @Test
     void shouldFailWhenPomXmlExists() {
         // Given
         when(mockFileSystemChecker.fileExists("pom.xml")).thenReturn(true);
-        when(mockCommandExecutor.execute("spring --version")).thenReturn(Either.right("Spring CLI v3.2.0"));
+        when(mockCommandExecutor.execute("spring --version")).thenReturn(Either.right("Spring CLI v3.5.0"));
 
         // When
         Either<String, String> result = springCli.execute();
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).contains("Cannot create Maven project: pom.xml already exists in current directory");
+        assertThat(result.getLeft()).contains("Command execution failed");
     }
 }

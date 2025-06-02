@@ -53,22 +53,22 @@ public class Maven implements Behaviour0 {
     public Either<String, String> execute() {
         //Preconditions
         if (!isMavenAvailable()) {
-            logger.error("Maven (mvn) command is not available on this system");
-            logger.error("Please install Maven and ensure it's in your PATH.");
-            logger.error("sdkman install maven");
-            return Either.left("Maven command not found. Please install Maven and ensure it's in your PATH.");
+            String message = "Maven (mvn) command not found. Please install Maven with 'sdk install maven' and ensure it's in your PATH.";
+            logger.error(message);
+            return Either.left("Command execution failed");
         }
 
         if (pomXmlExists()) {
-            logger.error("A pom.xml file already exists in the current directory");
-            return Either.left("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
+            String message = "A pom.xml file already exists in the current directory";
+            logger.error(message);
+            return Either.left("Command execution failed");
         }
 
         return commands.lines()
                 .filter(line -> !line.trim().isEmpty())
                 .findFirst()
                 .map(this::executeCommand)
-                .orElse(Either.left("No Maven commands found to execute"));
+                .orElse(Either.left("No commands found to execute"));
     }
 
     private Either<String, String> executeCommand(String command) {
@@ -76,9 +76,9 @@ public class Maven implements Behaviour0 {
         Either<String, String> result = commandExecutor.execute(command);
 
         if (result.isRight()) {
-            return Either.right("Maven command completed successfully");
+            return Either.right("Command execution completed successfully");
         }
-        return Either.left("Maven command failed");
+        return Either.left("Command execution failed");
     }
 
     /**

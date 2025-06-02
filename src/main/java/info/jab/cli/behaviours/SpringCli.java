@@ -38,16 +38,17 @@ public class SpringCli implements Behaviour0 {
 
     @Override
     public Either<String, String> execute() {
-
         //Preconditions
         if (!isSpringCliAvailable()) {
-            logger.error("sdkman install springboot");
-            return Either.left("Spring Boot command not found. Please install Spring Boot and ensure it's in your PATH.");
+            String message = "Spring Boot command not found. Please install Spring Boot with 'sdk install springboot' and ensure it's in your PATH.";
+            logger.error(message);
+            return Either.left("Command execution failed");
         }
 
         if (pomXmlExists()) {
-            logger.error("A pom.xml file already exists in the current directory");
-            return Either.left("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
+            String message = "A pom.xml file already exists in the current directory";
+            logger.error(message);
+            return Either.left("Command execution failed");
         }
 
         //TODO: Review in the future how to execute multiple commands
@@ -55,7 +56,7 @@ public class SpringCli implements Behaviour0 {
                 .filter(line -> !line.trim().isEmpty())
                 .findFirst()
                 .map(this::executeCommand)
-                .orElse(Either.left("No Spring Boot commands found to execute"));
+                .orElse(Either.left("No commands found to execute"));
     }
 
     private Either<String, String> executeCommand(String command) {
@@ -63,9 +64,9 @@ public class SpringCli implements Behaviour0 {
         Either<String, String> result = commandExecutor.execute(command);
 
         if (result.isRight()) {
-            return Either.right("Spring Boot command completed successfully");
+            return Either.right("Command execution completed successfully");
         }
-        return Either.left("Spring Boot command failed");
+        return Either.left("Command execution failed");
     }
 
     /**

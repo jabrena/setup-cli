@@ -23,6 +23,7 @@
         <zt-exec.version>1.12</zt-exec.version>
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
+        <jgit.version>7.2.1.202505142326-r</jgit.version>
 
         <!-- Test dependencies -->
         <junit.version>5.13.0</junit.version>
@@ -32,7 +33,6 @@
 
         <!-- Maven Extensions -->
         <maven-extensions-timeline.version>2.0.1</maven-extensions-timeline.version>
-        <maven-extensions-build-cache.version>1.2.0</maven-extensions-build-cache.version>
 
         <!-- Maven Plugins -->
         <maven-plugins-flatten.version>1.7.0</maven-plugins-flatten.version>
@@ -113,6 +113,11 @@
             <version>${zt-exec.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>${jgit.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.lalyos</groupId>
             <artifactId>jfiglet</artifactId>
             <version>${jfiglet.version}</version>
@@ -166,11 +171,6 @@
                 <groupId>io.takari.maven</groupId>
                 <artifactId>maven-timeline</artifactId>
                 <version>${maven-extensions-timeline.version}</version>
-            </extension>
-            <extension>
-                <groupId>org.apache.maven.extensions</groupId>
-                <artifactId>maven-build-cache-extension</artifactId>
-                <version>${maven-extensions-build-cache.version}</version>
             </extension>
         </extensions>
 
@@ -351,6 +351,9 @@
                                         <exclude>README.md</exclude>
                                         <exclude>docs/**</exclude>
                                         <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
                                         <exclude>META-INF/LICENSE.txt</exclude>
                                         <exclude>META-INF/versions/9/module-info.class</exclude>
                                         <exclude>module-info.class</exclude>
@@ -377,73 +380,6 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven-plugins-resources.version}</version>
                 <executions>
-                    <execution>
-                        <id>copy-cursor-rules-java</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-java</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/cursor-rules-java</directory>
-                                    <filtering>false</filtering>
-                                    <excludes>
-                                        <exclude>.gitignore</exclude>
-                                        <exclude>LICENSE</exclude>
-                                        <exclude>*.md</exclude>
-                                        <exclude>docs/**</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-cursor-rules-tasks</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-tasks</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/cursor-rules-tasks</directory>
-                                    <filtering>false</filtering>
-                                    <excludes>
-                                        <exclude>.gitignore</exclude>
-                                        <exclude>LICENSE</exclude>
-                                        <exclude>*.md</exclude>
-                                        <exclude>*.png</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-cursor-rules-agile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-agile</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/cursor-rules-agile</directory>
-                                    <filtering>false</filtering>
-                                    <excludes>
-                                        <exclude>.gitignore</exclude>
-                                        <exclude>LICENSE</exclude>
-                                        <exclude>*.md</exclude>
-                                        <exclude>*.png</exclude>
-                                        <exclude>docs/**</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>copy-devcontainer</id>
                         <phase>compile</phase>

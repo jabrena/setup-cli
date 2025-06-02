@@ -3,10 +3,15 @@ package info.jab.cli.behaviours;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.jab.cli.io.CopyFiles;
 import io.vavr.control.Either;
 
 public class GithubAction implements Behaviour0 {
+
+    private static final Logger logger = LoggerFactory.getLogger(GithubAction.class);
 
     private final CopyFiles copyFiles;
 
@@ -21,10 +26,12 @@ public class GithubAction implements Behaviour0 {
 
     @Override
     public Either<String, String> execute() {
+        logger.info("Executing command to add GitHub Actions workflow (.github/workflows/maven.yaml)");
+
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path workflowsPath = currentPath.resolve(".github").resolve("workflows");
-
         copyFiles.copyClasspathFolder( "github-action/", workflowsPath);
-        return Either.right("GitHub Actions workflow added successfully");
+
+        return Either.right("Command execution completed successfully");
     }
 }
