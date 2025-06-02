@@ -29,7 +29,8 @@ public class Dependabot implements Behaviour0 {
         logger.info("Executing command to add dependabot.yml file");
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        copyFiles.copyClasspathFolder( ".github/", currentPath);
+        Path githubPath = currentPath.resolve(".github");
+        copyFiles.copyClasspathFolder( "dependabot/", githubPath);
         return Either.right("Command execution completed successfully");
     }
 }

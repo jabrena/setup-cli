@@ -73,6 +73,12 @@ jbang setup@jabrena init --editorconfig
 # Add an initial Github Action pipeline for Maven
 jbang setup@jabrena init --github-action
 
+# Add an initial .gitignore file
+jbang setup@jabrena init --gitignore
+
+# Add an initial Dependabot.yaml file
+jbang setup@jabrena init --dependabot
+
 # Add an initial Devcontainer configuration
 jbang setup@jabrena init --devcontainer
 ```

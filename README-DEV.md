@@ -39,19 +39,21 @@ java -jar ./target/setup-0.11.0.jar
 java -jar ./target/setup-0.11.0.jar --help
 java -jar ./target/setup-0.11.0.jar init
 java -jar ./target/setup-0.11.0.jar init --help
-java -jar ./target/setup-0.11.0.jar init --devcontainer
-java -jar ./target/setup-0.11.0.jar init --cursor https://github.com/jabrena/cursor-rules-java
-java -jar ./target/setup-0.11.0.jar init --cursor https://github.com/jabrena/cursor-rules-agile
-java -jar ./target/setup-0.11.0.jar init --cursor https://github.com/snarktank/ai-dev-tasks .
 java -jar ./target/setup-0.11.0.jar init --maven
 java -jar ./target/setup-0.11.0.jar init --spring-boot
 java -jar ./target/setup-0.11.0.jar init --quarkus
-java -jar ./target/setup-0.11.0.jar init --github-action
-java -jar ./target/setup-0.11.0.jar init --editorconfig
+java -jar ./target/setup-0.11.0.jar init --cursor https://github.com/jabrena/cursor-rules-java
+java -jar ./target/setup-0.11.0.jar init --cursor https://github.com/jabrena/cursor-rules-agile
+java -jar ./target/setup-0.11.0.jar init --cursor https://github.com/snarktank/ai-dev-tasks .
 java -jar ./target/setup-0.11.0.jar init --sdkman
+java -jar ./target/setup-0.11.0.jar init --editorconfig
+java -jar ./target/setup-0.11.0.jar init --github-action
+java -jar ./target/setup-0.11.0.jar init --gitignore
+java -jar ./target/setup-0.11.0.jar init --devcontainer
+java -jar ./target/setup-0.11.0.jar init --dependabot
 java -jar ./target/setup-0.11.0.jar init --visualvm
 java -jar ./target/setup-0.11.0.jar init --jmc
-java -jar ./target/setup-0.11.0.jar init --gitignore
+
 jar tf ./target/setup-0.11.0.jar
 ```
 

@@ -73,6 +73,9 @@ jobs:
           echo "Running: java -jar $JAR_FILE init --github-action"
           java -jar $JAR_FILE init --github-action
           echo "--------------------------------"
+          echo "Running: java -jar $JAR_FILE init --dependabot"
+          java -jar $JAR_FILE init --dependabot
+          echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --devcontainer"
           java -jar $JAR_FILE init --devcontainer
           echo "--------------------------------"

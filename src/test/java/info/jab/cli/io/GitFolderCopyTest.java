@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.nio.file.Path;
 
@@ -25,9 +25,9 @@ class GitFolderCopyTest {
         String destinationPath = tempDir.resolve("destination").toString();
 
         // When/Then: Should handle empty URL gracefully
-        assertDoesNotThrow(() -> {
+        assertThatCode(() -> {
             gitFolderCopy.copyFolderFromRepo(emptyRepoUrl, folderPath, destinationPath);
-        }, "Should handle empty repository URL gracefully");
+        }).as("Should handle empty repository URL gracefully").doesNotThrowAnyException();
     }
 
     @Test
@@ -38,9 +38,9 @@ class GitFolderCopyTest {
         String emptyDestinationPath = tempDir.resolve("destination").toString();
 
         // When/Then: Should handle empty destination path gracefully
-        assertDoesNotThrow(() -> {
+        assertThatCode(() -> {
             gitFolderCopy.copyFolderFromRepo(repoUrl, folderPath, emptyDestinationPath);
-        }, "Should handle empty destination path gracefully");
+        }).as("Should handle empty destination path gracefully").doesNotThrowAnyException();
     }
 
     @Test
@@ -51,9 +51,9 @@ class GitFolderCopyTest {
         String destinationPath = tempDir.resolve("destination").toString();
 
         // When/Then: Should handle non-existent folder gracefully
-        assertDoesNotThrow(() -> {
+        assertThatCode(() -> {
             gitFolderCopy.copyFolderFromRepo(repoUrl, nonExistentFolderPath, destinationPath);
-        }, "Should handle non-existent folder path gracefully");
+        }).as("Should handle non-existent folder path gracefully").doesNotThrowAnyException();
     }
 
     @Test
@@ -64,9 +64,9 @@ class GitFolderCopyTest {
         String destinationPath = tempDir.resolve("destination").toString();
 
         // When/Then: Should handle malformed URL gracefully
-        assertDoesNotThrow(() -> {
+        assertThatCode(() -> {
             gitFolderCopy.copyFolderFromRepo(malformedRepoUrl, folderPath, destinationPath);
-        }, "Should handle malformed repository URL gracefully");
+        }).as("Should handle malformed repository URL gracefully").doesNotThrowAnyException();
     }
 
     @Test
@@ -77,8 +77,8 @@ class GitFolderCopyTest {
         String destinationPath = tempDir.resolve("dest with spaces").toString();
 
         // When/Then: Should handle special characters gracefully
-        assertDoesNotThrow(() -> {
+        assertThatCode(() -> {
             gitFolderCopy.copyFolderFromRepo(repoUrl, folderPath, destinationPath);
-        }, "Should handle special characters in paths gracefully");
+        }).as("Should handle special characters in paths gracefully").doesNotThrowAnyException();
     }
 }

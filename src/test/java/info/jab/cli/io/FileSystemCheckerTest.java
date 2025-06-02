@@ -3,8 +3,7 @@ package info.jab.cli.io;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +23,7 @@ class FileSystemCheckerTest {
         boolean result = fileSystemChecker.fileExists(testFile.toString());
 
         // Then: Should return true
-        assertTrue(result, "Expected fileExists to return true for existing file");
+        assertThat(result).as("Expected fileExists to return true for existing file").isTrue();
     }
 
     @Test
@@ -36,7 +35,7 @@ class FileSystemCheckerTest {
         boolean result = fileSystemChecker.fileExists(nonExistentFile.toString());
 
         // Then: Should return false
-        assertFalse(result, "Expected fileExists to return false for non-existent file");
+        assertThat(result).as("Expected fileExists to return false for non-existent file").isFalse();
     }
 
     @Test
@@ -49,7 +48,7 @@ class FileSystemCheckerTest {
         boolean result = fileSystemChecker.fileExists(testDir.toString());
 
         // Then: Should return true (directories are considered as existing files)
-        assertTrue(result, "Expected fileExists to return true for existing directory");
+        assertThat(result).as("Expected fileExists to return true for existing directory").isTrue();
     }
 
     @Test
@@ -58,7 +57,7 @@ class FileSystemCheckerTest {
         boolean result = fileSystemChecker.fileExists("");
 
         // Then: Should return false
-        assertFalse(result, "Expected fileExists to return false for empty string");
+        assertThat(result).as("Expected fileExists to return false for empty string").isFalse();
     }
 
     @Test
@@ -71,7 +70,7 @@ class FileSystemCheckerTest {
         boolean result = fileSystemChecker.fileExists(testFile.toString());
 
         // Then: Should return true
-        assertTrue(result, "Expected fileExists to return true for file with absolute path");
+        assertThat(result).as("Expected fileExists to return true for file with absolute path").isTrue();
     }
 
     @Test
@@ -84,6 +83,6 @@ class FileSystemCheckerTest {
         boolean result = fileSystemChecker.fileExists(testFile.toString());
 
         // Then: Should return true
-        assertTrue(result, "Expected fileExists to return true for file with special characters");
+        assertThat(result).as("Expected fileExists to return true for file with special characters").isTrue();
     }
 }
