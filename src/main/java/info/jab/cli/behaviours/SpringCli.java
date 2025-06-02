@@ -38,7 +38,6 @@ public class SpringCli implements Behaviour0 {
 
     @Override
     public Either<String, String> execute() {
-
         //Preconditions
         if (!isSpringCliAvailable()) {
             String message = "Spring Boot command not found. Please install Spring Boot with 'sdk install springboot' and ensure it's in your PATH.";

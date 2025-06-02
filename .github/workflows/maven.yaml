@@ -46,6 +46,9 @@ jobs:
           echo "Running: java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks ."
           java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks .
           echo "--------------------------------"
+          echo "Running: java -jar $JAR_FILE init --maven"
+          java -jar $JAR_FILE init --maven
+          echo "--------------------------------"
           echo "Running: mkdir demo && cd demo && java -jar ../$JAR_FILE init --maven"
           mkdir demo && cd demo && java -jar ../$JAR_FILE init --maven
           echo "--------------------------------"
