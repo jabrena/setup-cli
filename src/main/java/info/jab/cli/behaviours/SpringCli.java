@@ -43,13 +43,13 @@ public class SpringCli implements Behaviour0 {
         if (!isSpringCliAvailable()) {
             String message = "Spring Boot command not found. Please install Spring Boot and ensure it's in your PATH.";
             logger.error(message);
-            return Either.left(message);
+            return Either.left("Command execution failed");
         }
 
         if (pomXmlExists()) {
             String message = "A pom.xml file already exists in the current directory";
             logger.error(message);
-            return Either.left(message);
+            return Either.left("Command execution failed");
         }
 
         //TODO: Review in the future how to execute multiple commands
@@ -65,9 +65,9 @@ public class SpringCli implements Behaviour0 {
         Either<String, String> result = commandExecutor.execute(command);
 
         if (result.isRight()) {
-            return Either.right("Spring Boot command completed successfully");
+            return Either.right("Command execution completed successfully");
         }
-        return Either.left("Spring Boot command failed");
+        return Either.left("Command execution failed");
     }
 
     /**

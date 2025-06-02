@@ -55,7 +55,7 @@ class SpringCliTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).contains("Spring Boot command not found");
+        assertThat(result.getLeft()).contains("Command execution failed");
     }
 
     @Test
@@ -71,7 +71,7 @@ class SpringCliTest {
 
         // Then
         assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).contains("Spring Boot command completed successfully");
+        assertThat(result.get()).contains("Command execution completed successfully");
     }
 
     @Test
@@ -87,7 +87,7 @@ class SpringCliTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).contains("Spring Boot command failed");
+        assertThat(result.getLeft()).contains("Command execution failed");
     }
 
     @Test
@@ -112,7 +112,7 @@ class SpringCliTest {
 
         // Then
         assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).contains("Spring Boot command completed successfully");
+        assertThat(result.get()).contains("Command execution completed successfully");
     }
 
     @Test
@@ -126,6 +126,6 @@ class SpringCliTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).contains("A pom.xml file already exists in the current directory");
+        assertThat(result.getLeft()).contains("Command execution failed");
     }
 }
