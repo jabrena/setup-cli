@@ -8,7 +8,7 @@ Setup is a command line utility designed to help developers when initializing ne
 
 ## Motivation
 
-**I hate waste time in general**, but when you start working in a new repository you always need to do some stuff manually to setup your developer environment like Build Systems, Pipelines, Remote environments, Cursor rules, What Java version I will use and others...
+**I hate wasting time in general**, but when you start working in a new repository you always need to do some boring and manual stuff to setup your developer environment like Build Systems, Pipelines, Cursor rules, What Java version I will use and others...
 
 With this idea in mind, I developed Setup. When you begin with a new repository, what do you need? Create a Maven project, but you don´t remember the the whole maven archetype command or why I need to visit that I start with Non JVM framework developer and I have to read the classical article about [Maven in 5 minutes](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html) or when you develop something with a JVM Framework like [Spring Boot](https://docs.spring.io/spring-boot/cli/index.html) or [Quarkus](https://quarkus.io/blog/quarkus-cli/), why I need to memorize all options? Lets begin and later touch the **pom.xml** to customize the behaviour.
 
