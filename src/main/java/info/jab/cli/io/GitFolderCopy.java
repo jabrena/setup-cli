@@ -79,6 +79,25 @@ public class GitFolderCopy {
 
     /**
      * Copies a directory from source to destination.
+     *
+     * .cursor/rules
+     *      ├── 2000-agile-checklist.mdc
+     *      ├── 2001-agile-create-an-epic.mdc
+     *      ├── 2002-agile-create-features-from-epics.mdc
+     *      ├── 2003-agile-create-user-story.mdc
+     *      ├── 2004-uml-sequence-diagram-about-solution.mdc
+     *      ├── 2005-c4-diagrams-about-solution.mdc
+     *      ├── 2006-adr-create-functional-requirements-for-cli-development.mdc
+     *      ├── 2006-adr-create-functional-requirements-for-rest-api-development.mdc
+     *      ├── 2007-adr-create-acceptance-testing-strategy.mdc
+     *      ├── 2008-adr-create-non-functional-requirements-decisions.mdc
+     *      └── templates
+     *          ├── checklist-template.md
+     *          ├── epic-template.md
+     *          ├── feature-template.md
+     *          ├── gherkin-template.md
+     *          └── user-story-template.md
+     *
      * @param source the source directory path to copy from
      * @param destination the destination directory path to copy to
      * @throws IOException if an I/O error occurs during the copy operation
@@ -90,8 +109,20 @@ public class GitFolderCopy {
                 if (Files.isDirectory(sourcePath)) {
                     return true;
                 }
-                // Only include files with .mdc extension
-                return sourcePath.toString().toLowerCase(Locale.ENGLISH).endsWith(".mdc");
+
+                String pathString = sourcePath.toString().toLowerCase(Locale.ENGLISH);
+
+                // Include files with .mdc extension
+                if (pathString.endsWith(".mdc")) {
+                    return true;
+                }
+
+                // Include files with .md extension that are inside templates folder
+                if (pathString.endsWith(".md") && pathString.contains("templates")) {
+                    return true;
+                }
+
+                return false;
             }).forEach(sourcePath -> {
                 Path destPath = null;
                 try {

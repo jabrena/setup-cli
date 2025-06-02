@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for modular Cursor rules
 - Dependabot support
 - Added capacity to execute shell commands
 - Maven option creates a maven project from scratch
