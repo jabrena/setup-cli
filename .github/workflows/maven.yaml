@@ -50,11 +50,12 @@ jobs:
           mkdir demo && cd demo && java -jar ../$JAR_FILE init --maven
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --spring-boot"
-          echo $(pwd)
-          java -jar $JAR_FILE init --spring-boot
+          cd ..
+          mkdir spring-boot-demo && cd spring-boot-demo && java -jar ../$JAR_FILE init --spring-boot
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --quarkus"
-          java -jar $JAR_FILE init --quarkus
+          cd ..
+          mkdir quarkus-demo && cd quarkus-demo && java -jar ../$JAR_FILE init --quarkus
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --editorconfig"
           java -jar $JAR_FILE init --editorconfig
