@@ -30,9 +30,7 @@ This command line tool was designed to be executed in combination **Jbang** a ni
 sdk install jbang
 ```
 
-Once you have instaled **JBang**, you can start using this tool.
-
-I recommend to clear the cache to use latest version of setup:
+Once you have instaled **JBang**, I recommend to clear the cache to use latest version of setup:
 
 ```bash
 jbang cache clear
