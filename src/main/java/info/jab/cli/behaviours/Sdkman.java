@@ -29,7 +29,7 @@ public class Sdkman implements Behaviour0 {
         logger.info("Executing command to add .sdkmanrc file");
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        String resourcePath = "sdkman/";
+        String resourcePath = "sdkman-template/";
         copyFiles.copyClasspathFolder(resourcePath, currentPath);
 
         return Either.right("Command execution completed successfully");

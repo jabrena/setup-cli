@@ -49,7 +49,7 @@ class EditorConfigTest {
     void testExecute() {
         // Given
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        String expectedResourcePath = "editorconfig/";
+        String expectedResourcePath = "editorconfig-template/";
         doNothing().when(copyFilesMock).copyClasspathFolder(expectedResourcePath, currentPath);
 
         // When
@@ -64,7 +64,7 @@ class EditorConfigTest {
     void testExecuteWithCopyException() {
         // Given
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        String expectedResourcePath = "editorconfig/";
+        String expectedResourcePath = "editorconfig-template/";
         doThrow(new RuntimeException("Error copying files")).when(copyFilesMock).copyClasspathFolder(expectedResourcePath, currentPath);
 
         // When / Then

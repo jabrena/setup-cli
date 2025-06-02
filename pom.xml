@@ -293,12 +293,6 @@
                     <excludes>
                         <exclude>**/*Test.java</exclude>
                     </excludes>
-                    <systemPropertyVariables>
-                        <ENABLE_INTEGRATION_TESTS>${ENABLE_INTEGRATION_TESTS}</ENABLE_INTEGRATION_TESTS>
-                    </systemPropertyVariables>
-                    <environmentVariables>
-                        <ENABLE_INTEGRATION_TESTS>${ENABLE_INTEGRATION_TESTS}</ENABLE_INTEGRATION_TESTS>
-                    </environmentVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -375,6 +369,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -478,6 +473,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
