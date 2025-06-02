@@ -29,7 +29,6 @@ jobs:
       - name: Test CLI commands
         run: |
           JAR_FILE="./target/setup-${{ steps.get_version.outputs.VERSION }}.jar"
-          JAR_FILE2="target/setup-${{ steps.get_version.outputs.VERSION }}.jar"
           echo "Testing CLI with $JAR_FILE"
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE --help"
@@ -50,11 +49,11 @@ jobs:
           echo "Running: mkdir demo && cd demo && java -jar ../$JAR_FILE init --maven"
           mkdir demo && cd demo && java -jar ../$JAR_FILE init --maven
           echo "--------------------------------"
-          echo "Running: mkdir spring-boot-demo && cd spring-boot-demo && java -jar ../$JAR_FILE2 init --spring-boot"
-          mkdir spring-boot-demo && cd spring-boot-demo && java -jar ../$JAR_FILE2 init --spring-boot
+          echo "Running: java -jar $JAR_FILE init --spring-boot"
+          java -jar $JAR_FILE init --spring-boot
           echo "--------------------------------"
-          echo "Running: mkdir quarkus-demo && cd quarkus-demo && java -jar ../$JAR_FILE2 init --quarkus"
-          mkdir quarkus-demo && cd quarkus-demo && java -jar ../$JAR_FILE2 init --quarkus
+          echo "Running: java -jar $JAR_FILE init --quarkus"
+          java -jar $JAR_FILE init --quarkus
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --editorconfig"
           java -jar $JAR_FILE init --editorconfig
