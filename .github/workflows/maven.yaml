@@ -57,6 +57,7 @@ jobs:
           cd ..
           mkdir quarkus-demo && cd quarkus-demo && java -jar ../$JAR_FILE init --quarkus
           echo "--------------------------------"
+          cd ..
           echo "Running: java -jar $JAR_FILE init --editorconfig"
           java -jar $JAR_FILE init --editorconfig
           echo "--------------------------------"
