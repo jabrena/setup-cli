@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Locale;
 
 public class GitFolderCopy {
 
@@ -75,9 +76,22 @@ public class GitFolderCopy {
         });
     }
 
+    /**
+     * Copies a directory from source to destination.
+     * @param source the source directory path to copy from
+     * @param destination the destination directory path to copy to
+     * @throws IOException if an I/O error occurs during the copy operation
+     */
     private void copyDirectory(Path source, Path destination) throws IOException {
         try (var stream = Files.walk(source)) {
-            stream.forEach(sourcePath -> {
+            stream.filter(sourcePath -> {
+                // Always include directories to maintain structure
+                if (Files.isDirectory(sourcePath)) {
+                    return true;
+                }
+                // Only include files with .mdc extension
+                return sourcePath.toString().toLowerCase(Locale.ENGLISH).endsWith(".mdc");
+            }).forEach(sourcePath -> {
                 Path destPath = null;
                 try {
                     destPath = destination.resolve(source.relativize(sourcePath));

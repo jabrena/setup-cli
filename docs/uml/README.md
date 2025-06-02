@@ -1,3 +1,0 @@
-# UML Diagram
-
-![](graph.png)

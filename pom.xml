@@ -173,11 +173,6 @@
                 <artifactId>maven-timeline</artifactId>
                 <version>${maven-extensions-timeline.version}</version>
             </extension>
-            <extension>
-                <groupId>org.apache.maven.extensions</groupId>
-                <artifactId>maven-build-cache-extension</artifactId>
-                <version>${maven-extensions-build-cache.version}</version>
-            </extension>
         </extensions>
 
         <plugins>
@@ -386,73 +381,6 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven-plugins-resources.version}</version>
                 <executions>
-                    <execution>
-                        <id>copy-cursor-rules-java</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-java</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/cursor-rules-java</directory>
-                                    <filtering>false</filtering>
-                                    <excludes>
-                                        <exclude>.gitignore</exclude>
-                                        <exclude>LICENSE</exclude>
-                                        <exclude>*.md</exclude>
-                                        <exclude>docs/**</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-cursor-rules-tasks</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-tasks</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/cursor-rules-tasks</directory>
-                                    <filtering>false</filtering>
-                                    <excludes>
-                                        <exclude>.gitignore</exclude>
-                                        <exclude>LICENSE</exclude>
-                                        <exclude>*.md</exclude>
-                                        <exclude>*.png</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-cursor-rules-agile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/cursor-rules-agile</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates/cursor-rules-agile</directory>
-                                    <filtering>false</filtering>
-                                    <excludes>
-                                        <exclude>.gitignore</exclude>
-                                        <exclude>LICENSE</exclude>
-                                        <exclude>*.md</exclude>
-                                        <exclude>*.png</exclude>
-                                        <exclude>docs/**</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>copy-devcontainer</id>
                         <phase>compile</phase>

@@ -1,66 +1,88 @@
 package info.jab.cli.behaviours;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.Locale;
 
 import org.jspecify.annotations.NonNull;
 
-import info.jab.cli.CursorOptions.CursorOption;
-import info.jab.cli.io.CopyFiles;
 import info.jab.cli.io.GitFolderCopy;
 import io.vavr.control.Either;
 
-public class Cursor implements Behaviour1 {
+public class Cursor implements Behaviour2 {
 
-    // Resource base paths within the JAR/classpath
-    private static final String CURSOR_RULES_JAVA_BASE_PATH = "cursor-rules-java/.cursor/rules/";
-    private static final String CURSOR_RULES_TASKS_BASE_PATH = "cursor-rules-tasks/";
-    private static final String CURSOR_RULES_AGILE_BASE_PATH = "cursor-rules-agile/.cursor/rules/";
-
-    private static final List<String> QUARKUS_SPECIFIC_FILES = List.of("401-framework-quarkus.mdc");
-    private static final List<String> SPRING_BOOT_SPECIFIC_FILES = List.of("301-framework-spring-boot.mdc", "304-java-rest-api-design.mdc");
-
-    @SuppressWarnings("UnusedVariable")
-    private static final List<String> JVM_FRAMEWORKS_SPECIFIC_FILES = Stream.of(
-            SPRING_BOOT_SPECIFIC_FILES,
-            QUARKUS_SPECIFIC_FILES)
-            .flatMap(List::stream)
-            .toList();
-
-    private final CopyFiles copyFiles;
+    private final GitFolderCopy gitFolderCopy;
 
     public Cursor() {
-        this.copyFiles = new CopyFiles();
+        this.gitFolderCopy = new GitFolderCopy();
     }
 
-    Cursor(CopyFiles copyFiles) {
-        this.copyFiles = copyFiles;
+    Cursor(GitFolderCopy gitFolderCopy) {
+        this.gitFolderCopy = gitFolderCopy;
     }
 
     @Override
-    public Either<String, String> execute(@NonNull String parameter) {
-        return CursorOption.fromString(parameter)
-            .map(this::executeWithOption)
-            .orElse(Either.left("Invalid parameter: " + parameter));
+    public Either<String, String> execute(@NonNull String parameter1, @NonNull String parameter2) {
+        String gitRepoUrl = parameter1;
+        String folderPath = parameter2;
+
+        // Validate the URL before proceeding
+        Either<String, String> urlValidation = validateGitUrl(gitRepoUrl);
+        if (urlValidation.isLeft()) {
+            return urlValidation;
+        }
+
+        // Use trimmed URL for consistency with validation
+        return executeWithOption(gitRepoUrl.trim(), folderPath);
     }
 
-    private Either<String, String> executeWithOption(CursorOption option) {
+    /**
+     * Validates if the given string is a valid URL and appears to be a git repository URL.
+     *
+     * @param urlString the URL string to validate
+     * @return Either.left with error message if invalid, Either.right with success message if valid
+     */
+    private Either<String, String> validateGitUrl(String urlString) {
+        if (urlString == null || urlString.trim().isEmpty()) {
+            return Either.left("Git repository URL cannot be null or empty");
+        }
+
+        try {
+            // Use URI.create() and then convert to URL to avoid deprecated constructor
+            URI uri = URI.create(urlString.trim());
+            URL url = uri.toURL();
+
+            // Check if protocol is supported for git operations
+            // Note: git:// protocol is not supported by Java's URL class
+            String protocol = url.getProtocol().toLowerCase(Locale.ENGLISH);
+            if (!protocol.equals("http") && !protocol.equals("https")) {
+                return Either.left("Unsupported protocol: " + protocol + ". Only http and https protocols are supported");
+            }
+
+            // Check if host is present
+            if (url.getHost() == null || url.getHost().trim().isEmpty()) {
+                return Either.left("Invalid URL: missing host");
+            }
+
+            return Either.right("Valid git repository URL");
+
+        } catch (IllegalArgumentException e) {
+            return Either.left("Invalid URI format: " + e.getMessage());
+        } catch (MalformedURLException e) {
+            return Either.left("Invalid URL format: " + e.getMessage());
+        }
+    }
+
+    private Either<String, String> executeWithOption(String url, String folderPath) {
+        //Location where the cursor rules will be copied
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path cursorPath = currentPath.resolve(".cursor");
         Path rulesPath = cursorPath.resolve("rules");
 
-        GitFolderCopy gitFolderCopy = new GitFolderCopy();
-
-        switch (option) {
-            //case JAVA -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, JVM_FRAMEWORKS_SPECIFIC_FILES);
-            case JAVA -> gitFolderCopy.copyFolderFromRepo("https://github.com/jabrena/cursor-rules-java", ".cursor/rules", rulesPath.toString());
-            case SPRING_BOOT -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, QUARKUS_SPECIFIC_FILES);
-            case QUARKUS -> copyFiles.copyClasspathFolderExcludingFiles(CURSOR_RULES_JAVA_BASE_PATH, rulesPath, SPRING_BOOT_SPECIFIC_FILES);
-            case TASKS -> copyFiles.copyClasspathFolder(CURSOR_RULES_TASKS_BASE_PATH, rulesPath);
-            case AGILE -> copyFiles.copyClasspathFolder(CURSOR_RULES_AGILE_BASE_PATH, rulesPath);
-        }
+        gitFolderCopy.copyFolderFromRepo(url, folderPath, rulesPath.toString());
 
         return Either.right("Cursor rules added successfully");
     }

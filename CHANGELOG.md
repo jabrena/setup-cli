@@ -10,7 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added capacity to execute shell commands
-- Maven option create a maven project from scratch
+- Maven option creates a maven project from scratch
+- Spring-boot options create a maven project from scratch
+- Quarkus options create a maven project from scratch
+
+### Changed
+
+- Cursor option changed the signature and now it is possible to fetch any Http Git repository, Example: jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-java
 
 ## [0.10.0] 2025/05/30
 

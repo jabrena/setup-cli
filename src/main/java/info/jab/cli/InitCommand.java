@@ -11,18 +11,11 @@ import info.jab.cli.behaviours.QuarkusCli;
 import info.jab.cli.behaviours.Sdkman;
 import info.jab.cli.behaviours.SpringCli;
 import info.jab.cli.behaviours.Visualvm;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ArgGroup;
 import io.vavr.control.Either;
 import org.jspecify.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 import java.util.Objects;
 
 /**
@@ -32,7 +25,7 @@ import java.util.Objects;
  */
 @Command(
     name = "init",
-    description = "Initialize a new repository with some useful features for Developers.",
+    description = "Setup is a command line utility designed to help developers when initializing new projects using Maven.",
     mixinStandardHelpOptions = true,
     sortOptions = false,
     usageHelpAutoWidth = true
@@ -48,12 +41,15 @@ public class InitCommand implements Runnable {
 
         @Option(
             names = {"-c", "--cursor"},
-            description = "Add cursor rules for: ${COMPLETION-CANDIDATES}.",
-            completionCandidates = CursorOptions.class,
-            paramLabel = "<option>",
+            description = "Download cursor rules from a Git repository. " +
+                         "The option accepts 2 parameters, the first parameter requires a Https Git repository URL, " +
+                         "the second parameter is optional and indicates the path where is located in the repository " +
+                         "the cursor rules, by default ./cursor/rules.",
+            arity = "1..2",
             order = 1)
         @Nullable
-        String cursorOption;
+        @SuppressWarnings("NullAway") // Optional CLI parameter can be null
+        String[] cursorParameters;
 
         @Option(
             names = {"-m", "--maven"},
@@ -198,8 +194,16 @@ public class InitCommand implements Runnable {
             return processResult(quarkusCli.execute());
         }
 
-        if (CursorOptions.isValidOption(exclusiveOptions.cursorOption)) {
-            return processResult(cursor.execute(exclusiveOptions.cursorOption));
+        if (Objects.nonNull(exclusiveOptions.cursorParameters) && exclusiveOptions.cursorParameters.length > 0) {
+            if (exclusiveOptions.cursorParameters.length == 1) {
+                String gitRepoUrl = exclusiveOptions.cursorParameters[0];
+                String destinationPath = ".cursor/rules";
+                return processResult(cursor.execute(gitRepoUrl, destinationPath));
+            } else {
+                String gitRepoUrl = exclusiveOptions.cursorParameters[0];
+                String destinationPath = exclusiveOptions.cursorParameters[1];
+                return processResult(cursor.execute(gitRepoUrl, destinationPath));
+            }
         }
 
         if (exclusiveOptions.githubActionOption) {
