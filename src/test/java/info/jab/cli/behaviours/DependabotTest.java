@@ -45,7 +45,7 @@ class DependabotTest {
         dependabot.execute();
 
         // Then
-        verify(mockCopyFiles).copyClasspathFolder(eq("templates/dependabot-template/"), eq(expectedGithubPath));
+        verify(mockCopyFiles).copyClasspathFolder(eq("templates/dependabot/"), eq(expectedGithubPath));
     }
 
     @Test
@@ -88,11 +88,11 @@ class DependabotTest {
         dependabot.execute();
 
         // Then
-        verify(mockCopyFiles).copyClasspathFolder(eq("templates/dependabot-template/"), any(Path.class));
+        verify(mockCopyFiles).copyClasspathFolder(eq("templates/dependabot/"), any(Path.class));
 
         // Verify the path resolution logic by checking the actual path passed
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path expectedPath = currentPath.resolve(".github");
-        verify(mockCopyFiles).copyClasspathFolder(eq("templates/dependabot-template/"), eq(expectedPath));
+        verify(mockCopyFiles).copyClasspathFolder(eq("templates/dependabot/"), eq(expectedPath));
     }
 }

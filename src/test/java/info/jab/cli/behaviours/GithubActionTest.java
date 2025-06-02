@@ -49,7 +49,7 @@ class GithubActionTest {
     void testExecute() {
         // Given
         Path expectedPath = Paths.get(System.getProperty("user.dir")).resolve(".github").resolve("workflows");
-        String expectedResourcePath = "templates/github-action-template/";
+        String expectedResourcePath = "templates/github-action/";
 
         // When
         githubAction.execute();
@@ -62,7 +62,7 @@ class GithubActionTest {
     void testExecuteWithCopyFailure() {
         // Given
         Path expectedPath = Paths.get(System.getProperty("user.dir")).resolve(".github").resolve("workflows");
-        String expectedResourcePath = "templates/github-action-template/";
+        String expectedResourcePath = "templates/github-action/";
         doThrow(new RuntimeException("Simulated copy error"))
                 .when(copyFilesMock).copyClasspathFolder(eq(expectedResourcePath), eq(expectedPath));
 
