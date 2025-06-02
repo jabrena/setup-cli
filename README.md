@@ -98,7 +98,6 @@ Review this [document](./README-DEV.md)
 - https://visualvm.github.io/
 - https://www.oracle.com/java/technologies/jdk-mission-control.html
 - https://containers.dev/
-
 - https://www.cursor.com/
 - https://docs.cursor.com/context/rules-for-ai
 - ...
