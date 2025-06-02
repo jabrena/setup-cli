@@ -15,19 +15,6 @@ public class Gitignore implements Behaviour0 {
 
     private final CopyFiles copyFiles;
 
-    //Maintain the content in file, because conflicts with maven resource plugin
-    private static final String GITIGNORE_FILE = ".gitignore";
-    private static final String GITIGNORE_CONTENT = """
-        .DS_Store
-        target/
-        .idea/
-        .vscode/
-        .cursor/
-        .flattened-pom.xml
-        *.log
-        .classpath
-        """;
-
     public Gitignore() {
         this.copyFiles = new CopyFiles();
     }
@@ -42,8 +29,9 @@ public class Gitignore implements Behaviour0 {
         logger.info("Executing command to add .gitignore file");
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        Path gitignorePath = currentPath.resolve(GITIGNORE_FILE);
-        copyFiles.copyContentToFile(GITIGNORE_CONTENT, gitignorePath);
+        Path gitignoreFile = currentPath.resolve(".gitignore");
+        String resourcePath = "templates/gitignore/gitignore.template";
+        copyFiles.copyClasspathFileWithRename(resourcePath, gitignoreFile);
 
         return Either.right("Command execution completed successfully");
     }
