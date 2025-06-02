@@ -18,7 +18,7 @@ Using the tool, you could add some interesting defaults like Devcontainers, Gith
 
 **So why not save some time in the onboarding?** This is the reason that I created Setup.
 
-The tool is working in some features that every Software engineer doesn´t need to do in the beginning but they are good practice to avoid other issues like Memory leaks, for that purpose, the tool is working to offer some value around Java Mission Control, JMC & VisualVM. Verify your app before production.
+The tool is working in some features that every Software engineer doesn´t need to do in the beginning but they are good practice to avoid other issues like Memory leaks, for that purpose, the tool is working to offer some value around [Java Mission Control, JMC](https://www.oracle.com/java/technologies/jdk-mission-control.html) & [VisualVM](https://visualvm.github.io/). Verify your app before production.
 
 ## Getting started
 
@@ -30,9 +30,16 @@ sdk install jbang
 
 Once you have instaled **JBang**, you can start using this tool.
 
+I recommend to clear the cache to use latest version of setup:
+
 ```bash
 jbang cache clear
 jbang catalog list jabrena
+````
+
+After this quick process, please use the tool:
+
+```bash
 jbang setup@jabrena init --help
 jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-java
 jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-agile
@@ -45,6 +52,8 @@ jbang setup@jabrena init --sdkman
 jbang setup@jabrena init --github-action
 jbang setup@jabrena init --devcontainer
 ```
+
+With any doubt, you can create an issue here: https://github.com/jabrena/setup-cli/issues
 
 ## How to contribute
 
