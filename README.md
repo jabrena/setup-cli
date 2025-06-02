@@ -24,7 +24,7 @@ Using the tool, you could add other interesting defaults like Devcontainers, Git
 
 ## Getting started
 
-This command line tool was designed to be executed in combination Jbang a nice way to develop small programs like this. To use Setup, you will need to have installed JBang first, so how to install JBang?
+This command line tool was designed to be executed in combination **Jbang** a nice way to develop small programs like this. To use Setup, you will need to have installed JBang first, so how to install JBang?
 
 ```bash
 sdk install jbang
