@@ -5,10 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.11.0] ??
+## [0.11.0] 2025/06/03
 
 ### Added
 
+- Dependabot support
 - Added capacity to execute shell commands
 - Maven option creates a maven project from scratch
 - Spring-boot options create a maven project from scratch
@@ -17,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Cursor option changed the signature and now it is possible to fetch any Http Git repository, Example: jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-java
+- Removed git submodules, mainly usedd for the previous approach for Cursor rules
+- Refactored the approach for resources, now using the universal maven layout
 
 ## [0.10.0] 2025/05/30
 
