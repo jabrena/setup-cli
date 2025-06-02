@@ -26,7 +26,7 @@ public class Dependabot implements Behaviour0 {
 
     @Override
     public Either<String, String> execute() {
-        logger.info("Executing command to add dependabot.yml file");
+        logger.info("Executing command to add dependabot.yml file (.github/dependabot.yml)");
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path githubPath = currentPath.resolve(".github");
