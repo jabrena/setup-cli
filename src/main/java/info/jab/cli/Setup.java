@@ -49,7 +49,7 @@ public class Setup implements Runnable {
             System.out.println();
             String asciiArt = FigletFont.convertOneLine("Setup CLI");
             System.out.println(colorize(asciiArt, Attribute.GREEN_TEXT()));
-            new GitInfoPrinter().printGitInfo();
+            new GitInfo().print();
         } catch (IOException e) {
             System.out.println("Error printing banner: " + e.getMessage());
         }

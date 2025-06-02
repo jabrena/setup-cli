@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class GitInfoPrinterTest {
+class GitInfoTest {
 
     private final PrintStream standardOut = System.out;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
@@ -31,10 +31,10 @@ class GitInfoPrinterTest {
     void should_printNotFound_when_gitPropertiesMissing() {
         // Given
         // Use the test-specific constructor to simulate the resource not being found
-        GitInfoPrinter printer = new GitInfoPrinter(() -> null);
+        GitInfo printer = new GitInfo(() -> null);
 
         // When
-        printer.printGitInfo();
+        printer.print();
 
         // Then
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("git.properties not found");
@@ -45,10 +45,10 @@ class GitInfoPrinterTest {
     void should_printVersionAndCommit_when_gitPropertiesFound() {
         // Given
         // git.properties is expected to be in src/test/resources
-        GitInfoPrinter printer = new GitInfoPrinter();
+        GitInfo printer = new GitInfo();
 
         // When
-        printer.printGitInfo();
+        printer.print();
 
         // Then
         String expectedOutput = "Version: 1.0.0-test" + System.lineSeparator() +
