@@ -61,7 +61,7 @@ jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-java
 # Add the popular Cursor rules for Tasks from Ryan Carson
 jbang setup@jabrena init --cursor https://github.com/snarktank/ai-dev-tasks .
 
-# Add another cursor rules from another Http git repository
+# Another cursor rules example
 jbang setup@jabrena init --cursor https://your-favourite-repository-with-awesome-cursor-rules-repository
 
 # Add a .sdkmanrc file to indicate with Java//Maven version you are going to use in the repository
