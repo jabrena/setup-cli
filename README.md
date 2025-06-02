@@ -16,7 +16,7 @@ For this kind of stuff that they are not complex, but they are tedious honestly,
 
 Using the tool, you could add other interesting defaults like Devcontainers, Github Actions (If you use), .editorconfig, .sdkmanrc that the are ready to use with a simple `jbang setup@jabrena init` execution and maybe you know or maybe not, but the tool provides.
 
-**So why not save some time in the onboarding?** This is the reason that I created Setup.
+**So if you love save some time in the onboarding?** You could become as a user for this command line tool named Setup.
 
 The tool is working in some features that every Software engineer doesn´t need to do in the beginning but they are good practice to avoid other issues like Memory leaks, for that purpose, the tool is working to offer some value around [Java Mission Control, JMC](https://www.oracle.com/java/technologies/jdk-mission-control.html) & [VisualVM](https://visualvm.github.io/). Verify your app before production.
 
