@@ -42,26 +42,37 @@ After this quick operation, it is your turn!
 ```bash
 # Show all options
 jbang setup@jabrena init --help
+
 # Create a Maven from Scratch using a maven archetype
 jbang setup@jabrena init --maven
+
 # Create an initial Servlet Spring boot REST API maven project example
 jbang setup@jabrena init --spring-boot
+
 # Create an initial Quarkus maven project
 jbang setup@jabrena init --quarkus
+
 # Add cursor rules for Agile/Scrum in ./cursor/rules
 jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-agile
+
 # Add cursor rules for Java in ./cursor/rules
 jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-java
+
 # Add the popular Cursor rules for Tasks from Ryan Carson
 jbang setup@jabrena init --cursor https://github.com/snarktank/ai-dev-tasks .
+
 # Add another cursor rules from another Http git repository
-jbang setup@jabrena init --cursor https://your-favourite-repository-with-awesome-cursor-rules
+jbang setup@jabrena init --cursor https://your-favourite-repository-with-awesome-cursor-rules-repository
+
 # Add a .sdkmanrc file to indicate with Java//Maven version you are going to use in the repository
 jbang setup@jabrena init --sdkman
+
 # Add a .editorconfig file
 jbang setup@jabrena init --editorconfig
+
 # Add an initial Github Action pipeline for Maven
 jbang setup@jabrena init --github-action
+
 # Add an initial Devcontainer configuration
 jbang setup@jabrena init --devcontainer
 ```
