@@ -20,7 +20,7 @@ Using the tool, you could add other interesting defaults like Devcontainers, Git
 
 ---
 
-**WIP:** Currently, I am working in some features that every Software engineer doesn´t need to do in the beginning but they are good practice to avoid other issues later like Memory leaks, for that purpose, the tool is working to add value around tools like [Java Mission Control, JMC](https://www.oracle.com/java/technologies/jdk-mission-control.html) & [VisualVM](https://visualvm.github.io/). Verify your app before production.
+**WIP:** Currently, I am working in some features that every Software engineer doesn´t need to do in the beginning but they are good practice to avoid other issues later like Memory leaks. For that purpose, the tool is working to add value around tools like [Java Mission Control, JMC](https://www.oracle.com/java/technologies/jdk-mission-control.html) & [VisualVM](https://visualvm.github.io/).
 
 ## Getting started
 
