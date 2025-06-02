@@ -8,15 +8,15 @@ Setup is a command line utility designed to help developers when initializing ne
 
 ## Motivation
 
-**I hate wasting time in general**, but when you start working in a new repository you always need to do some boring and manual stuff to setup your developer environment like Build Systems, Pipelines, Cursor rules, What Java version I will use and others...
+**Time is precious in software development**, and setting up a new repository shouldn't consume hours of your productive time. Every new project requires the same tedious setup tasks: configuring build systems, setting up CI/CD pipelines, adding development environment configurations, choosing Java versions, and more.
 
-When you begin with a new repository, what do you need? Create a Maven project, but you don´t remember the the whole maven archetype command or why I need to visit everytime the classical article about [Maven in 5 minutes](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html) or when you develop something with a JVM Framework like [Spring Boot](https://docs.spring.io/spring-boot/cli/index.html) or [Quarkus](https://quarkus.io/blog/quarkus-cli/), why I need to memorize all options? Lets begin with something easy and later touch the **pom.xml** to customize the behaviour.
+When starting a new repository, you face familiar challenges: creating a Maven project (but who remembers the complete archetype command?), revisiting the classic [Maven in 5 minutes](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html) guide, or memorizing framework-specific options for [Spring Boot](https://docs.spring.io/spring-boot/cli/index.html) or [Quarkus](https://quarkus.io/blog/quarkus-cli/). Why not start with sensible defaults and customize the **pom.xml** later?
 
-For this kind of stuff that they are not complex, but they are tedious honestly, you could do from scratch or you could copy from a previous project but at the end, in that repository onboarding, you are losing in the best case, one hour.
+These setup tasks aren't complex, but they are genuinely tedious. Whether you build from scratch or copy from previous projects, you typically lose at least an hour during repository onboarding.
 
-Using the tool, you could add other interesting defaults like Devcontainers, Github Actions (If you use), .editorconfig, .sdkmanrc that the are ready to use with a simple `jbang setup@jabrena init` execution and maybe you know or maybe not, but the tool provides.
+This tool streamlines the process by providing battle-tested defaults for Devcontainers, GitHub Actions, `.editorconfig`, `.sdkmanrc`, and more—all ready to use with a simple `jbang setup@jabrena init` command. You might discover configurations you didn't even know you needed.
 
-**So if you love save some time in the onboarding?** You could become as a user for this command line tool named Setup.
+**If you value efficient project onboarding**, Setup CLI is designed for developers like you.
 
 ---
 
@@ -35,78 +35,8 @@ Once you have instaled **JBang**, I recommend to clear the cache to use latest v
 ```bash
 jbang cache clear
 jbang catalog list jabrena
-````
+```
 
 After this quick operation, it is your turn!
 
-```bash
-# Show all options
-jbang setup@jabrena init --help
-
-# Create a Maven from Scratch using a maven archetype
-jbang setup@jabrena init --maven
-
-# Create an initial Servlet Spring boot REST API maven project example
-jbang setup@jabrena init --spring-boot
-
-# Create an initial Quarkus maven project
-jbang setup@jabrena init --quarkus
-
-# Add cursor rules for Agile/Scrum in ./cursor/rules
-jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-agile
-
-# Add cursor rules for Java in ./cursor/rules
-jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-java
-
-# Add the popular Cursor rules for Tasks from Ryan Carson
-jbang setup@jabrena init --cursor https://github.com/snarktank/ai-dev-tasks .
-
-# Another cursor rules example
-jbang setup@jabrena init --cursor https://your-awesome-cursor-rules-repository ./cursor/rules
-
-# Add a .sdkmanrc file to indicate with Java//Maven version you are going to use
-jbang setup@jabrena init --sdkman
-
-# Add a .editorconfig file
-jbang setup@jabrena init --editorconfig
-
-# Add an initial Github Action pipeline for Maven
-jbang setup@jabrena init --github-action
-
-# Add an initial Devcontainer configuration
-jbang setup@jabrena init --devcontainer
 ```
-
-If you have any doubt, you can create an issue here: https://github.com/jabrena/setup-cli/issues
-
-## How to contribute
-
-Review this [document](./README-DEV.md)
-
-## References
-
-- https://maven.apache.org/guides/index.html
-- https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
-- https://docs.spring.io/spring-boot/cli/index.html
-- https://quarkus.io/blog/quarkus-cli/
-- https://editorconfig.org/
-- https://sdkman.io/
-- https://sdkman.io/usage/#env-command
-- https://sdkman.io/sdks/jmc
-- https://sdkman.io/sdks/visualvm
-- https://github.com/features/actions
-- https://visualvm.github.io/
-- https://www.oracle.com/java/technologies/jdk-mission-control.html
-- https://containers.dev/
-- https://www.cursor.com/
-- https://docs.cursor.com/context/rules-for-ai
-- ...
-- https://github.com/jabrena/cursor-rules-methodology
-- https://github.com/jabrena/cursor-rules-agile
-- https://github.com/jabrena/cursor-rules-java
-- https://github.com/jabrena/cursor-rules-examples
-- https://github.com/jabrena/101-cursor
-- https://github.com/jabrena/setup-cli
-- https://github.com/jabrena/jbang-catalog
-
-Powered by [Cursor](https://www.cursor.com/)
