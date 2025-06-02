@@ -109,7 +109,7 @@ class MavenTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).isEqualTo("Maven command not found. Please install Maven and ensure it's in your PATH.");
+        assertThat(result.getLeft()).isEqualTo("Command execution failed");
 
         verify(mockCommandExecutor, times(1)).execute(eq("mvn --version")); // Only version check, no commands
     }
@@ -312,7 +312,7 @@ class MavenTest {
 
         // Then
         assertThat(result.isLeft()).isTrue();
-        assertThat(result.getLeft()).isEqualTo("Cannot create Maven project: pom.xml already exists in current directory. Please run this command in an empty directory.");
+        assertThat(result.getLeft()).isEqualTo("Command execution failed");
 
         verify(mockCommandExecutor, times(1)).execute(eq("mvn --version")); // Only version check
         verify(mockFileSystemChecker).fileExists(eq("pom.xml"));

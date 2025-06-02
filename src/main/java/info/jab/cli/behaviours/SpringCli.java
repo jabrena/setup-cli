@@ -41,7 +41,7 @@ public class SpringCli implements Behaviour0 {
 
         //Preconditions
         if (!isSpringCliAvailable()) {
-            String message = "Spring Boot command not found. Please install Spring Boot and ensure it's in your PATH.";
+            String message = "Spring Boot command not found. Please install Spring Boot with 'sdk install springboot' and ensure it's in your PATH.";
             logger.error(message);
             return Either.left("Command execution failed");
         }
@@ -57,7 +57,7 @@ public class SpringCli implements Behaviour0 {
                 .filter(line -> !line.trim().isEmpty())
                 .findFirst()
                 .map(this::executeCommand)
-                .orElse(Either.left("No Spring Boot commands found to execute"));
+                .orElse(Either.left("No commands found to execute"));
     }
 
     private Either<String, String> executeCommand(String command) {
