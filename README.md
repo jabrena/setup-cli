@@ -41,12 +41,12 @@ After this quick operation, it is your turn!
 
 ```bash
 jbang setup@jabrena init --help
-jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-java
-jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-agile
-jbang setup@jabrena init --cursor https://github.com/snarktank/ai-dev-tasks .
 jbang setup@jabrena init --maven
 jbang setup@jabrena init --spring-boot
 jbang setup@jabrena init --quarkus
+jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-java
+jbang setup@jabrena init --cursor https://github.com/jabrena/cursor-rules-agile
+jbang setup@jabrena init --cursor https://github.com/snarktank/ai-dev-tasks .
 jbang setup@jabrena init --editorconfig
 jbang setup@jabrena init --sdkman
 jbang setup@jabrena init --github-action
