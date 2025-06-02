@@ -64,7 +64,7 @@ jbang setup@jabrena init --cursor https://github.com/snarktank/ai-dev-tasks .
 # Another cursor rules example
 jbang setup@jabrena init --cursor https://your-awesome-cursor-rules-repository ./cursor/rules
 
-# Add a .sdkmanrc file to indicate with Java//Maven version you are going to use in the repository
+# Add a .sdkmanrc file to indicate with Java//Maven version you are going to use
 jbang setup@jabrena init --sdkman
 
 # Add a .editorconfig file
