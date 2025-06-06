@@ -23,7 +23,7 @@
         <zt-exec.version>1.12</zt-exec.version>
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
-        <jgit.version>7.2.1.202505142326-r</jgit.version>
+        <jgit.version>7.3.0.202506031305-r</jgit.version>
 
         <!-- Test dependencies -->
         <junit.version>5.13.0</junit.version>
