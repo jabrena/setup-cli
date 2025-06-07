@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Include all bug patterns by default -->
+    <!-- You can add specific bug categories to include here -->
+    <!-- Example: -->
+    <!-- <Match>
+        <Bug category="SECURITY"/>
+    </Match> -->
+</FindBugsFilter>

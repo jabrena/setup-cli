@@ -23,10 +23,10 @@
         <zt-exec.version>1.12</zt-exec.version>
         <jcolor.version>5.5.1</jcolor.version>
         <jfiglet.version>0.0.9</jfiglet.version>
-        <jgit.version>7.2.1.202505142326-r</jgit.version>
+        <jgit.version>7.3.0.202506031305-r</jgit.version>
 
         <!-- Test dependencies -->
-        <junit.version>5.13.0</junit.version>
+        <junit.version>5.13.1</junit.version>
         <mockito.version>5.18.0</mockito.version>
         <byte-buddy.version>1.17.5</byte-buddy.version>
         <assertj.version>3.27.3</assertj.version>
@@ -37,6 +37,7 @@
         <!-- Maven Plugins -->
         <maven-plugins-flatten.version>1.7.0</maven-plugins-flatten.version>
         <maven-plugins-enforcer.version>3.5.0</maven-plugins-enforcer.version>
+        <extra-enforcer-rules.version>1.10.0</extra-enforcer-rules.version>
         <maven-plugins-compiler.version>3.14.0</maven-plugins-compiler.version>
         <error-prone.version>2.38.0</error-prone.version>
         <nullaway.version>0.12.7</nullaway.version>
@@ -49,9 +50,13 @@
         <maven-plugins-versions.version>2.18.0</maven-plugins-versions.version>
         <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
-        <maven-plugins-pitest.version>1.19.4</maven-plugins-pitest.version>
+        <maven-plugins-pitest.version>1.19.5</maven-plugins-pitest.version>
         <maven-plugins-pitest-junit5.version>1.2.3</maven-plugins-pitest-junit5.version>
         <maven-plugins-dependency-check.version>12.1.1</maven-plugins-dependency-check.version>
+        <maven-plugins-pmd.version>3.26.0</maven-plugins-pmd.version>
+        <maven-plugins-spotbugs.version>4.9.3.0</maven-plugins-spotbugs.version>
+        <maven-plugins-site.version>3.20.0</maven-plugins-site.version>
+        <maven-plugins-sonar.version>4.0.0.4121</maven-plugins-sonar.version>
 
         <!-- Coverage -->
         <coverage.level>80</coverage.level>
@@ -150,7 +155,8 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Mockito needs these dependencies updated to fix the issue about org.mockito.plugins.MockMaker -->
+        <!-- Mockito needs these dependencies updated to fix the issue about
+        org.mockito.plugins.MockMaker -->
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy-agent</artifactId>
@@ -202,11 +208,19 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>${maven-plugins-enforcer.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>${extra-enforcer-rules.version}</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>enforce</id>
                         <configuration>
                             <rules>
+                                <banCircularDependencies/>
                                 <dependencyConvergence />
                                 <banDuplicatePomDependencyVersions />
                                 <requireMavenVersion>
@@ -373,6 +387,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>${maven-plugins-jxr.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${maven-plugins-site.version}</version>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
@@ -544,6 +563,84 @@
         </profile>
 
 
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <!-- SonarCloud configuration -->
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.organization>jabrena</sonar.organization>
+                <sonar.projectKey>jabrena_setup-cli</sonar.projectKey>
+                <sonar.projectName>Setup CLI</sonar.projectName>
+                <sonar.projectVersion>${project.version}</sonar.projectVersion>
+                <sonar.sources>src/main/java</sonar.sources>
+                <sonar.tests>src/test/java</sonar.tests>
+                <sonar.java.binaries>target/classes</sonar.java.binaries>
+                <sonar.java.test.binaries>target/test-classes</sonar.java.test.binaries>
+                <sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
+                <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
+                <sonar.coverage.exclusions>**/*Test.java,**/*IT.java</sonar.coverage.exclusions>
+                <sonar.java.source>${java.version}</sonar.java.source>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>${maven-plugins-sonar.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>find-bugs</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${maven-plugins-pmd.version}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>${maven-plugins-spotbugs.version}</version>
+                        <configuration>
+                            <effort>Max</effort>
+                            <threshold>Low</threshold>
+                            <failOnError>true</failOnError>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <!-- SpotBugs reporting for Maven site -->
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>${maven-plugins-spotbugs.version}</version>
+                        <configuration>
+                            <effort>Max</effort>
+                            <threshold>Low</threshold>
+                            <includeFilterFile>src/main/spotbugs/spotbugs-include.xml</includeFilterFile>
+                            <excludeFilterFile>src/main/spotbugs/spotbugs-exclude.xml</excludeFilterFile>
+                        </configuration>
+                    </plugin>
+                  <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${maven-plugins-pmd.version}</version>
+                  </plugin>
+                </plugins>
+              </reporting>
+        </profile>
     </profiles>
 
     <reporting>
@@ -567,5 +664,4 @@
             </plugin>
         </plugins>
     </reporting>
-
 </project>

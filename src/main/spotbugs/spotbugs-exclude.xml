@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Exclude specific bug patterns if needed -->
+    <!-- Example: Exclude specific classes or packages -->
+    <!-- <Match>
+        <Class name="~.*\.Test.*"/>
+    </Match> -->
+
+    <!-- Example: Exclude specific bug types -->
+    <!-- <Match>
+        <Bug pattern="DM_EXIT"/>
+    </Match> -->
+</FindBugsFilter>
