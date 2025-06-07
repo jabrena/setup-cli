@@ -22,6 +22,7 @@ jwebserver -p 8004 -d "$(pwd)/target/site/jacoco"
 ./mvnw clean verify -Psecurity
 ./mvnw clean verify site -Pfind-bugs
 jwebserver -p 8005 -d "$(pwd)/target/site/"
+# https://sonarcloud.io/account/security/
 ./mvnw clean verify -Pjacoco -Psonar sonar:sonar
 
 ./mvnw versions:display-property-updates

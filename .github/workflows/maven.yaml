@@ -20,7 +20,7 @@ jobs:
           java-version: '24'
 
       - name: Maven build
-        run: ./mvnw --batch-mode --no-transfer-progress package surefire-report:report --file pom.xml -Pjacoco -Psonar sonar:sonar
+        run: ./mvnw --batch-mode --no-transfer-progress package surefire-report:report --file pom.xml -Pjacoco -Psonar sonar:sonar -Dsonar.token=68148336c39f18ab75b248249553a753fdd5ebbf
 
       - name: Get Maven project version
         id: get_version
