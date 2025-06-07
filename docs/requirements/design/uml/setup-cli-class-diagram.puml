@@ -1,0 +1,292 @@
+@startuml Setup_CLI_Class_Diagram
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam packageStyle rectangle
+
+' Package declarations
+package "info.jab.cli" {
+    class Setup {
+        - logger : Logger
+        - initCommand : InitCommand
+        --
+        + Setup()
+        + Setup(InitCommand)
+        + run() : void
+        - printBanner() : void
+        + runCLI(String[]) : int
+        + main(String[]) : void
+    }
+
+    class InitCommand {
+        - logger : Logger
+        - exclusiveOptions : ExclusiveOptions
+        - maven : Maven
+        - springCli : SpringCli
+        - quarkusCli : QuarkusCli
+        - cursor : Cursor
+        - sdkman : Sdkman
+        - editorConfig : EditorConfig
+        - gitignore : Gitignore
+        - githubAction : GithubAction
+        - dependabot : Dependabot
+        - devContainer : DevContainer
+        - visualvm : Visualvm
+        - jmc : JMC
+        --
+        + InitCommand()
+        + InitCommand(Maven, SpringCli, QuarkusCli, Cursor, EditorConfig, Sdkman, GithubAction, Gitignore, Dependabot, DevContainer, Visualvm, JMC)
+        + run() : void
+        # runInitFeature() : Integer
+        - processResult(Either<String, String>) : Integer
+    }
+
+    class ExclusiveOptions {
+        + mavenOption : boolean
+        + springCliOption : boolean
+        + quarkusCliOption : boolean
+        + cursorParameters : String[]
+        + sdkmanOption : boolean
+        + editorConfigOption : boolean
+        + gitignoreOption : boolean
+        + githubActionOption : boolean
+        + dependabotOption : boolean
+        + devcontainerOption : boolean
+        + visualvmOption : boolean
+        + jmcOption : boolean
+    }
+
+    class GitInfo {
+        - gitPropertiesStreamSupplier : Supplier<InputStream>
+        --
+        + GitInfo()
+        + GitInfo(Supplier<InputStream>)
+        + print() : void
+    }
+}
+
+package "info.jab.cli.behaviours" {
+    interface Behaviour0 {
+        + execute() : Either<String, String>
+    }
+
+    interface Behaviour1 {
+        + execute(String) : Either<String, String>
+    }
+
+    interface Behaviour2 {
+        + execute(String, String) : Either<String, String>
+    }
+
+    class Maven {
+        - logger : Logger
+        - commandExecutor : CommandExecutor
+        - fileSystemChecker : FileSystemChecker
+        - commands : String
+        --
+        + Maven()
+        + Maven(CommandExecutor)
+        + Maven(CommandExecutor, FileSystemChecker)
+        + execute() : Either<String, String>
+        + isMavenAvailable() : boolean
+        + pomXmlExists() : boolean
+        - executeCommand(String) : Either<String, String>
+    }
+
+    class SpringCli {
+        - logger : Logger
+        - commandExecutor : CommandExecutor
+        - fileSystemChecker : FileSystemChecker
+        - commands : String
+        --
+        + SpringCli()
+        + SpringCli(CommandExecutor, FileSystemChecker)
+        + execute() : Either<String, String>
+        + isSpringCliAvailable() : boolean
+        + pomXmlExists() : boolean
+        - executeCommand(String) : Either<String, String>
+    }
+
+    class QuarkusCli {
+        - logger : Logger
+        - commandExecutor : CommandExecutor
+        - fileSystemChecker : FileSystemChecker
+        - commands : String
+        --
+        + QuarkusCli()
+        + QuarkusCli(CommandExecutor, FileSystemChecker)
+        + execute() : Either<String, String>
+        + isQuarkusCliAvailable() : boolean
+        + pomXmlExists() : boolean
+        - executeCommand(String) : Either<String, String>
+    }
+
+    class Cursor {
+        - gitFolderCopy : GitFolderCopy
+        --
+        + Cursor()
+        + Cursor(GitFolderCopy)
+        + execute(String, String) : Either<String, String>
+        - validateGitUrl(String) : Either<String, String>
+        - executeWithOption(String, String) : Either<String, String>
+    }
+
+    class Sdkman {
+        - logger : Logger
+        - copyFiles : CopyFiles
+        --
+        + Sdkman()
+        + Sdkman(CopyFiles)
+        + execute() : Either<String, String>
+    }
+
+    class EditorConfig {
+        - logger : Logger
+        - copyFiles : CopyFiles
+        --
+        + EditorConfig()
+        + EditorConfig(CopyFiles)
+        + execute() : Either<String, String>
+    }
+
+    class Gitignore {
+        - logger : Logger
+        - copyFiles : CopyFiles
+        --
+        + Gitignore()
+        + Gitignore(CopyFiles)
+        + execute() : Either<String, String>
+    }
+
+    class GithubAction {
+        - logger : Logger
+        - copyFiles : CopyFiles
+        --
+        + GithubAction()
+        + GithubAction(CopyFiles)
+        + execute() : Either<String, String>
+    }
+
+    class Dependabot {
+        - logger : Logger
+        - copyFiles : CopyFiles
+        --
+        + Dependabot()
+        + Dependabot(CopyFiles)
+        + execute() : Either<String, String>
+    }
+
+    class DevContainer {
+        - logger : Logger
+        - copyFiles : CopyFiles
+        --
+        + DevContainer()
+        + DevContainer(CopyFiles)
+        + execute() : Either<String, String>
+    }
+
+    class Visualvm {
+        - commands : String
+        --
+        + execute() : Either<String, String>
+    }
+
+    class JMC {
+        - logger : Logger
+        - commands : String
+        --
+        + execute() : Either<String, String>
+    }
+}
+
+package "info.jab.cli.io" {
+    class CommandExecutor {
+        - logger : Logger
+        - DEFAULT_TIMEOUT_MINUTES : int
+        --
+        + execute(String) : Either<String, String>
+        + execute(String, File, int) : Either<String, String>
+    }
+
+    class CopyFiles {
+        --
+        + copyClasspathFolder(String, Path) : void
+        + copyClasspathFolderExcludingFiles(String, Path, List<String>) : void
+        + copyContentToFile(String, Path) : void
+        + copyClasspathFileWithRename(String, Path) : void
+        - createDirectoryAndContinue(Path, Path, Path) : FileVisitResult
+        - copyFileAndContinue(Path, Path, Path) : FileVisitResult
+    }
+
+    class FileSystemChecker {
+        --
+        + fileExists(String) : boolean
+    }
+
+    class GitFolderCopy {
+        - logger : Logger
+        --
+        + copyFolderFromRepo(String, String, String) : void
+        - deleteDirectory(Path) : void
+        - copyDirectory(Path, Path) : void
+    }
+}
+
+' Relationships
+Setup ||--|| InitCommand : composition
+InitCommand ||--|| ExclusiveOptions : composition
+InitCommand ||--o{ Maven : aggregation
+InitCommand ||--o{ SpringCli : aggregation
+InitCommand ||--o{ QuarkusCli : aggregation
+InitCommand ||--o{ Cursor : aggregation
+InitCommand ||--o{ Sdkman : aggregation
+InitCommand ||--o{ EditorConfig : aggregation
+InitCommand ||--o{ Gitignore : aggregation
+InitCommand ||--o{ GithubAction : aggregation
+InitCommand ||--o{ Dependabot : aggregation
+InitCommand ||--o{ DevContainer : aggregation
+InitCommand ||--o{ Visualvm : aggregation
+InitCommand ||--o{ JMC : aggregation
+
+' Interface implementations
+Maven ..|> Behaviour0 : implements
+SpringCli ..|> Behaviour0 : implements
+QuarkusCli ..|> Behaviour0 : implements
+Sdkman ..|> Behaviour0 : implements
+EditorConfig ..|> Behaviour0 : implements
+Gitignore ..|> Behaviour0 : implements
+GithubAction ..|> Behaviour0 : implements
+Dependabot ..|> Behaviour0 : implements
+DevContainer ..|> Behaviour0 : implements
+Visualvm ..|> Behaviour0 : implements
+JMC ..|> Behaviour0 : implements
+Cursor ..|> Behaviour2 : implements
+
+' Dependencies in behaviours package
+Maven ||--|| CommandExecutor : composition
+Maven ||--|| FileSystemChecker : composition
+SpringCli ||--|| CommandExecutor : composition
+SpringCli ||--|| FileSystemChecker : composition
+QuarkusCli ||--|| CommandExecutor : composition
+QuarkusCli ||--|| FileSystemChecker : composition
+Cursor ||--|| GitFolderCopy : composition
+Sdkman ||--|| CopyFiles : composition
+EditorConfig ||--|| CopyFiles : composition
+Gitignore ||--|| CopyFiles : composition
+GithubAction ||--|| CopyFiles : composition
+Dependabot ||--|| CopyFiles : composition
+DevContainer ||--|| CopyFiles : composition
+
+' External framework dependencies
+Setup ..|> Runnable : implements
+InitCommand ..|> Runnable : implements
+
+' Stereotypes and notes
+note top of Setup : "@Command\nMain CLI entry point"
+note top of InitCommand : "@Command\nSubcommand for initialization"
+note top of ExclusiveOptions : "@ArgGroup(exclusive=true)\nMutually exclusive CLI options"
+note right of Behaviour0 : "Strategy Pattern\nfor parameterless behaviors"
+note right of Behaviour1 : "Strategy Pattern\nfor single parameter behaviors"
+note right of Behaviour2 : "Strategy Pattern\nfor two parameter behaviors"
+
+@enduml
