@@ -55,7 +55,7 @@
         <maven-plugins-dependency-check.version>12.1.2</maven-plugins-dependency-check.version>
         <maven-plugins-pmd.version>3.26.0</maven-plugins-pmd.version>
         <maven-plugins-spotbugs.version>4.9.3.0</maven-plugins-spotbugs.version>
-        <maven-plugins-site.version>3.20.0</maven-plugins-site.version>
+        <maven-plugins-site.version>3.21.0</maven-plugins-site.version>
         <maven-plugins-sonar.version>4.0.0.4121</maven-plugins-sonar.version>
 
         <!-- Coverage -->
