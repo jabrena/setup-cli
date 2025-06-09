@@ -56,7 +56,7 @@
         <maven-plugins-pmd.version>3.26.0</maven-plugins-pmd.version>
         <maven-plugins-spotbugs.version>4.9.3.0</maven-plugins-spotbugs.version>
         <maven-plugins-site.version>3.21.0</maven-plugins-site.version>
-        <maven-plugins-sonar.version>4.0.0.4121</maven-plugins-sonar.version>
+        <maven-plugins-sonar.version>5.1.0.4751</maven-plugins-sonar.version>
 
         <!-- Coverage -->
         <coverage.level>80</coverage.level>
