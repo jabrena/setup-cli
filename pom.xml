@@ -35,7 +35,7 @@
         <maven-extensions-timeline.version>2.0.3</maven-extensions-timeline.version>
 
         <!-- Maven Plugins -->
-        <maven-plugins-flatten.version>1.7.0</maven-plugins-flatten.version>
+        <maven-plugins-flatten.version>1.7.1</maven-plugins-flatten.version>
         <maven-plugins-enforcer.version>3.5.0</maven-plugins-enforcer.version>
         <extra-enforcer-rules.version>1.10.0</extra-enforcer-rules.version>
         <maven-plugins-compiler.version>3.14.0</maven-plugins-compiler.version>
