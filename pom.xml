@@ -18,7 +18,7 @@
         <jspecify.version>1.0.0</jspecify.version>
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.18</logback.version>
-        <vavr.version>0.10.6</vavr.version>
+        <vavr.version>0.10.7</vavr.version>
         <picocli.version>4.7.7</picocli.version>
         <zt-exec.version>1.12</zt-exec.version>
         <jcolor.version>5.5.1</jcolor.version>
