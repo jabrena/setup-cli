@@ -23,7 +23,7 @@ jobs:
     steps:
       # Reuse checkout step from CI pipeline
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: true  # Fetches all submodules
 
