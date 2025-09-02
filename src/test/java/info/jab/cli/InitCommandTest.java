@@ -17,6 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import info.jab.cli.behaviours.CodeOwners;
 import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.Dependabot;
 import info.jab.cli.behaviours.DevContainer;
@@ -76,6 +77,9 @@ class InitCommandTest {
     @Mock
     private JMC mockJmc;
 
+    @Mock
+    private CodeOwners mockCodeOwners;
+
     private InitCommand initCommand;
     private ByteArrayOutputStream outputStreamCaptor;
     private CommandLine cmd;
@@ -99,7 +103,8 @@ class InitCommandTest {
                 mockDependabot,
                 mockDevContainer,
                 mockVisualvm,
-                mockJmc
+                mockJmc,
+                mockCodeOwners
         );
 
         // Capture console output for assertions

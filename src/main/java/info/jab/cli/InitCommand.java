@@ -1,5 +1,6 @@
 package info.jab.cli;
 
+import info.jab.cli.behaviours.CodeOwners;
 import info.jab.cli.behaviours.Cursor;
 import info.jab.cli.behaviours.Dependabot;
 import info.jab.cli.behaviours.DevContainer;
@@ -125,6 +126,12 @@ public class InitCommand implements Runnable {
             order = 12,
             hidden = true)
         boolean jmcOption;
+
+        @Option(
+            names = {"-co", "--codeowners"},
+            description = "Add an initial CODEOWNERS file for GitHub.",
+            order = 13)
+        boolean codeownersOption;
     }
 
     // Behavior instances
@@ -140,6 +147,7 @@ public class InitCommand implements Runnable {
     private final DevContainer devContainer;
     private final Visualvm visualvm;
     private final JMC jmc;
+    private final CodeOwners codeOwners;
 
     public InitCommand() {
         this.maven = new Maven();
@@ -154,6 +162,7 @@ public class InitCommand implements Runnable {
         this.devContainer = new DevContainer();
         this.visualvm = new Visualvm();
         this.jmc = new JMC();
+        this.codeOwners = new CodeOwners();
     }
 
     public InitCommand(
@@ -168,7 +177,8 @@ public class InitCommand implements Runnable {
         Dependabot dependabot,
         DevContainer devContainer,
         Visualvm visualvm,
-        JMC jmc
+        JMC jmc,
+        CodeOwners codeOwners
     ) {
         this.maven = maven;
         this.springCli = springCli;
@@ -182,6 +192,7 @@ public class InitCommand implements Runnable {
         this.devContainer = devContainer;
         this.visualvm = visualvm;
         this.jmc = jmc;
+        this.codeOwners = codeOwners;
     }
 
     @Override
@@ -249,6 +260,10 @@ public class InitCommand implements Runnable {
 
         if (exclusiveOptions.jmcOption) {
             return processResult(jmc.execute());
+        }
+
+        if (exclusiveOptions.codeownersOption) {
+            return processResult(codeOwners.execute());
         }
 
         return processResult(Either.left("No valid feature option provided."));

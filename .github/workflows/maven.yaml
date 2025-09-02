@@ -84,6 +84,9 @@ jobs:
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --jmc"
           java -jar $JAR_FILE init --jmc
+          echo "--------------------------------"
+          echo "Running: java -jar $JAR_FILE init --codeowners"
+          java -jar $JAR_FILE init --codeowners
           echo "✅ CLI commands executed successfully"
 
       - name: Upload jar
