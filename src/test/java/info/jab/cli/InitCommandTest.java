@@ -182,14 +182,14 @@ class InitCommandTest {
     void shouldExecuteCursorFeature() throws Exception {
         // Given
         String gitRepoUrl = "https://github.com/user/cursor-rules.git";
-        when(mockCursor.execute(gitRepoUrl, ".cursor/rules")).thenReturn(Either.right("Cursor executed successfully"));
+        when(mockCursor.execute(gitRepoUrl, "./cursor/rules", ".cursor/rules")).thenReturn(Either.right("Cursor executed successfully"));
         String[] args = {"--cursor", gitRepoUrl};
 
         // When
         int exitCode = cmd.execute(args);
 
         // Then
-        verify(mockCursor, times(1)).execute(gitRepoUrl, ".cursor/rules");
+        verify(mockCursor, times(1)).execute(gitRepoUrl, "./cursor/rules", ".cursor/rules");
         assertThat(exitCode).isEqualTo(0);
         assertThat(outputStreamCaptor.toString(StandardCharsets.UTF_8).trim()).isEqualTo("Cursor executed successfully");
     }
