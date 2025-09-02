@@ -6,7 +6,6 @@ import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
 import info.jab.cli.behaviours.Gitignore;
-import info.jab.cli.behaviours.Gradle;
 import info.jab.cli.behaviours.JMC;
 import info.jab.cli.behaviours.Maven;
 import info.jab.cli.behaviours.QuarkusCli;
@@ -54,30 +53,25 @@ public class InitCommand implements Runnable {
         boolean mavenOption;
 
         @Option(
-            names = {"-g", "--gradle"},
-            description = "Create a new Gradle project.",
-            order = 3)
-        boolean gradleOption;
-
-        @Option(
             names = {"-sb", "--spring-boot"},
             description = "Create a new Spring Boot project.",
-            order = 4)
+            order = 3)
         boolean springCliOption;
 
         @Option(
             names = {"-q", "--quarkus"},
             description = "Create a new Quarkus project.",
-            order = 5)
+            order = 4)
         boolean quarkusCliOption;
 
         @Option(
             names = {"-c", "--cursor"},
             description = "Download cursor rules from a Git repository. " +
-                         "The option accepts 2 parameters, the first parameter requires a Https Git repository URL, " +
-                         "the second parameter is optional and indicates the path where is located in the repository " +
-                         "the cursor rules, by default ./cursor/rules.",
-            arity = "1..2",
+                         "The option accepts 1-3 parameters: " +
+                         "1st parameter (required): HTTPS Git repository URL, " +
+                         "2nd parameter (optional): path in the repository where cursor rules are located (default: ./cursor/rules), " +
+                         "3rd parameter (optional): local destination path (default: .cursor/rules).",
+            arity = "1..3",
             order = 1)
         @Nullable
         @SuppressWarnings("NullAway") // Optional CLI parameter can be null
@@ -86,57 +80,56 @@ public class InitCommand implements Runnable {
         @Option(
             names = {"-s", "--sdkman"},
             description = "Add an initial .sdkmanrc file.",
-            order = 6)
+            order = 5)
         boolean sdkmanOption;
 
         @Option(
             names = {"-ec", "--editorconfig"},
             description = "Add an initial .editorconfig file.",
-            order = 7)
+            order = 6)
         boolean editorConfigOption;
 
         @Option(
             names = {"-gi", "--gitignore"},
             description = "Add an initial .gitignore file.",
-            order = 8)
+            order = 7)
         boolean gitignoreOption;
 
         @Option(
             names = {"-ga", "--github-action"},
             description = "Add an initial GitHub Actions workflow for Maven.",
-            order = 9)
+            order = 8)
         boolean githubActionOption;
 
         @Option(
             names = {"-db", "--dependabot"},
             description = "Add an initial Dependabot configuration.",
-            order = 10)
+            order = 9)
         boolean dependabotOption;
 
         @Option(
             names = {"-dc", "--devcontainer"},
             description = "Add an initial Devcontainer support for Java.",
-            order = 11)
+            order = 10)
         boolean devcontainerOption;
 
         @Option(
             names = {"-vv", "--visualvm"},
             description = "Run VisualVM to monitor the application.",
-            order = 12,
+            order = 11,
             hidden = true)
         boolean visualvmOption;
 
         @Option(
             names = {"-j", "--jmc"},
             description = "Run JMC to monitor the application.",
-            order = 13,
+            order = 12,
             hidden = true)
         boolean jmcOption;
     }
 
     // Behavior instances
     private final Maven maven;
-    private final Gradle gradle;
     private final SpringCli springCli;
     private final QuarkusCli quarkusCli;
     private final Cursor cursor;
@@ -151,7 +144,6 @@ public class InitCommand implements Runnable {
 
     public InitCommand() {
         this.maven = new Maven();
-        this.gradle = new Gradle();
         this.springCli = new SpringCli();
         this.quarkusCli = new QuarkusCli();
         this.cursor = new Cursor();
@@ -167,7 +159,6 @@ public class InitCommand implements Runnable {
 
     public InitCommand(
         Maven maven,
-        Gradle gradle,
         SpringCli springCli,
         QuarkusCli quarkusCli,
         Cursor cursor,
@@ -181,7 +172,6 @@ public class InitCommand implements Runnable {
         JMC jmc
     ) {
         this.maven = maven;
-        this.gradle = gradle;
         this.springCli = springCli;
         this.quarkusCli = quarkusCli;
         this.cursor = cursor;
@@ -210,10 +200,6 @@ public class InitCommand implements Runnable {
             return processResult(maven.execute());
         }
 
-        if (exclusiveOptions.gradleOption) {
-            return processResult(gradle.execute());
-        }
-
         if (exclusiveOptions.springCliOption) {
             return processResult(springCli.execute());
         }
@@ -223,14 +209,23 @@ public class InitCommand implements Runnable {
         }
 
         if (Objects.nonNull(exclusiveOptions.cursorParameters) && exclusiveOptions.cursorParameters.length > 0) {
+            String gitRepoUrl = exclusiveOptions.cursorParameters[0];
+            
             if (exclusiveOptions.cursorParameters.length == 1) {
-                String gitRepoUrl = exclusiveOptions.cursorParameters[0];
+                // Only Git repo URL provided, use defaults for source and destination paths
+                String sourcePath = "./cursor/rules";
                 String destinationPath = ".cursor/rules";
-                return processResult(cursor.execute(gitRepoUrl, destinationPath));
+                return processResult(cursor.execute(gitRepoUrl, sourcePath, destinationPath));
+            } else if (exclusiveOptions.cursorParameters.length == 2) {
+                // Git repo URL and source path provided, use default destination path
+                String sourcePath = exclusiveOptions.cursorParameters[1];
+                String destinationPath = ".cursor/rules";
+                return processResult(cursor.execute(gitRepoUrl, sourcePath, destinationPath));
             } else {
-                String gitRepoUrl = exclusiveOptions.cursorParameters[0];
-                String destinationPath = exclusiveOptions.cursorParameters[1];
-                return processResult(cursor.execute(gitRepoUrl, destinationPath));
+                // All three parameters provided
+                String sourcePath = exclusiveOptions.cursorParameters[1];
+                String destinationPath = exclusiveOptions.cursorParameters[2];
+                return processResult(cursor.execute(gitRepoUrl, sourcePath, destinationPath));
             }
         }
 

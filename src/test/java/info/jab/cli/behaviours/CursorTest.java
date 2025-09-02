@@ -278,4 +278,123 @@ class CursorTest {
         assertThat(result.getLeft()).startsWith("Invalid URL format:");
         verify(mockGitFolderCopy, never()).copyFolderFromRepo(anyString(), anyString(), anyString());
     }
+
+    // Tests for 3-parameter execute method
+    @Test
+    void testExecuteWithThreeParametersValidInput() {
+        // Given
+        String validUrl = "https://github.com/user/repo.git";
+        String sourcePath = "custom/rules";
+        String destinationPath = "local/destination";
+        Mockito.doNothing().when(mockGitFolderCopy).copyFolderFromRepo(eq(validUrl), eq(sourcePath), anyString());
+
+        // When
+        var result = cursor.execute(validUrl, sourcePath, destinationPath);
+
+        // Then
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
+        verify(mockGitFolderCopy).copyFolderFromRepo(eq(validUrl), eq(sourcePath), anyString());
+    }
+
+    @Test
+    @SuppressWarnings("NullAway")
+    void testExecuteWithThreeParametersNullUrl() {
+        // Given
+        String nullUrl = null;
+        String sourcePath = "source/path";
+        String destinationPath = "dest/path";
+
+        // When
+        var result = cursor.execute(nullUrl, sourcePath, destinationPath);
+
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).isEqualTo("Git repository URL cannot be null or empty");
+        verify(mockGitFolderCopy, never()).copyFolderFromRepo(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    void testExecuteWithThreeParametersInvalidUrl() {
+        // Given
+        String invalidUrl = "not-a-url";
+        String sourcePath = "source/path";
+        String destinationPath = "dest/path";
+
+        // When
+        var result = cursor.execute(invalidUrl, sourcePath, destinationPath);
+
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).startsWith("Invalid URI format:");
+        verify(mockGitFolderCopy, never()).copyFolderFromRepo(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    void testExecuteWithThreeParametersUnsupportedProtocol() {
+        // Given
+        String ftpUrl = "ftp://example.com/repo.git";
+        String sourcePath = "source/path";
+        String destinationPath = "dest/path";
+
+        // When
+        var result = cursor.execute(ftpUrl, sourcePath, destinationPath);
+
+        // Then
+        assertThat(result.isLeft()).isTrue();
+        assertThat(result.getLeft()).isEqualTo("Unsupported protocol: ftp. Only http and https protocols are supported");
+        verify(mockGitFolderCopy, never()).copyFolderFromRepo(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    void testExecuteWithThreeParametersGitFolderCopyFailure() {
+        // Given
+        String validUrl = "https://github.com/user/repo.git";
+        String sourcePath = "source/path";
+        String destinationPath = "dest/path";
+        doThrow(new RuntimeException("Git operation failed"))
+            .when(mockGitFolderCopy).copyFolderFromRepo(eq(validUrl), eq(sourcePath), anyString());
+
+        // When & Then
+        assertThatThrownBy(() -> cursor.execute(validUrl, sourcePath, destinationPath))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Git operation failed");
+
+        verify(mockGitFolderCopy).copyFolderFromRepo(eq(validUrl), eq(sourcePath), anyString());
+    }
+
+    @Test
+    void testExecuteWithThreeParametersUrlWithTrailingWhitespace() {
+        // Given
+        String urlWithWhitespace = " https://github.com/user/repo.git ";
+        String sourcePath = "source/path";
+        String destinationPath = "dest/path";
+        Mockito.doNothing().when(mockGitFolderCopy).copyFolderFromRepo(eq(urlWithWhitespace.trim()), eq(sourcePath), anyString());
+
+        // When
+        var result = cursor.execute(urlWithWhitespace, sourcePath, destinationPath);
+
+        // Then
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
+        // Verify that the trimmed URL is passed to the copy method
+        verify(mockGitFolderCopy).copyFolderFromRepo(eq(urlWithWhitespace.trim()), eq(sourcePath), anyString());
+    }
+
+    @Test
+    void testTwoParameterExecuteUsesDefaultDestination() {
+        // Given
+        String validUrl = "https://github.com/user/repo.git";
+        String sourcePath = "custom/source";
+        Mockito.doNothing().when(mockGitFolderCopy).copyFolderFromRepo(eq(validUrl), eq(sourcePath), anyString());
+
+        // When
+        var result = cursor.execute(validUrl, sourcePath);
+
+        // Then
+        assertThat(result.isRight()).isTrue();
+        assertThat(result.get()).isEqualTo("Cursor rules added successfully");
+        // The 2-parameter method should call the 3-parameter method with default destination
+        verify(mockGitFolderCopy).copyFolderFromRepo(eq(validUrl), eq(sourcePath), anyString());
+    }
 }

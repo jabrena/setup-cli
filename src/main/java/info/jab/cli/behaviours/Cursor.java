@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 import info.jab.cli.io.GitFolderCopy;
 import io.vavr.control.Either;
 
-public class Cursor implements Behaviour2 {
+public class Cursor implements Behaviour2, Behaviour3 {
 
     private final GitFolderCopy gitFolderCopy;
 
@@ -26,8 +26,14 @@ public class Cursor implements Behaviour2 {
 
     @Override
     public Either<String, String> execute(@NonNull String parameter1, @NonNull String parameter2) {
+        return execute(parameter1, parameter2, ".cursor/rules");
+    }
+
+    @Override
+    public Either<String, String> execute(@NonNull String parameter1, @NonNull String parameter2, @NonNull String parameter3) {
         String gitRepoUrl = parameter1;
-        String folderPath = parameter2;
+        String sourceFolderPath = parameter2;
+        String destinationPath = parameter3;
 
         // Validate the URL before proceeding
         Either<String, String> urlValidation = validateGitUrl(gitRepoUrl);
@@ -36,7 +42,7 @@ public class Cursor implements Behaviour2 {
         }
 
         // Use trimmed URL for consistency with validation
-        return executeWithOption(gitRepoUrl.trim(), folderPath);
+        return executeWithOption(gitRepoUrl.trim(), sourceFolderPath, destinationPath);
     }
 
     /**
@@ -76,13 +82,12 @@ public class Cursor implements Behaviour2 {
         }
     }
 
-    private Either<String, String> executeWithOption(String url, String folderPath) {
+    private Either<String, String> executeWithOption(String url, String sourceFolderPath, String destinationPath) {
         //Location where the cursor rules will be copied
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        Path cursorPath = currentPath.resolve(".cursor");
-        Path rulesPath = cursorPath.resolve("rules");
+        Path finalDestinationPath = currentPath.resolve(destinationPath);
 
-        gitFolderCopy.copyFolderFromRepo(url, folderPath, rulesPath.toString());
+        gitFolderCopy.copyFolderFromRepo(url, sourceFolderPath, finalDestinationPath.toString());
 
         return Either.right("Cursor rules added successfully");
     }
