@@ -6,6 +6,7 @@ import info.jab.cli.behaviours.DevContainer;
 import info.jab.cli.behaviours.EditorConfig;
 import info.jab.cli.behaviours.GithubAction;
 import info.jab.cli.behaviours.Gitignore;
+import info.jab.cli.behaviours.Gradle;
 import info.jab.cli.behaviours.JMC;
 import info.jab.cli.behaviours.Maven;
 import info.jab.cli.behaviours.QuarkusCli;
@@ -53,15 +54,21 @@ public class InitCommand implements Runnable {
         boolean mavenOption;
 
         @Option(
+            names = {"-g", "--gradle"},
+            description = "Create a new Gradle project.",
+            order = 3)
+        boolean gradleOption;
+
+        @Option(
             names = {"-sb", "--spring-boot"},
             description = "Create a new Spring Boot project.",
-            order = 3)
+            order = 4)
         boolean springCliOption;
 
         @Option(
             names = {"-q", "--quarkus"},
             description = "Create a new Quarkus project.",
-            order = 4)
+            order = 5)
         boolean quarkusCliOption;
 
         @Option(
@@ -79,56 +86,57 @@ public class InitCommand implements Runnable {
         @Option(
             names = {"-s", "--sdkman"},
             description = "Add an initial .sdkmanrc file.",
-            order = 5)
+            order = 6)
         boolean sdkmanOption;
 
         @Option(
             names = {"-ec", "--editorconfig"},
             description = "Add an initial .editorconfig file.",
-            order = 6)
+            order = 7)
         boolean editorConfigOption;
 
         @Option(
             names = {"-gi", "--gitignore"},
             description = "Add an initial .gitignore file.",
-            order = 7)
+            order = 8)
         boolean gitignoreOption;
 
         @Option(
             names = {"-ga", "--github-action"},
             description = "Add an initial GitHub Actions workflow for Maven.",
-            order = 8)
+            order = 9)
         boolean githubActionOption;
 
         @Option(
             names = {"-db", "--dependabot"},
             description = "Add an initial Dependabot configuration.",
-            order = 9)
+            order = 10)
         boolean dependabotOption;
 
         @Option(
             names = {"-dc", "--devcontainer"},
             description = "Add an initial Devcontainer support for Java.",
-            order = 10)
+            order = 11)
         boolean devcontainerOption;
 
         @Option(
             names = {"-vv", "--visualvm"},
             description = "Run VisualVM to monitor the application.",
-            order = 11,
+            order = 12,
             hidden = true)
         boolean visualvmOption;
 
         @Option(
             names = {"-j", "--jmc"},
             description = "Run JMC to monitor the application.",
-            order = 12,
+            order = 13,
             hidden = true)
         boolean jmcOption;
     }
 
     // Behavior instances
     private final Maven maven;
+    private final Gradle gradle;
     private final SpringCli springCli;
     private final QuarkusCli quarkusCli;
     private final Cursor cursor;
@@ -143,6 +151,7 @@ public class InitCommand implements Runnable {
 
     public InitCommand() {
         this.maven = new Maven();
+        this.gradle = new Gradle();
         this.springCli = new SpringCli();
         this.quarkusCli = new QuarkusCli();
         this.cursor = new Cursor();
@@ -158,6 +167,7 @@ public class InitCommand implements Runnable {
 
     public InitCommand(
         Maven maven,
+        Gradle gradle,
         SpringCli springCli,
         QuarkusCli quarkusCli,
         Cursor cursor,
@@ -171,6 +181,7 @@ public class InitCommand implements Runnable {
         JMC jmc
     ) {
         this.maven = maven;
+        this.gradle = gradle;
         this.springCli = springCli;
         this.quarkusCli = quarkusCli;
         this.cursor = cursor;
@@ -197,6 +208,10 @@ public class InitCommand implements Runnable {
 
         if (exclusiveOptions.mavenOption) {
             return processResult(maven.execute());
+        }
+
+        if (exclusiveOptions.gradleOption) {
+            return processResult(gradle.execute());
         }
 
         if (exclusiveOptions.springCliOption) {

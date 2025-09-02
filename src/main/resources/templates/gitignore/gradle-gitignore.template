@@ -1,0 +1,14 @@
+.DS_Store
+build/
+.gradle/
+.idea/
+.vscode/
+.cursor/
+*.log
+.classpath
+.project
+.settings/
+bin/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
