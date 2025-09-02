@@ -9,6 +9,7 @@ import io.vavr.control.Either;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +48,17 @@ public class CommandExecutor {
         try {
             logger.info("Executing command: {} in directory: {}", command, workingDirectory.getAbsolutePath());
 
-            List<String> commandParts = Arrays.asList(command.trim().split("\\s+"));
+            if (command == null || command.trim().isEmpty()) {
+                logger.error("Command cannot be null or empty");
+                return Either.left("Command cannot be null or empty");
+            }
+
+            List<String> commandParts = parseCommand(command.trim());
+
+            if (commandParts.isEmpty()) {
+                logger.error("No valid command parts found after parsing: {}", command);
+                return Either.left("No valid command parts found");
+            }
 
             ProcessResult result = new ProcessExecutor()
                     .command(commandParts)
@@ -87,5 +98,54 @@ public class CommandExecutor {
             logger.error("Unexpected error executing command '{}': {}", command, e.getMessage(), e);
             return Either.left(e.getMessage());
         }
+    }
+
+    /**
+     * Parses a command string into a list of arguments, properly handling quoted strings.
+     * This method handles both single and double quotes.
+     *
+     * @param command the command string to parse
+     * @return a list of command arguments
+     */
+    private List<String> parseCommand(String command) {
+        List<String> result = new ArrayList<>();
+        StringBuilder currentArg = new StringBuilder();
+        boolean inQuotes = false;
+        char quoteChar = 0;
+
+        for (int i = 0; i < command.length(); i++) {
+            char c = command.charAt(i);
+
+            if (!inQuotes && (c == '\'' || c == '"')) {
+                // Start of quoted string
+                inQuotes = true;
+                quoteChar = c;
+            } else if (inQuotes && c == quoteChar) {
+                // End of quoted string
+                inQuotes = false;
+                quoteChar = 0;
+            } else if (!inQuotes && Character.isWhitespace(c)) {
+                // Whitespace outside quotes - end current argument
+                if (currentArg.length() > 0) {
+                    result.add(currentArg.toString());
+                    currentArg.setLength(0);
+                }
+            } else {
+                // Regular character or whitespace inside quotes
+                currentArg.append(c);
+            }
+        }
+
+        // Add the last argument if any
+        if (currentArg.length() > 0) {
+            result.add(currentArg.toString());
+        }
+
+        // Fallback to simple split if result is empty (shouldn't happen with valid input)
+        if (result.isEmpty() && !command.trim().isEmpty()) {
+            return Arrays.asList(command.trim().split("\\s+"));
+        }
+
+        return result;
     }
 }
