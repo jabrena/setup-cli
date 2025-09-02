@@ -19,27 +19,8 @@ jobs:
           distribution: 'graalvm' # See 'Supported distributions' for available options
           java-version: '24'
 
-      - name: Maven build and test with JaCoCo coverage
-        run: ./mvnw --batch-mode --no-transfer-progress clean verify -Pjacoco
-
-      - name: Generate surefire reports
-        run: ./mvnw surefire-report:report --batch-mode --no-transfer-progress
-        if: always()
-
-      - name: Display coverage summary
-        run: |
-          if [ -f ./target/site/jacoco/index.html ]; then
-            echo "📊 JaCoCo Coverage Report Generated"
-            echo "Coverage reports available in ./target/site/jacoco/"
-            # Extract coverage percentage if available
-            if command -v grep >/dev/null 2>&1; then
-              COVERAGE=$(grep -o "Total[^%]*%" ./target/site/jacoco/index.html | tail -1 || echo "Coverage data not found")
-              echo "Coverage: $COVERAGE"
-            fi
-          else
-            echo "⚠️  JaCoCo coverage report not found"
-          fi
-        if: always()
+      - name: Maven build
+        run: ./mvnw --batch-mode --no-transfer-progress verify --file pom.xml -Pjacoco
 
       - name: Get Maven project version
         id: get_version
@@ -79,6 +60,9 @@ jobs:
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks ."
           java -jar $JAR_FILE init --cursor https://github.com/snarktank/ai-dev-tasks .
+          echo "--------------------------------"
+          echo "Running: java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-java ./cursor/rules ./custom-destination"
+          java -jar $JAR_FILE init --cursor https://github.com/jabrena/cursor-rules-java ./cursor/rules ./custom-destination
           echo "--------------------------------"
           echo "Running: java -jar $JAR_FILE init --editorconfig"
           java -jar $JAR_FILE init --editorconfig
