@@ -54,7 +54,7 @@
         <maven-plugins-pitest-junit5.version>1.2.3</maven-plugins-pitest-junit5.version>
         <maven-plugins-dependency-check.version>12.1.3</maven-plugins-dependency-check.version>
         <maven-plugins-pmd.version>3.27.0</maven-plugins-pmd.version>
-        <maven-plugins-spotbugs.version>4.9.4.0</maven-plugins-spotbugs.version>
+        <maven-plugins-spotbugs.version>4.9.4.1</maven-plugins-spotbugs.version>
         <maven-plugins-site.version>3.21.0</maven-plugins-site.version>
         <maven-plugins-sonar.version>5.1.0.4751</maven-plugins-sonar.version>
 
