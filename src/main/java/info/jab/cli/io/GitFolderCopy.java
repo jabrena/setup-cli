@@ -102,6 +102,7 @@ public class GitFolderCopy {
      * @param destination the destination directory path to copy to
      * @throws IOException if an I/O error occurs during the copy operation
      */
+    @SuppressWarnings("AlreadyChecked")
     private void copyDirectory(Path source, Path destination) throws IOException {
         try (var stream = Files.walk(source)) {
             stream.filter(sourcePath -> {
@@ -117,6 +118,12 @@ public class GitFolderCopy {
                     return true;
                 }
 
+                // Include files with .md extension
+                if (pathString.endsWith(".md")) {
+                    return true;
+                }
+
+                //TODO: Remove when I refactor cursor rules agile (2025-09-18)
                 // Include files with .md extension that are inside templates folder
                 if (pathString.endsWith(".md") && pathString.contains("templates")) {
                     return true;

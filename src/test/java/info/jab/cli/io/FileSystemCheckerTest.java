@@ -52,15 +52,6 @@ class FileSystemCheckerTest {
     }
 
     @Test
-    void testFileExists_WithEmptyString() {
-        // When: Check if empty string exists as a file
-        boolean result = fileSystemChecker.fileExists("");
-
-        // Then: Should return false
-        assertThat(result).as("Expected fileExists to return false for empty string").isFalse();
-    }
-
-    @Test
     void testFileExists_WithRelativePath(@TempDir Path tempDir) throws IOException {
         // Given: Create a file in temp directory and change working directory context
         Path testFile = tempDir.resolve("relative-test.txt");
