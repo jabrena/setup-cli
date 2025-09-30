@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: 'graalvm' # See 'Supported distributions' for available options
-          java-version: '24'
+          java-version: '25'
 
       - name: Maven build
         run: ./mvnw --batch-mode --no-transfer-progress package surefire-report:report --file pom.xml -Pjacoco -Psonar sonar:sonar -Dsonar.token=68148336c39f18ab75b248249553a753fdd5ebbf

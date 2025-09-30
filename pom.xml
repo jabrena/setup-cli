@@ -6,11 +6,11 @@
 
     <groupId>info.jab.cli</groupId>
     <artifactId>setup</artifactId>
-    <version>0.12.0-SNAPSHOT</version>
+    <version>0.12.0-SNAPSHOT-SNAPSHOT</version>
 
     <properties>
-        <java.version>24</java.version>
-        <maven.version>3.9.9</maven.version>
+        <java.version>25</java.version>
+        <maven.version>3.9.10</maven.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
