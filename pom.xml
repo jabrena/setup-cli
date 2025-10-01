@@ -17,7 +17,7 @@
         <!-- Dependencies -->
         <jspecify.version>1.0.0</jspecify.version>
         <slf4j.version>2.0.17</slf4j.version>
-        <logback.version>1.5.18</logback.version>
+        <logback.version>1.5.19</logback.version>
         <vavr.version>0.10.7</vavr.version>
         <picocli.version>4.7.7</picocli.version>
         <zt-exec.version>1.12</zt-exec.version>
@@ -26,7 +26,7 @@
         <jgit.version>7.3.0.202506031305-r</jgit.version>
 
         <!-- Test dependencies -->
-        <junit.version>5.13.4</junit.version>
+        <junit.version>6.0.0</junit.version>
         <mockito.version>5.19.0</mockito.version>
         <byte-buddy.version>1.17.7</byte-buddy.version>
         <assertj.version>3.27.4</assertj.version>
@@ -39,7 +39,7 @@
         <maven-plugins-enforcer.version>3.6.1</maven-plugins-enforcer.version>
         <extra-enforcer-rules.version>1.10.0</extra-enforcer-rules.version>
         <maven-plugins-compiler.version>3.14.1</maven-plugins-compiler.version>
-        <error-prone.version>2.41.0</error-prone.version>
+        <error-prone.version>2.42.0</error-prone.version>
         <nullaway.version>0.12.9</nullaway.version>
         <maven-plugins-surefire.version>3.5.3</maven-plugins-surefire.version>
         <maven-plugins-failsafe.version>3.5.3</maven-plugins-failsafe.version>
