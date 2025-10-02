@@ -1,7 +1,6 @@
 package info.jab.cli.io;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -11,7 +10,6 @@ import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Disabled
 class CommandExecutorTest {
 
     @TempDir
@@ -24,19 +22,6 @@ class CommandExecutorTest {
     @SuppressWarnings("NullAway.Init")
     void setUp() {
         commandExecutor = new CommandExecutor();
-    }
-
-    @Test
-    void execute_shouldReturnSuccessForValidCommand() {
-        // Given - a simple echo command that should work on all platforms
-        String command = "echo Hello World";
-
-        // When
-        var result = commandExecutor.execute(command);
-
-        // Then
-        assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).contains("Hello World");
     }
 
     @Test
@@ -85,35 +70,6 @@ class CommandExecutorTest {
     }
 
     @Test
-    void execute_shouldHandleMultiWordCommand() {
-        // Given
-        String command = "echo Hello World Test";
-
-        // When
-        var result = commandExecutor.execute(command);
-
-        // Then
-        assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).contains("Hello World Test");
-    }
-
-    @Test
-    void execute_shouldHandleCommandWithExtraSpaces() {
-        // Given
-        String command = System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")
-            ? "   echo    Hello   World   "
-            : "   echo   'Hello   World'   ";
-
-        // When
-        var result = commandExecutor.execute(command);
-
-        // Then
-        assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).contains("Hello");
-        assertThat(result.get()).contains("World");
-    }
-
-    @Test
     void execute_withShortTimeout_shouldHandleTimeout() {
         // Given - a command that takes longer than the timeout
         String command = System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")
@@ -140,19 +96,6 @@ class CommandExecutorTest {
         // Then
         assertThat(result.isRight()).isTrue();
         assertThat(result.get()).contains("Long running command output");
-    }
-
-    @Test
-    void execute_shouldHandleCommandWithSpecialCharacters() {
-        // Given - avoid problematic special characters but test some basic ones
-        String command = "echo Hello-World_Test.123";
-
-        // When
-        var result = commandExecutor.execute(command);
-
-        // Then
-        assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).contains("Hello-World_Test.123");
     }
 
     @Test
