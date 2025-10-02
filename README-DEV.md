@@ -31,7 +31,7 @@ jwebserver -p 8005 -d "$(pwd)/target/site/"
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
 
-./mvnw versions:set -DnewVersion=0.11.0
+./mvnw versions:set -DnewVersion=0.13.0-SNAPSHOT
 ./mvnw versions:commit
 ```
 
@@ -40,26 +40,26 @@ jwebserver -p 8005 -d "$(pwd)/target/site/"
 ```bash
 ./mvnw clean package
 ./mvnw clean package -DskipTests
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar --help
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --help
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --maven
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --spring-boot
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --quarkus
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --cursor https://github.com/jabrena/cursor-rules-java
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --cursor https://github.com/jabrena/cursor-rules-agile
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --cursor https://github.com/snarktank/ai-dev-tasks .
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --sdkman
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --editorconfig
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --github-action
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --gitignore
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --devcontainer
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --dependabot
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --visualvm
-java -jar ./target/setup-0.12.0-SNAPSHOT.jar init --jmc
+java -jar ./target/setup-0.12.0.jar
+java -jar ./target/setup-0.12.0.jar --help
+java -jar ./target/setup-0.12.0.jar init
+java -jar ./target/setup-0.12.0.jar init --help
+java -jar ./target/setup-0.12.0.jar init --maven
+java -jar ./target/setup-0.12.0.jar init --spring-boot
+java -jar ./target/setup-0.12.0.jar init --quarkus
+java -jar ./target/setup-0.12.0.jar init --cursor https://github.com/jabrena/cursor-rules-java
+java -jar ./target/setup-0.12.0.jar init --cursor https://github.com/jabrena/cursor-rules-agile
+java -jar ./target/setup-0.12.0.jar init --cursor https://github.com/snarktank/ai-dev-tasks .
+java -jar ./target/setup-0.12.0.jar init --sdkman
+java -jar ./target/setup-0.12.0.jar init --editorconfig
+java -jar ./target/setup-0.12.0.jar init --github-action
+java -jar ./target/setup-0.12.0.jar init --gitignore
+java -jar ./target/setup-0.12.0.jar init --devcontainer
+java -jar ./target/setup-0.12.0.jar init --dependabot
+java -jar ./target/setup-0.12.0.jar init --visualvm
+java -jar ./target/setup-0.12.0.jar init --jmc
 
-jar tf ./target/setup-0.12.0-SNAPSHOT.jar
+jar tf ./target/setup-0.12.0.jar
 ```
 
 ## Release process
