@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'graalvm' # See 'Supported distributions' for available options
-          java-version: '24'
+          java-version: '25'
 
       # Cache Maven dependencies for faster builds
       - name: Cache Maven dependencies
