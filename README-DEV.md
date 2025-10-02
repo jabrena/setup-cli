@@ -11,6 +11,7 @@ sdk env install
 ./mvnw clean validate -U
 ./mvnw buildplan:list-phase
 ./mvnw license:third-party-report
+
 jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify
 jwebserver -p 8001 -d "$(pwd)/target/timeline/"
