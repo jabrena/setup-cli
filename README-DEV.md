@@ -14,6 +14,7 @@ sdk env install
 jwebserver -p 8001 -d "$(pwd)/target/reports/"
 ./mvnw clean verify
 jwebserver -p 8001 -d "$(pwd)/target/timeline/"
+./mvnw clean test surefire-report:report
 ./mvnw clean test surefire-report:report -Dmaven.test.failure.ignore=true
 jwebserver -p 8004 -d "$(pwd)/target/reports"
 ./mvnw clean verify jacoco:report -Pjacoco

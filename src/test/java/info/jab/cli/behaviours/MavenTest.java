@@ -189,7 +189,6 @@ class MavenTest {
                 .hasMessage("FileSystemChecker cannot be null");
     }
 
-    @Disabled
     @Test
     void defaultConstructor_shouldCreateInstanceWithRealExecutor() {
         // When
