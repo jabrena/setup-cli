@@ -37,7 +37,7 @@
         <!-- Maven Plugins -->
         <maven-plugins-flatten.version>1.7.2</maven-plugins-flatten.version>
         <maven-plugins-enforcer.version>3.6.2</maven-plugins-enforcer.version>
-        <extra-enforcer-rules.version>1.10.0</extra-enforcer-rules.version>
+        <extra-enforcer-rules.version>1.11.0</extra-enforcer-rules.version>
         <maven-plugins-compiler.version>3.14.1</maven-plugins-compiler.version>
         <error-prone.version>2.42.0</error-prone.version>
         <nullaway.version>0.12.9</nullaway.version>
