@@ -50,7 +50,7 @@
         <maven-plugins-versions.version>2.19.1</maven-plugins-versions.version>
         <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
-        <maven-plugins-pitest.version>1.20.5</maven-plugins-pitest.version>
+        <maven-plugins-pitest.version>1.20.6</maven-plugins-pitest.version>
         <maven-plugins-pitest-junit5.version>1.2.3</maven-plugins-pitest-junit5.version>
         <maven-plugins-dependency-check.version>12.1.3</maven-plugins-dependency-check.version>
         <maven-plugins-pmd.version>3.27.0</maven-plugins-pmd.version>
