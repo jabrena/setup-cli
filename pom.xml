@@ -26,7 +26,7 @@
         <jgit.version>7.4.0.202509020913-r</jgit.version>
 
         <!-- Test dependencies -->
-        <junit.version>6.0.0</junit.version>
+        <junit.version>6.0.1</junit.version>
         <mockito.version>5.20.0</mockito.version>
         <byte-buddy.version>1.17.8</byte-buddy.version>
         <assertj.version>3.27.6</assertj.version>
@@ -40,17 +40,17 @@
         <extra-enforcer-rules.version>1.11.0</extra-enforcer-rules.version>
         <maven-plugins-compiler.version>3.14.1</maven-plugins-compiler.version>
         <error-prone.version>2.43.0</error-prone.version>
-        <nullaway.version>0.12.9</nullaway.version>
+        <nullaway.version>0.12.11</nullaway.version>
         <maven-plugins-surefire.version>3.5.3</maven-plugins-surefire.version>
         <maven-plugins-failsafe.version>3.5.3</maven-plugins-failsafe.version>
         <maven-plugins-jxr.version>3.6.0</maven-plugins-jxr.version>
-        <maven-plugins-jacoco.version>0.8.13</maven-plugins-jacoco.version>
+        <maven-plugins-jacoco.version>0.8.14</maven-plugins-jacoco.version>
         <maven-plugins-jar.version>3.4.2</maven-plugins-jar.version>
         <maven-plugins-shade.version>3.6.0</maven-plugins-shade.version>
         <maven-plugins-versions.version>2.19.1</maven-plugins-versions.version>
         <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
-        <maven-plugins-pitest.version>1.20.5</maven-plugins-pitest.version>
+        <maven-plugins-pitest.version>1.21.0</maven-plugins-pitest.version>
         <maven-plugins-pitest-junit5.version>1.2.3</maven-plugins-pitest-junit5.version>
         <maven-plugins-dependency-check.version>12.1.8</maven-plugins-dependency-check.version>
         <maven-plugins-pmd.version>3.28.0</maven-plugins-pmd.version>
