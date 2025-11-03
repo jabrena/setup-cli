@@ -39,7 +39,7 @@
         <maven-plugins-enforcer.version>3.6.2</maven-plugins-enforcer.version>
         <extra-enforcer-rules.version>1.11.0</extra-enforcer-rules.version>
         <maven-plugins-compiler.version>3.14.1</maven-plugins-compiler.version>
-        <error-prone.version>2.42.0</error-prone.version>
+        <error-prone.version>2.43.0</error-prone.version>
         <nullaway.version>0.12.11</nullaway.version>
         <maven-plugins-surefire.version>3.5.3</maven-plugins-surefire.version>
         <maven-plugins-failsafe.version>3.5.3</maven-plugins-failsafe.version>
