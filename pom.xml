@@ -47,7 +47,7 @@
         <maven-plugins-jacoco.version>0.8.14</maven-plugins-jacoco.version>
         <maven-plugins-jar.version>3.5.0</maven-plugins-jar.version>
         <maven-plugins-shade.version>3.6.0</maven-plugins-shade.version>
-        <maven-plugins-versions.version>2.19.1</maven-plugins-versions.version>
+        <maven-plugins-versions.version>2.20.1</maven-plugins-versions.version>
         <maven-plugins-resources.version>3.3.1</maven-plugins-resources.version>
         <maven-plugins-git-commit-id.version>4.9.10</maven-plugins-git-commit-id.version>
         <maven-plugins-pitest.version>1.22.0</maven-plugins-pitest.version>
