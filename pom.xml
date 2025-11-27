@@ -28,7 +28,7 @@
         <!-- Test dependencies -->
         <junit.version>6.0.1</junit.version>
         <mockito.version>5.20.0</mockito.version>
-        <byte-buddy.version>1.18.1</byte-buddy.version>
+        <byte-buddy.version>1.18.2</byte-buddy.version>
         <assertj.version>3.27.6</assertj.version>
 
         <!-- Maven Extensions -->
